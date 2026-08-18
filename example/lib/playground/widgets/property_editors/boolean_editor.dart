@@ -18,11 +18,19 @@ class BooleanEditor extends StatelessWidget {
   Widget build(BuildContext context) {
     return SwitchListTile(
       dense: true,
-      title: Text(definition.label,
-          style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
-      subtitle: Text('API: ${definition.apiPath}',
-          style: const TextStyle(
-              fontSize: 11, fontFamily: 'monospace', color: Colors.blueGrey)),
+      title: Text(
+        definition.label,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
+      ),
+      subtitle: Text(
+        'API: ${definition.apiPath}',
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: const TextStyle(
+            fontSize: 11, fontFamily: 'monospace', color: Colors.blueGrey),
+      ),
       value: value,
       onChanged: onChanged,
       contentPadding: EdgeInsets.zero,
