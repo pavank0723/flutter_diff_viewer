@@ -69,7 +69,7 @@ class DiffHeader extends StatelessWidget {
                 child: Text(effectiveOldLabel, style: labelStyle),
               ),
             ),
-            Container(width: spacing.borderWidth, color: theme.dividerColor),
+            Container(width: spacing.dividerWidth, color: theme.dividerColor),
             Expanded(
               child: Container(
                 decoration: headerDecoration,
