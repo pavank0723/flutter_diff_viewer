@@ -90,7 +90,15 @@ DiffViewer(
     final config = DiffViewerConfiguration.defaults().copyWith(
       layout: DiffLayout.sideBySide,
       theme: _buildTheme(),
-      spacing: DiffSpacing.defaults().copyWith(
+      spacing: DiffSpacing(
+        lineHeight: 22.0,
+        lineNumberWidth: 52.0,
+        indicatorWidth: 20.0,
+        horizontalPadding: 8.0,
+        verticalPadding: 2.0,
+        borderWidth: 1.0,
+        headerHeight: 40.0,
+        summaryHeight: 32.0,
         borderRadius: _borderRadius,
       ),
     );
