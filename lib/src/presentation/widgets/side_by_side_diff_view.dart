@@ -83,7 +83,7 @@ class SideBySideDiffView extends StatelessWidget {
               ),
             ),
             // Vertical divider
-            Container(width: spacing.borderWidth, color: theme.dividerColor),
+            Container(width: spacing.dividerWidth, color: theme.dividerColor),
             // Right panel (new content)
             Expanded(
               child: _DiffPanel(
