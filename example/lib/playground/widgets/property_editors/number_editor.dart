@@ -28,23 +28,34 @@ class NumberEditor extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(definition.label,
+              Expanded(
+                child: Text(
+                  definition.label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
-                      fontWeight: FontWeight.w600, fontSize: 13)),
-              Text('${isInt ? value.toInt() : value}',
-                  style: const TextStyle(
-                      fontFamily: 'monospace',
-                      fontWeight: FontWeight.bold,
-                      color: Colors.blue)),
+                      fontWeight: FontWeight.w600, fontSize: 13),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Text(
+                '${isInt ? value.toInt() : value}',
+                style: const TextStyle(
+                    fontFamily: 'monospace',
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blue),
+              ),
             ],
           ),
-          Text('API: ${definition.apiPath}',
-              style: const TextStyle(
-                  fontSize: 11,
-                  fontFamily: 'monospace',
-                  color: Colors.blueGrey)),
+          const SizedBox(height: 2),
+          Text(
+            'API: ${definition.apiPath}',
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(
+                fontSize: 11, fontFamily: 'monospace', color: Colors.blueGrey),
+          ),
           Slider(
             value: value.toDouble().clamp(min, max),
             min: min,
