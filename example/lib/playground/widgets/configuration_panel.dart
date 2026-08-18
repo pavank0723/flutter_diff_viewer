@@ -436,6 +436,24 @@ class _ConfigurationPanelState extends State<ConfigurationPanel> {
               config.copyWith(theme: config.theme.copyWith(borderColor: val)),
               'Changed Border Color'),
         );
+      case 'dividerColor':
+        return ColorEditor(
+          definition: def,
+          value: config.theme.dividerColor,
+          onChanged: (val) => ctrl.updateConfiguration(
+              config.copyWith(theme: config.theme.copyWith(dividerColor: val)),
+              'Changed Divider Color'),
+        );
+      case 'dividerWidth':
+        return NumberEditor(
+          definition: def,
+          value: config.spacing.dividerWidth,
+          onChanged: (val) => ctrl.updateConfiguration(
+              config.copyWith(
+                  spacing:
+                      config.spacing.copyWith(dividerWidth: val.toDouble())),
+              'Changed Divider Width'),
+        );
       case 'lineHeight':
         return NumberEditor(
           definition: def,
