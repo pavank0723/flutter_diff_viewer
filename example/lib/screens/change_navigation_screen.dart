@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_diff_viewer/flutter_diff_viewer.dart';
 
+import '../playground/screens/playground_screen.dart';
 import '../sample_data.dart';
+import '../widgets/feature_code_dialog.dart';
 
 class ChangeNavigationScreen extends StatefulWidget {
   const ChangeNavigationScreen({super.key});
@@ -11,68 +13,130 @@ class ChangeNavigationScreen extends StatefulWidget {
 }
 
 class _ChangeNavigationScreenState extends State<ChangeNavigationScreen> {
-  late final DiffViewerController _controller;
+  late final DiffViewerController _diffController;
 
   @override
   void initState() {
     super.initState();
-    _controller = DiffViewerController();
+    _diffController = DiffViewerController();
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    _diffController.dispose();
     super.dispose();
+  }
+
+  void _showCode() {
+    const code = '''
+final controller = DiffViewerController();
+
+// Programmatic navigation:
+controller.nextChange();
+controller.previousChange();
+controller.jumpToChange(2);
+
+DiffViewer(
+  oldContent: oldText,
+  newContent: newText,
+  controller: controller,
+  configuration: DiffViewerConfiguration.defaults().copyWith(
+    showChangeNavigation: true,
+  ),
+)''';
+
+    FeatureCodeDialog.show(
+      context,
+      title: 'Programmatic Change Navigation',
+      description:
+          'Control diff line jumping programmatically using DiffViewerController.nextChange() and previousChange().',
+      code: code,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    final config = DiffViewerConfiguration.defaults().copyWith(
+      layout: DiffLayout.sideBySide,
+      showChangeNavigation: true,
+    );
+
     return Scaffold(
-      appBar: AppBar(title: const Text('Programmatic Change Navigation')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            ListenableBuilder(
-              listenable: _controller,
+      appBar: AppBar(
+        title: const Text('Change Navigation Controller'),
+        actions: [
+          ElevatedButton.icon(
+            icon: const Icon(Icons.code, size: 16),
+            label: const Text('View Code'),
+            onPressed: _showCode,
+          ),
+          const SizedBox(width: 8),
+          IconButton(
+            icon: const Icon(Icons.tune),
+            tooltip: 'Customize in Studio',
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (_) => const PlaygroundScreen(),
+                ),
+              );
+            },
+          ),
+          const SizedBox(width: 8),
+        ],
+      ),
+      body: Column(
+        children: [
+          // External Programmatic Action Bar
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            color: Theme.of(context).colorScheme.surfaceContainerLow,
+            child: ListenableBuilder(
+              listenable: _diffController,
               builder: (context, _) {
+                final current = _diffController.currentChangeIndex;
+                final total = _diffController.totalChanges;
+
                 return Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Total changes: ${_controller.totalChanges}'),
-                    Row(
-                      children: [
-                        ElevatedButton.icon(
-                          onPressed: _controller.hasPreviousChange
-                              ? _controller.previousChange
-                              : null,
-                          icon: const Icon(Icons.arrow_upward),
-                          label: const Text('Prev'),
-                        ),
-                        const SizedBox(width: 8),
-                        ElevatedButton.icon(
-                          onPressed: _controller.hasNextChange
-                              ? _controller.nextChange
-                              : null,
-                          icon: const Icon(Icons.arrow_downward),
-                          label: const Text('Next'),
-                        ),
-                      ],
+                    Text(
+                      'Programmatic Controls (${total > 0 ? "Change ${current + 1} of $total" : "Calculating..."})',
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 12),
+                    ),
+                    const Spacer(),
+                    OutlinedButton.icon(
+                      icon: const Icon(Icons.arrow_upward, size: 14),
+                      label: const Text('Prev Change'),
+                      onPressed:
+                          total > 0 ? _diffController.previousChange : null,
+                    ),
+                    const SizedBox(width: 8),
+                    ElevatedButton.icon(
+                      icon: const Icon(Icons.arrow_downward, size: 14),
+                      label: const Text('Next Change'),
+                      onPressed: total > 0 ? _diffController.nextChange : null,
                     ),
                   ],
                 );
               },
             ),
-            const SizedBox(height: 12),
-            Expanded(
+          ),
+          const Divider(height: 1),
+
+          // Main View
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
               child: DiffViewer(
                 oldContent: SampleData.privacyOld,
                 newContent: SampleData.privacyNew,
-                controller: _controller,
+                controller: _diffController,
+                configuration: config,
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
