@@ -10,6 +10,7 @@
 /// final spacing = DiffSpacing.defaults().copyWith(
 ///   lineNumberWidth: 64.0,
 ///   horizontalPadding: 12.0,
+///   dividerWidth: 2.0,
 /// );
 /// ```
 class DiffSpacing {
@@ -30,6 +31,9 @@ class DiffSpacing {
 
   /// Width of borders drawn around or within the diff viewer.
   final double borderWidth;
+
+  /// Width of central vertical divider separating original and modified content panels.
+  final double dividerWidth;
 
   /// Corner radius of the diff viewer's outer container.
   final double borderRadius;
@@ -54,12 +58,14 @@ class DiffSpacing {
     required this.borderRadius,
     required this.headerHeight,
     required this.summaryHeight,
+    this.dividerWidth = 1.0,
   })  : assert(lineHeight > 0, 'lineHeight must be > 0'),
         assert(lineNumberWidth >= 0, 'lineNumberWidth must be >= 0'),
         assert(indicatorWidth >= 0, 'indicatorWidth must be >= 0'),
         assert(horizontalPadding >= 0, 'horizontalPadding must be >= 0'),
         assert(verticalPadding >= 0, 'verticalPadding must be >= 0'),
         assert(borderWidth >= 0, 'borderWidth must be >= 0'),
+        assert(dividerWidth >= 0, 'dividerWidth must be >= 0'),
         assert(borderRadius >= 0, 'borderRadius must be >= 0'),
         assert(headerHeight >= 0, 'headerHeight must be >= 0'),
         assert(summaryHeight >= 0, 'summaryHeight must be >= 0');
@@ -85,6 +91,9 @@ class DiffSpacing {
 
   /// Default border width (1 dp).
   static const double defaultBorderWidth = 1.0;
+
+  /// Default divider width (1 dp).
+  static const double defaultDividerWidth = 1.0;
 
   /// Default corner radius for the outer container (6 dp).
   static const double defaultBorderRadius = 6.0;
@@ -123,6 +132,7 @@ class DiffSpacing {
     double? horizontalPadding,
     double? verticalPadding,
     double? borderWidth,
+    double? dividerWidth,
     double? borderRadius,
     double? headerHeight,
     double? summaryHeight,
@@ -134,6 +144,7 @@ class DiffSpacing {
       horizontalPadding: horizontalPadding ?? this.horizontalPadding,
       verticalPadding: verticalPadding ?? this.verticalPadding,
       borderWidth: borderWidth ?? this.borderWidth,
+      dividerWidth: dividerWidth ?? this.dividerWidth,
       borderRadius: borderRadius ?? this.borderRadius,
       headerHeight: headerHeight ?? this.headerHeight,
       summaryHeight: summaryHeight ?? this.summaryHeight,
@@ -155,6 +166,7 @@ class DiffSpacing {
           horizontalPadding == other.horizontalPadding &&
           verticalPadding == other.verticalPadding &&
           borderWidth == other.borderWidth &&
+          dividerWidth == other.dividerWidth &&
           borderRadius == other.borderRadius &&
           headerHeight == other.headerHeight &&
           summaryHeight == other.summaryHeight;
@@ -167,6 +179,7 @@ class DiffSpacing {
         horizontalPadding,
         verticalPadding,
         borderWidth,
+        dividerWidth,
         borderRadius,
         headerHeight,
         summaryHeight,
@@ -177,6 +190,7 @@ class DiffSpacing {
       'lineHeight: $lineHeight, '
       'lineNumberWidth: $lineNumberWidth, '
       'indicatorWidth: $indicatorWidth, '
+      'dividerWidth: $dividerWidth, '
       'horizontalPadding: $horizontalPadding, '
       'borderRadius: $borderRadius)';
 }
@@ -191,6 +205,7 @@ class _DefaultDiffSpacing extends DiffSpacing {
           horizontalPadding: DiffSpacing.defaultHorizontalPadding,
           verticalPadding: DiffSpacing.defaultVerticalPadding,
           borderWidth: DiffSpacing.defaultBorderWidth,
+          dividerWidth: DiffSpacing.defaultDividerWidth,
           borderRadius: DiffSpacing.defaultBorderRadius,
           headerHeight: DiffSpacing.defaultHeaderHeight,
           summaryHeight: DiffSpacing.defaultSummaryHeight,
