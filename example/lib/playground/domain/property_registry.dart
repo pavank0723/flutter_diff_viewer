@@ -228,13 +228,36 @@ class PropertyRegistry {
       key: 'borderColor',
       apiPath: 'configuration.theme.borderColor',
       label: 'Border Color',
-      description: 'Color of outer border and panel dividers.',
+      description: 'Color of outer border.',
+      category: PropertyCategory.colors,
+      editorType: EditorType.color,
+      defaultValue: Color(0xFFD0D7DE),
+    ),
+    PlaygroundPropertyDefinition(
+      key: 'dividerColor',
+      apiPath: 'configuration.theme.dividerColor',
+      label: 'Center Panel Divider Color',
+      description:
+          'Color of the central vertical divider between original and modified panels in side-by-side view.',
       category: PropertyCategory.colors,
       editorType: EditorType.color,
       defaultValue: Color(0xFFD0D7DE),
     ),
 
     // --- Spacing & Sizes ---
+    PlaygroundPropertyDefinition(
+      key: 'dividerWidth',
+      apiPath: 'configuration.spacing.dividerWidth',
+      label: 'Center Panel Divider Width (px)',
+      description:
+          'Width of the central vertical divider separating old/original and new/modified panels.',
+      category: PropertyCategory.spacing,
+      editorType: EditorType.number,
+      defaultValue: 1.0,
+      min: 0.0,
+      max: 12.0,
+      divisions: 24,
+    ),
     PlaygroundPropertyDefinition(
       key: 'lineHeight',
       apiPath: 'configuration.spacing.lineHeight',
