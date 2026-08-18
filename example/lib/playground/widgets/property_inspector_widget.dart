@@ -16,15 +16,17 @@ class PropertyInspectorWidget extends StatelessWidget {
       return Card(
         color: Theme.of(context).colorScheme.surfaceContainerLow,
         child: const Padding(
-          padding: EdgeInsets.all(12.0),
+          padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
           child: Row(
             children: [
-              Icon(Icons.info_outline, size: 20, color: Colors.grey),
+              Icon(Icons.info_outline, size: 18, color: Colors.grey),
               SizedBox(width: 8),
               Expanded(
                 child: Text(
                   'Select or hover over any property to view detailed API inspector documentation.',
                   style: TextStyle(fontSize: 12, color: Colors.grey),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ],
@@ -39,43 +41,64 @@ class PropertyInspectorWidget extends StatelessWidget {
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       child: Padding(
-        padding: const EdgeInsets.all(12.0),
+        padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
           children: [
             Row(
               children: [
                 Icon(def.category.icon,
-                    size: 18, color: Theme.of(context).colorScheme.primary),
+                    size: 16, color: Theme.of(context).colorScheme.primary),
                 const SizedBox(width: 8),
-                Text(def.label,
+                Expanded(
+                  child: Text(
+                    def.label,
                     style: const TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: 14)),
+                        fontWeight: FontWeight.bold, fontSize: 13),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
               ],
             ),
+            const SizedBox(height: 4),
+            Text(
+              def.description,
+              style: const TextStyle(fontSize: 11),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
             const SizedBox(height: 6),
-            Text(def.description, style: const TextStyle(fontSize: 12)),
-            const SizedBox(height: 8),
             Container(
-              padding: const EdgeInsets.all(8),
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.surfaceContainerHighest,
                 borderRadius: BorderRadius.circular(6),
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              child: Row(
                 children: [
-                  Text('API Path: ${def.apiPath}',
+                  Expanded(
+                    child: Text(
+                      'API Path: ${def.apiPath}',
                       style: const TextStyle(
                           fontFamily: 'monospace',
                           fontSize: 11,
-                          fontWeight: FontWeight.bold)),
-                  const SizedBox(height: 2),
-                  Text('Default: ${def.defaultValue}',
-                      style: const TextStyle(
-                          fontFamily: 'monospace',
-                          fontSize: 11,
-                          color: Colors.grey)),
+                          fontWeight: FontWeight.bold),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Text(
+                    'Default: ${def.defaultValue}',
+                    style: const TextStyle(
+                        fontFamily: 'monospace',
+                        fontSize: 11,
+                        color: Colors.grey),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ],
               ),
             ),
