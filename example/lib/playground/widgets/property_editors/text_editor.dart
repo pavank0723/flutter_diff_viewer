@@ -22,16 +22,28 @@ class TextEditor extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(definition.label,
+              Expanded(
+                child: Text(
+                  definition.label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
-                      fontWeight: FontWeight.w600, fontSize: 13)),
-              Text('API: ${definition.apiPath}',
+                      fontWeight: FontWeight.w600, fontSize: 13),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Flexible(
+                child: Text(
+                  'API: ${definition.apiPath}',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
                       fontSize: 11,
                       fontFamily: 'monospace',
-                      color: Colors.blueGrey)),
+                      color: Colors.blueGrey),
+                ),
+              ),
             ],
           ),
           const SizedBox(height: 6),
