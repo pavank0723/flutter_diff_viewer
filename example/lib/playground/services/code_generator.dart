@@ -198,7 +198,8 @@ DiffViewer(
         current.unchangedBackgroundColor != defaults.unchangedBackgroundColor ||
         current.lineNumberBackgroundColor !=
             defaults.lineNumberBackgroundColor ||
-        current.borderColor != defaults.borderColor;
+        current.borderColor != defaults.borderColor ||
+        current.dividerColor != defaults.dividerColor;
   }
 
   static String _generateThemeCode(
@@ -247,6 +248,9 @@ DiffViewer(
     if (!minimalMode || current.borderColor != defaults.borderColor) {
       b.writeln('      borderColor: ${_colorToCode(current.borderColor)},');
     }
+    if (!minimalMode || current.dividerColor != defaults.dividerColor) {
+      b.writeln('      dividerColor: ${_colorToCode(current.dividerColor)},');
+    }
     b.writeln('    ),');
     return b.toString();
   }
@@ -254,6 +258,7 @@ DiffViewer(
   static bool _isSpacingCustomized(DiffSpacing current, DiffSpacing defaults) {
     return current.lineHeight != defaults.lineHeight ||
         current.lineNumberWidth != defaults.lineNumberWidth ||
+        current.dividerWidth != defaults.dividerWidth ||
         current.borderRadius != defaults.borderRadius;
   }
 
@@ -266,6 +271,9 @@ DiffViewer(
     }
     if (!minimalMode || current.lineNumberWidth != defaults.lineNumberWidth) {
       b.writeln('      lineNumberWidth: ${current.lineNumberWidth},');
+    }
+    if (!minimalMode || current.dividerWidth != defaults.dividerWidth) {
+      b.writeln('      dividerWidth: ${current.dividerWidth},');
     }
     if (!minimalMode || current.borderRadius != defaults.borderRadius) {
       b.writeln('      borderRadius: ${current.borderRadius},');
