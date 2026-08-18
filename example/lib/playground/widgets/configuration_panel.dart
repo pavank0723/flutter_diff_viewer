@@ -11,7 +11,7 @@ import 'property_editors/dropdown_editor.dart';
 import 'property_editors/number_editor.dart';
 import 'property_editors/text_editor.dart';
 
-class ConfigurationPanel extends StatelessWidget {
+class ConfigurationPanel extends StatefulWidget {
   final PlaygroundController controller;
 
   const ConfigurationPanel({
@@ -20,7 +20,44 @@ class ConfigurationPanel extends StatelessWidget {
   });
 
   @override
+  State<ConfigurationPanel> createState() => _ConfigurationPanelState();
+}
+
+class _ConfigurationPanelState extends State<ConfigurationPanel> {
+  late TextEditingController _oldContentController;
+  late TextEditingController _newContentController;
+
+  @override
+  void initState() {
+    super.initState();
+    _oldContentController =
+        TextEditingController(text: widget.controller.state.oldContent);
+    _newContentController =
+        TextEditingController(text: widget.controller.state.newContent);
+  }
+
+  @override
+  void didUpdateWidget(covariant ConfigurationPanel oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (_oldContentController.text != widget.controller.state.oldContent) {
+      _oldContentController.text = widget.controller.state.oldContent;
+    }
+    if (_newContentController.text != widget.controller.state.newContent) {
+      _newContentController.text = widget.controller.state.newContent;
+    }
+  }
+
+  @override
+  void dispose() {
+    _oldContentController.dispose();
+    _newContentController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final controller = widget.controller;
+
     return ListenableBuilder(
       listenable: controller,
       builder: (context, _) {
@@ -51,7 +88,7 @@ class ConfigurationPanel extends StatelessWidget {
                 children: [
                   TextField(
                     decoration: InputDecoration(
-                      hintText: '🔍 Search property (e.g. color, lines...)',
+                      hintText: 'Search property (e.g. color, lines...)',
                       isDense: true,
                       prefixIcon: const Icon(Icons.search, size: 18),
                       suffixIcon: query.isNotEmpty
@@ -91,45 +128,113 @@ class ConfigurationPanel extends StatelessWidget {
             ),
             const Divider(height: 1),
 
-            // Accordion List of Property Editors
+            // Accordion List of Property Editors & Input Boxes
             Expanded(
               child: ListView(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                children: categoriesMap.entries.map((entry) {
-                  final category = entry.key;
-                  final defs = entry.value;
-
-                  return ExpansionTile(
+                children: [
+                  // --- Content Input Boxes Section ---
+                  ExpansionTile(
                     initiallyExpanded: true,
-                    leading: Icon(category.icon,
+                    leading: Icon(Icons.article_outlined,
                         size: 18, color: Theme.of(context).colorScheme.primary),
-                    title: Text(category.label,
-                        style: const TextStyle(
+                    title: const Text('Input Documents & Texts',
+                        style: TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 13)),
-                    childrenPadding:
-                        const EdgeInsets.only(left: 8, right: 8, bottom: 8),
-                    children: defs.map((def) {
-                      return MouseRegion(
-                        onEnter: (_) => controller.selectProperty(def.key),
-                        child: Container(
-                          margin: const EdgeInsets.symmetric(vertical: 4),
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: state.selectedPropertyKey == def.key
-                                ? Theme.of(context)
-                                    .colorScheme
-                                    .primaryContainer
-                                    .withValues(alpha: 0.3)
-                                : null,
-                            borderRadius: BorderRadius.circular(6),
-                          ),
-                          child: _buildEditor(def, state, controller),
+                    childrenPadding: const EdgeInsets.only(
+                        left: 8, right: 8, bottom: 12, top: 4),
+                    children: [
+                      const Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'Original / Old Content Box:',
+                          style: TextStyle(
+                              fontWeight: FontWeight.w600, fontSize: 12),
                         ),
-                      );
-                    }).toList(),
-                  );
-                }).toList(),
+                      ),
+                      const SizedBox(height: 4),
+                      TextField(
+                        controller: _oldContentController,
+                        minLines: 3,
+                        maxLines: 6,
+                        style: const TextStyle(
+                            fontFamily: 'monospace', fontSize: 12),
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          isDense: true,
+                          hintText: 'Type or paste original content here...',
+                        ),
+                        onChanged: (val) {
+                          controller.updateContents(oldContent: val);
+                        },
+                      ),
+                      const SizedBox(height: 12),
+                      const Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'Modified / New Content Box:',
+                          style: TextStyle(
+                              fontWeight: FontWeight.w600, fontSize: 12),
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      TextField(
+                        controller: _newContentController,
+                        minLines: 3,
+                        maxLines: 6,
+                        style: const TextStyle(
+                            fontFamily: 'monospace', fontSize: 12),
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          isDense: true,
+                          hintText: 'Type or paste modified content here...',
+                        ),
+                        onChanged: (val) {
+                          controller.updateContents(newContent: val);
+                        },
+                      ),
+                    ],
+                  ),
+                  const Divider(),
+
+                  // --- Property Editors Categories ---
+                  ...categoriesMap.entries.map((entry) {
+                    final category = entry.key;
+                    final defs = entry.value;
+
+                    return ExpansionTile(
+                      initiallyExpanded: true,
+                      leading: Icon(category.icon,
+                          size: 18,
+                          color: Theme.of(context).colorScheme.primary),
+                      title: Text(category.label,
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 13)),
+                      childrenPadding:
+                          const EdgeInsets.only(left: 8, right: 8, bottom: 8),
+                      children: defs.map((def) {
+                        return MouseRegion(
+                          onEnter: (_) => controller.selectProperty(def.key),
+                          child: Container(
+                            margin: const EdgeInsets.symmetric(vertical: 4),
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color: state.selectedPropertyKey == def.key
+                                  ? Theme.of(context)
+                                      .colorScheme
+                                      .primaryContainer
+                                      .withValues(alpha: 0.3)
+                                  : null,
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            child: _buildEditor(def, state, controller),
+                          ),
+                        );
+                      }).toList(),
+                    );
+                  }),
+                ],
               ),
             ),
           ],
