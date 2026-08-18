@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../playground/screens/playground_screen.dart';
 import 'change_navigation_screen.dart';
 import 'character_diff_screen.dart';
 import 'custom_theme_screen.dart';
@@ -84,43 +85,130 @@ class HomeScreen extends StatelessWidget {
         title: const Text('Flutter Diff Viewer Showcase'),
         centerTitle: false,
       ),
-      body: ListView.separated(
+      body: ListView(
         padding: const EdgeInsets.all(16),
-        itemCount: demos.length,
-        separatorBuilder: (_, __) => const SizedBox(height: 12),
-        itemBuilder: (context, index) {
-          final item = demos[index];
-          return Card(
-            elevation: 1,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: ListTile(
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 20,
-                vertical: 8,
-              ),
-              leading: CircleAvatar(
-                backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-                child: Icon(
-                  item.icon,
-                  color: Theme.of(context).colorScheme.primary,
+        children: [
+          // Hero Featured Card: Interactive Customization Studio
+          Card(
+            color: Theme.of(context).colorScheme.primaryContainer,
+            elevation: 3,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            child: InkWell(
+              borderRadius: BorderRadius.circular(16),
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (_) => const PlaygroundScreen(),
+                  ),
+                );
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Row(
+                  children: [
+                    CircleAvatar(
+                      radius: 28,
+                      backgroundColor: Theme.of(context).colorScheme.primary,
+                      child: const Icon(Icons.palette_outlined,
+                          size: 28, color: Colors.white),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                '🎨 Customization Studio',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onPrimaryContainer,
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 6, vertical: 2),
+                                decoration: BoxDecoration(
+                                  color: Colors.amber,
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                                child: const Text(
+                                  'FEATURED',
+                                  style: TextStyle(
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            'Interactively configure properties, preview live diffs, and generate copy-paste ready Dart integration code.',
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onPrimaryContainer
+                                  .withValues(alpha: 0.85),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      color: Theme.of(context).colorScheme.onPrimaryContainer,
+                    ),
+                  ],
                 ),
               ),
-              title: Text(
-                item.title,
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              ),
-              subtitle: Text(item.subtitle),
-              trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-              onTap: () {
-                Navigator.of(
-                  context,
-                ).push(MaterialPageRoute<void>(builder: (_) => item.screen));
-              },
             ),
-          );
-        },
+          ),
+          const SizedBox(height: 20),
+
+          const Text(
+            'Static Feature Demos',
+            style: TextStyle(
+                fontSize: 15, fontWeight: FontWeight.bold, color: Colors.grey),
+          ),
+          const SizedBox(height: 8),
+
+          // Standard Demos
+          ...demos.map((item) {
+            return Card(
+              margin: const EdgeInsets.only(bottom: 10),
+              elevation: 1,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12)),
+              child: ListTile(
+                contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                leading: CircleAvatar(
+                  backgroundColor:
+                      Theme.of(context).colorScheme.primaryContainer,
+                  child: Icon(item.icon,
+                      color: Theme.of(context).colorScheme.primary),
+                ),
+                title: Text(item.title,
+                    style: const TextStyle(fontWeight: FontWeight.bold)),
+                subtitle: Text(item.subtitle),
+                trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute<void>(builder: (_) => item.screen),
+                  );
+                },
+              ),
+            );
+          }),
+        ],
       ),
     );
   }
