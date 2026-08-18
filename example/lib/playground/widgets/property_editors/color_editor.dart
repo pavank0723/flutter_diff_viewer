@@ -29,18 +29,27 @@ class ColorEditor extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(definition.label,
-                    style: const TextStyle(
-                        fontWeight: FontWeight.w600, fontSize: 13)),
+                Text(
+                  definition.label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                      fontWeight: FontWeight.w600, fontSize: 13),
+                ),
                 const SizedBox(height: 2),
-                Text('API: ${definition.apiPath}',
-                    style: const TextStyle(
-                        fontSize: 11,
-                        fontFamily: 'monospace',
-                        color: Colors.blueGrey)),
+                Text(
+                  'API: ${definition.apiPath}',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                      fontSize: 11,
+                      fontFamily: 'monospace',
+                      color: Colors.blueGrey),
+                ),
               ],
             ),
           ),
+          const SizedBox(width: 8),
           InkWell(
             onTap: () async {
               final selected = await showDialog<Color>(
@@ -62,22 +71,23 @@ class ColorEditor extends StatelessWidget {
                 borderRadius: BorderRadius.circular(6),
               ),
               child: Row(
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   Container(
-                    width: 20,
-                    height: 20,
+                    width: 18,
+                    height: 18,
                     decoration: BoxDecoration(
                       color: value,
                       shape: BoxShape.circle,
                       border: Border.all(color: Colors.grey.shade600),
                     ),
                   ),
-                  const SizedBox(width: 8),
+                  const SizedBox(width: 6),
                   Text(_toHex(value),
                       style: const TextStyle(
-                          fontFamily: 'monospace', fontSize: 12)),
+                          fontFamily: 'monospace', fontSize: 11)),
                   const SizedBox(width: 4),
-                  const Icon(Icons.palette_outlined, size: 16),
+                  const Icon(Icons.palette_outlined, size: 14),
                 ],
               ),
             ),
