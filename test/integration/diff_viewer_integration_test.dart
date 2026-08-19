@@ -6,11 +6,11 @@ void main() {
   Widget buildApp({
     required String oldContent,
     required String newContent,
-    DiffViewerConfiguration? configuration,
+    FlutterDiffViewerConfiguration? configuration,
   }) {
     return MaterialApp(
       home: Scaffold(
-        body: DiffViewer(
+        body: FlutterDiffViewer(
           oldContent: oldContent,
           newContent: newContent,
           configuration: configuration,
@@ -19,7 +19,7 @@ void main() {
     );
   }
 
-  group('DiffViewer Integration Test', () {
+  group('FlutterDiffViewer Integration Test', () {
     testWidgets('renders diff viewer widget', (WidgetTester tester) async {
       await tester.pumpWidget(
         buildApp(
@@ -29,7 +29,7 @@ void main() {
       );
 
       await tester.pumpAndSettle();
-      expect(find.byType(DiffViewer), findsOneWidget);
+      expect(find.byType(FlutterDiffViewer), findsOneWidget);
     });
 
     testWidgets('renders empty state when content is identical',
