@@ -16,10 +16,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Word-level inline diff highlighting
 - Character-level inline diff highlighting
 - Staged diff processing (line → word → character, changed lines only)
-- `DiffViewer` main widget with simple and advanced API
-- `DiffViewerController` for programmatic navigation
-- `DiffViewerConfiguration` — fully immutable configuration object
-- `DiffViewerTheme` with `light()` and `dark()` factory constructors
+- `FlutterDiffViewer` main widget with simple and advanced API
+- `FlutterDiffViewerController` for programmatic navigation
+- `FlutterDiffViewerConfiguration` — fully immutable configuration object
+- `FlutterDiffViewerTheme` with `light()` and `dark()` factory constructors
 - `DiffTypography` — full text style customization
 - `DiffSpacing` — layout spacing customization
 - `DiffLocalizations` — localization/i18n support
@@ -27,7 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `indicatorBuilder`, `segmentBuilder`, `summaryBuilder`, `emptyStateBuilder`,
   `errorBuilder`, `loadingBuilder`, `collapsedSectionBuilder`, `footerBuilder`
 - `DiffEngine` abstract interface for pluggable diff algorithms
-- Replaceable diff engine via `DiffViewer(diffEngine: myEngine)`
+- Replaceable diff engine via `FlutterDiffViewer(diffEngine: myEngine)`
 - Synchronized scrolling for side-by-side view
 - Collapsible unchanged sections with configurable `contextLines`
 - Change navigation: next/previous/go-to change
