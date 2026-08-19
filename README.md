@@ -51,7 +51,7 @@ flutter pub get
 ```dart
 import 'package:flutter_diff_viewer/flutter_diff_viewer.dart';
 
-DiffViewer(
+FlutterDiffViewer(
   oldContent: 'Hello World\nLine two',
   newContent: 'Hello Dart\nLine two\nNew line',
 )
@@ -69,14 +69,14 @@ That's it! The widget automatically:
 ### Side-by-Side View
 
 ```dart
-DiffViewer(
+FlutterDiffViewer(
   oldContent: oldText,
   newContent: newText,
   oldLabel: 'v1.2',
   newLabel: 'v1.3',
-  configuration: DiffViewerConfiguration(
+  configuration: FlutterDiffViewerConfiguration(
     layout: DiffLayout.sideBySide,
-    theme: DiffViewerTheme.light(),
+    theme: FlutterDiffViewerTheme.light(),
     typography: DiffTypography.defaults(),
     spacing: DiffSpacing.defaults(),
     localizations: DiffLocalizations.defaults(),
@@ -87,14 +87,14 @@ DiffViewer(
 ### Unified View
 
 ```dart
-DiffViewer(
+FlutterDiffViewer(
   oldContent: oldText,
   newContent: newText,
-  configuration: DiffViewerConfiguration(
+  configuration: FlutterDiffViewerConfiguration(
     layout: DiffLayout.unified,
     showLineNumbers: true,
     showSummary: true,
-    theme: DiffViewerTheme.light(),
+    theme: FlutterDiffViewerTheme.light(),
     typography: DiffTypography.defaults(),
     spacing: DiffSpacing.defaults(),
     localizations: DiffLocalizations.defaults(),
@@ -105,20 +105,20 @@ DiffViewer(
 ### Dark Mode
 
 ```dart
-DiffViewer(
+FlutterDiffViewer(
   oldContent: oldText,
   newContent: newText,
-  theme: DiffViewerTheme.dark(),
+  theme: FlutterDiffViewerTheme.dark(),
 )
 ```
 
 ### Adaptive (auto-detects from Flutter theme)
 
 ```dart
-DiffViewer(
+FlutterDiffViewer(
   oldContent: oldText,
   newContent: newText,
-  configuration: DiffViewerConfiguration.adaptive(context),
+  configuration: FlutterDiffViewerConfiguration.adaptive(context),
 )
 ```
 
@@ -126,10 +126,10 @@ DiffViewer(
 
 ## Configuration
 
-`DiffViewerConfiguration` controls all layout and feature options:
+`FlutterDiffViewerConfiguration` controls all layout and feature options:
 
 ```dart
-DiffViewerConfiguration(
+FlutterDiffViewerConfiguration(
   // Layout
   layout: DiffLayout.auto,           // auto, sideBySide, unified, stacked
   sideBySideBreakpoint: 768.0,       // px width threshold for auto layout
@@ -152,7 +152,7 @@ DiffViewerConfiguration(
   useIsolateForLargeDocuments: true, // compute() for >1000 lines
 
   // Styling
-  theme: DiffViewerTheme.light(),
+  theme: FlutterDiffViewerTheme.light(),
   typography: DiffTypography.defaults(),
   spacing: DiffSpacing.defaults(),
   localizations: DiffLocalizations.defaults(),
@@ -166,17 +166,17 @@ DiffViewerConfiguration(
 ### Built-in themes
 
 ```dart
-DiffViewerTheme.light()  // GitHub light style
-DiffViewerTheme.dark()   // GitHub dark style
+FlutterDiffViewerTheme.light()  // GitHub light style
+FlutterDiffViewerTheme.dark()   // GitHub dark style
 ```
 
 ### Custom theme
 
 ```dart
-DiffViewer(
+FlutterDiffViewer(
   oldContent: oldText,
   newContent: newText,
-  theme: DiffViewerTheme.light().copyWith(
+  theme: FlutterDiffViewerTheme.light().copyWith(
     addedBackgroundColor: Color(0xFFE8F5E9),
     removedBackgroundColor: Color(0xFFEDE7F6),
     addedTextColor: Color(0xFF2E7D32),
@@ -191,12 +191,12 @@ DiffViewer(
 
 ```dart
 // Word-level highlighting
-DiffViewer(
+FlutterDiffViewer(
   oldContent: 'The quick brown fox',
   newContent: 'The fast red cat',
-  configuration: DiffViewerConfiguration(
+  configuration: FlutterDiffViewerConfiguration(
     granularity: DiffGranularity.word,
-    theme: DiffViewerTheme.light(),
+    theme: FlutterDiffViewerTheme.light(),
     typography: DiffTypography.defaults(),
     spacing: DiffSpacing.defaults(),
     localizations: DiffLocalizations.defaults(),
@@ -204,12 +204,12 @@ DiffViewer(
 )
 
 // Character-level highlighting (maximum precision)
-DiffViewer(
+FlutterDiffViewer(
   oldContent: 'colour',
   newContent: 'color',
-  configuration: DiffViewerConfiguration(
+  configuration: FlutterDiffViewerConfiguration(
     granularity: DiffGranularity.character,
-    theme: DiffViewerTheme.light(),
+    theme: FlutterDiffViewerTheme.light(),
     typography: DiffTypography.defaults(),
     spacing: DiffSpacing.defaults(),
     localizations: DiffLocalizations.defaults(),
@@ -221,13 +221,13 @@ DiffViewer(
 
 ## Controller
 
-Use `DiffViewerController` for programmatic navigation:
+Use `FlutterDiffViewerController` for programmatic navigation:
 
 ```dart
-final controller = DiffViewerController();
+final controller = FlutterDiffViewerController();
 
 // In your widget tree
-DiffViewer(
+FlutterDiffViewer(
   oldContent: oldText,
   newContent: newText,
   controller: controller,
@@ -261,7 +261,7 @@ void dispose() {
 Every UI section can be replaced with your own widget:
 
 ```dart
-DiffViewer(
+FlutterDiffViewer(
   oldContent: oldText,
   newContent: newText,
 
@@ -314,7 +314,7 @@ class MyDiffEngine implements DiffEngine {
   }
 }
 
-DiffViewer(
+FlutterDiffViewer(
   oldContent: oldText,
   newContent: newText,
   diffEngine: MyDiffEngine(),
@@ -328,11 +328,11 @@ DiffViewer(
 Provide custom strings for any language:
 
 ```dart
-DiffViewer(
+FlutterDiffViewer(
   oldContent: oldText,
   newContent: newText,
-  configuration: DiffViewerConfiguration(
-    theme: DiffViewerTheme.light(),
+  configuration: FlutterDiffViewerConfiguration(
+    theme: FlutterDiffViewerTheme.light(),
     typography: DiffTypography.defaults(),
     spacing: DiffSpacing.defaults(),
     localizations: DiffLocalizations(
@@ -368,10 +368,10 @@ DiffViewer(
 Override the breakpoint:
 
 ```dart
-DiffViewerConfiguration(
+FlutterDiffViewerConfiguration(
   layout: DiffLayout.auto,
   sideBySideBreakpoint: 600.0, // switch at 600px instead
-  theme: DiffViewerTheme.light(),
+  theme: FlutterDiffViewerTheme.light(),
   typography: DiffTypography.defaults(),
   spacing: DiffSpacing.defaults(),
   localizations: DiffLocalizations.defaults(),
@@ -425,13 +425,13 @@ See the [pub.dev documentation](https://pub.dev/documentation/flutter_diff_viewe
 
 | Class | Description |
 |---|---|
-| `DiffViewer` | Main widget — the package entry point |
-| `DiffViewerConfiguration` | Immutable configuration object |
-| `DiffViewerTheme` | Color theme with light/dark factories |
+| `FlutterDiffViewer` | Main widget — the package entry point |
+| `FlutterDiffViewerConfiguration` | Immutable configuration object |
+| `FlutterDiffViewerTheme` | Color theme with light/dark factories |
 | `DiffTypography` | Text style customization |
 | `DiffSpacing` | Layout spacing customization |
 | `DiffLocalizations` | User-visible string customization |
-| `DiffViewerController` | Programmatic navigation and scroll control |
+| `FlutterDiffViewerController` | Programmatic navigation and scroll control |
 | `DiffEngine` | Abstract interface for custom diff algorithms |
 | `DiffResult` | The output of a diff calculation |
 | `DiffLine` | A single row in the diff view |
