@@ -8,11 +8,11 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  group('DiffViewerController', () {
-    late DiffViewerController controller;
+  group('FlutterDiffViewerController', () {
+    late FlutterDiffViewerController controller;
 
     setUp(() {
-      controller = DiffViewerController();
+      controller = FlutterDiffViewerController();
     });
 
     tearDown(() {
@@ -20,19 +20,19 @@ void main() {
     });
 
     test('initial state is idle', () {
-      expect(controller.state, equals(DiffViewerState.idle));
+      expect(controller.state, equals(FlutterDiffViewerState.idle));
       expect(controller.totalChanges, equals(0));
     });
 
     test('setLoading sets loading state', () {
       controller.setLoading();
-      expect(controller.state, equals(DiffViewerState.loading));
+      expect(controller.state, equals(FlutterDiffViewerState.loading));
     });
 
     test('setError sets error state', () {
       const exception = DiffCalculationException('Error');
       controller.setError(exception);
-      expect(controller.state, equals(DiffViewerState.error));
+      expect(controller.state, equals(FlutterDiffViewerState.error));
       expect(controller.error, equals(exception));
     });
 
@@ -63,7 +63,7 @@ void main() {
       );
 
       controller.setResult(result);
-      expect(controller.state, equals(DiffViewerState.loaded));
+      expect(controller.state, equals(FlutterDiffViewerState.loaded));
       expect(controller.totalChanges, equals(1));
       expect(controller.currentChangeIndex, equals(0));
     });
