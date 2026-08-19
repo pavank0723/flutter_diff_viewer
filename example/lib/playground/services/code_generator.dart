@@ -4,7 +4,7 @@ import 'package:flutter_diff_viewer/flutter_diff_viewer.dart';
 class CodeGenerator {
   /// Generates clean, ready-to-paste Dart code for the current configuration.
   static String generateCode({
-    required DiffViewerConfiguration config,
+    required FlutterDiffViewerConfiguration config,
     required String oldContentVarName,
     required String newContentVarName,
     required String oldLabel,
@@ -21,7 +21,7 @@ class CodeGenerator {
       buffer.writeln();
     }
 
-    final defaults = DiffViewerConfiguration.defaults();
+    final defaults = FlutterDiffViewerConfiguration.defaults();
 
     final isLayoutChanged = config.layout != defaults.layout;
     final isSideBySideBpChanged =
@@ -55,7 +55,7 @@ class CodeGenerator {
     final isLocalizationsChanged = _isLocalizationsCustomized(
         config.localizations, defaults.localizations, oldLabel, newLabel);
 
-    buffer.writeln('DiffViewer(');
+    buffer.writeln('FlutterDiffViewer(');
     buffer.writeln('  oldContent: $oldContentVarName,');
     buffer.writeln('  newContent: $newContentVarName,');
     if (oldLabel.isNotEmpty && oldLabel != 'Current') {
@@ -87,7 +87,7 @@ class CodeGenerator {
         isLocalizationsChanged;
 
     if (hasConfigParams) {
-      buffer.writeln('  configuration: DiffViewerConfiguration(');
+      buffer.writeln('  configuration: FlutterDiffViewerConfiguration(');
 
       if (!minimalMode || isLayoutChanged) {
         buffer.writeln('    layout: DiffLayout.${config.layout.name},');
@@ -180,7 +180,7 @@ flutter pub get
 import 'package:flutter_diff_viewer/flutter_diff_viewer.dart';
 
 # 4. Add widget to UI:
-DiffViewer(
+FlutterDiffViewer(
   oldContent: myOriginalText,
   newContent: myUpdatedText,
 );
@@ -188,7 +188,7 @@ DiffViewer(
   }
 
   static bool _isThemeCustomized(
-      DiffViewerTheme current, DiffViewerTheme defaults) {
+      FlutterDiffViewerTheme current, FlutterDiffViewerTheme defaults) {
     return current.addedBackgroundColor != defaults.addedBackgroundColor ||
         current.addedTextColor != defaults.addedTextColor ||
         current.addedHighlightColor != defaults.addedHighlightColor ||
@@ -202,10 +202,10 @@ DiffViewer(
         current.dividerColor != defaults.dividerColor;
   }
 
-  static String _generateThemeCode(
-      DiffViewerTheme current, DiffViewerTheme defaults, bool minimalMode) {
+  static String _generateThemeCode(FlutterDiffViewerTheme current,
+      FlutterDiffViewerTheme defaults, bool minimalMode) {
     final b = StringBuffer();
-    b.writeln('    theme: DiffViewerTheme.light().copyWith(');
+    b.writeln('    theme: FlutterDiffViewerTheme.light().copyWith(');
     if (!minimalMode ||
         current.addedBackgroundColor != defaults.addedBackgroundColor) {
       b.writeln(

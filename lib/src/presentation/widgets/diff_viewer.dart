@@ -26,7 +26,7 @@ import 'unified_diff_view.dart';
 /// ## Simple usage
 ///
 /// ```dart
-/// DiffViewer(
+/// FlutterDiffViewer(
 ///   oldContent: 'Hello World',
 ///   newContent: 'Hello Dart',
 /// )
@@ -35,20 +35,20 @@ import 'unified_diff_view.dart';
 /// ## Advanced usage
 ///
 /// ```dart
-/// DiffViewer(
+/// FlutterDiffViewer(
 ///   oldContent: oldText,
 ///   newContent: newText,
 ///   oldLabel: 'v1.2',
 ///   newLabel: 'v1.3',
 ///   controller: myController,
-///   configuration: DiffViewerConfiguration(
+///   configuration: FlutterDiffViewerConfiguration(
 ///     layout: DiffLayout.sideBySide,
 ///     granularity: DiffGranularity.word,
 ///     collapseUnchangedLines: true,
 ///     showSummary: true,
 ///     showChangeNavigation: true,
 ///   ),
-///   theme: DiffViewerTheme.dark(),
+///   theme: FlutterDiffViewerTheme.dark(),
 ///   diffEngine: myCustomEngine,
 ///   headerBuilder: (ctx, old, new_, config) => MyHeader(),
 ///   lineBuilder: (ctx, line, config) => MyLine(line),
@@ -58,13 +58,13 @@ import 'unified_diff_view.dart';
 /// ## Controller ownership
 ///
 /// If you provide a [controller], YOU are responsible for disposing it.
-/// If you do not provide one, [DiffViewer] creates and disposes its own.
+/// If you do not provide one, [FlutterDiffViewer] creates and disposes its own.
 ///
 /// ## Diff engine
 ///
-/// By default, [DiffViewer] uses the built-in Myers LCS diff engine. To use
+/// By default, [FlutterDiffViewer] uses the built-in Myers LCS diff engine. To use
 /// a custom algorithm, implement [DiffEngine] and pass it via [diffEngine].
-class DiffViewer extends StatefulWidget {
+class FlutterDiffViewer extends StatefulWidget {
   /// The original content to compare from.
   final String oldContent;
 
@@ -79,24 +79,24 @@ class DiffViewer extends StatefulWidget {
 
   /// Configuration controlling layout, features, and appearance.
   ///
-  /// Defaults to [DiffViewerConfiguration.defaults()].
-  final DiffViewerConfiguration configuration;
+  /// Defaults to [FlutterDiffViewerConfiguration.defaults()].
+  final FlutterDiffViewerConfiguration configuration;
 
   /// Theme overrides. If provided, overrides [configuration.theme].
-  final DiffViewerTheme? theme;
+  final FlutterDiffViewerTheme? theme;
 
   /// An optional external controller for programmatic navigation and scrolling.
   ///
-  /// If not provided, [DiffViewer] creates and manages its own controller.
-  /// If provided, [DiffViewer] does NOT dispose it — you are responsible.
-  final DiffViewerController? controller;
+  /// If not provided, [FlutterDiffViewer] creates and manages its own controller.
+  /// If provided, [FlutterDiffViewer] does NOT dispose it — you are responsible.
+  final FlutterDiffViewerController? controller;
 
   /// A custom diff engine implementation.
   ///
   /// If not provided, the built-in [DefaultDiffEngine] (Myers LCS) is used.
   ///
   /// ```dart
-  /// DiffViewer(
+  /// FlutterDiffViewer(
   ///   diffEngine: MyCustomDiffEngine(),
   ///   ...
   /// )
@@ -138,17 +138,17 @@ class DiffViewer extends StatefulWidget {
   /// Custom builder for the footer section.
   final DiffFooterBuilder? footerBuilder;
 
-  /// Creates a [DiffViewer].
+  /// Creates a [FlutterDiffViewer].
   ///
   /// [oldContent] and [newContent] are required. All other parameters are
   /// optional and have sensible defaults.
-  DiffViewer({
+  FlutterDiffViewer({
     required this.oldContent,
     required this.newContent,
     super.key,
     this.oldLabel,
     this.newLabel,
-    DiffViewerConfiguration? configuration,
+    FlutterDiffViewerConfiguration? configuration,
     this.theme,
     this.controller,
     this.diffEngine,
@@ -163,14 +163,15 @@ class DiffViewer extends StatefulWidget {
     this.loadingBuilder,
     this.collapsedSectionBuilder,
     this.footerBuilder,
-  }) : configuration = configuration ?? DiffViewerConfiguration.defaults();
+  }) : configuration =
+            configuration ?? FlutterDiffViewerConfiguration.defaults();
 
   @override
-  State<DiffViewer> createState() => _DiffViewerState();
+  State<FlutterDiffViewer> createState() => _FlutterDiffViewerState();
 }
 
-class _DiffViewerState extends State<DiffViewer> {
-  late DiffViewerController _controller;
+class _FlutterDiffViewerState extends State<FlutterDiffViewer> {
+  late FlutterDiffViewerController _controller;
   late DiffRepository _repository;
   late CalculateDiff _calculateDiff;
   bool _ownsController = false;
@@ -188,7 +189,7 @@ class _DiffViewerState extends State<DiffViewer> {
       _controller = widget.controller!;
       _ownsController = false;
     } else {
-      _controller = DiffViewerController();
+      _controller = FlutterDiffViewerController();
       _ownsController = true;
     }
   }
@@ -199,7 +200,7 @@ class _DiffViewerState extends State<DiffViewer> {
     _calculateDiff = CalculateDiff(_repository);
   }
 
-  DiffViewerConfiguration get _effectiveConfig {
+  FlutterDiffViewerConfiguration get _effectiveConfig {
     final config = widget.configuration;
     if (widget.theme != null) {
       return config.copyWith(theme: widget.theme);
@@ -234,7 +235,7 @@ class _DiffViewerState extends State<DiffViewer> {
   }
 
   @override
-  void didUpdateWidget(DiffViewer oldWidget) {
+  void didUpdateWidget(FlutterDiffViewer oldWidget) {
     super.didUpdateWidget(oldWidget);
 
     // Re-run diff if content or engine changed
@@ -283,7 +284,7 @@ class _DiffViewerState extends State<DiffViewer> {
               if (config.showHeader) _buildHeader(config),
 
               // Summary bar (shown only when loaded)
-              if (config.showSummary && state == DiffViewerState.loaded)
+              if (config.showSummary && state == FlutterDiffViewerState.loaded)
                 _buildSummary(config),
 
               // Main diff content
@@ -291,7 +292,7 @@ class _DiffViewerState extends State<DiffViewer> {
 
               // Change navigation
               if (config.showChangeNavigation &&
-                  state == DiffViewerState.loaded)
+                  state == FlutterDiffViewerState.loaded)
                 ChangeNavigationWidget(
                   controller: _controller,
                   configuration: config,
@@ -299,7 +300,7 @@ class _DiffViewerState extends State<DiffViewer> {
 
               // Footer
               if (widget.footerBuilder != null &&
-                  state == DiffViewerState.loaded)
+                  state == FlutterDiffViewerState.loaded)
                 widget.footerBuilder!(context, _controller.result!, config),
             ],
           ),
@@ -308,7 +309,7 @@ class _DiffViewerState extends State<DiffViewer> {
     );
   }
 
-  Widget _buildHeader(DiffViewerConfiguration config) {
+  Widget _buildHeader(FlutterDiffViewerConfiguration config) {
     if (widget.headerBuilder != null) {
       return LayoutBuilder(
         builder: (context, constraints) => widget.headerBuilder!(
@@ -330,7 +331,7 @@ class _DiffViewerState extends State<DiffViewer> {
     );
   }
 
-  Widget _buildSummary(DiffViewerConfiguration config) {
+  Widget _buildSummary(FlutterDiffViewerConfiguration config) {
     final result = _controller.result;
     if (result == null) return const SizedBox.shrink();
 
@@ -342,18 +343,18 @@ class _DiffViewerState extends State<DiffViewer> {
 
   Widget _buildBody(
     BuildContext context,
-    DiffViewerConfiguration config,
-    DiffViewerState state,
+    FlutterDiffViewerConfiguration config,
+    FlutterDiffViewerState state,
   ) {
     switch (state) {
-      case DiffViewerState.idle:
-      case DiffViewerState.loading:
+      case FlutterDiffViewerState.idle:
+      case FlutterDiffViewerState.loading:
         if (widget.loadingBuilder != null) {
           return widget.loadingBuilder!(context, config);
         }
         return DiffLoadingWidget(configuration: config);
 
-      case DiffViewerState.error:
+      case FlutterDiffViewerState.error:
         if (widget.errorBuilder != null) {
           return widget.errorBuilder!(context, _controller.error!, config);
         }
@@ -362,7 +363,7 @@ class _DiffViewerState extends State<DiffViewer> {
           configuration: config,
         );
 
-      case DiffViewerState.loaded:
+      case FlutterDiffViewerState.loaded:
         final result = _controller.result!;
         if (result.hasNoChanges) {
           if (widget.emptyStateBuilder != null) {
@@ -380,7 +381,7 @@ class _DiffViewerState extends State<DiffViewer> {
   }
 
   DiffLayout _resolveLayout(
-    DiffViewerConfiguration config,
+    FlutterDiffViewerConfiguration config,
     double availableWidth,
   ) {
     if (config.layout == DiffLayout.auto) {
@@ -394,7 +395,7 @@ class _DiffViewerState extends State<DiffViewer> {
   Widget _buildLayoutView(
     DiffLayout layout,
     DiffResult result,
-    DiffViewerConfiguration config,
+    FlutterDiffViewerConfiguration config,
   ) {
     switch (layout) {
       case DiffLayout.sideBySide:

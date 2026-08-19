@@ -14,7 +14,7 @@ class DiffLineNumberWidget extends StatelessWidget {
   final int? lineNumber;
 
   /// The configuration providing theme and spacing.
-  final DiffViewerConfiguration configuration;
+  final FlutterDiffViewerConfiguration configuration;
 
   /// Creates a [DiffLineNumberWidget].
   const DiffLineNumberWidget({

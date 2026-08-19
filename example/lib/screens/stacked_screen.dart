@@ -19,12 +19,12 @@ class _StackedScreenState extends State<StackedScreen> {
 
   void _showCode() {
     final code = '''
-DiffViewer(
+FlutterDiffViewer(
   oldContent: oldContent,
   newContent: newContent,
   oldLabel: 'Original Text',
   newLabel: 'Updated Text',
-  configuration: DiffViewerConfiguration.defaults().copyWith(
+  configuration: FlutterDiffViewerConfiguration.defaults().copyWith(
     layout: DiffLayout.stacked,
     showLineNumbers: $_showLineNumbers,
     showSummary: $_showSummary,
@@ -43,7 +43,7 @@ DiffViewer(
 
   @override
   Widget build(BuildContext context) {
-    final config = DiffViewerConfiguration.defaults().copyWith(
+    final config = FlutterDiffViewerConfiguration.defaults().copyWith(
       layout: DiffLayout.stacked,
       showLineNumbers: _showLineNumbers,
       showSummary: _showSummary,
@@ -110,7 +110,7 @@ DiffViewer(
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(16.0),
-              child: DiffViewer(
+              child: FlutterDiffViewer(
                 key: ValueKey(
                     'stacked_${_showLineNumbers}_${_showSummary}_$_collapseUnchanged'),
                 oldContent: SampleData.shortOld,

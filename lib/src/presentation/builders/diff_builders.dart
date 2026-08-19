@@ -10,12 +10,12 @@ import '../configuration/diff_viewer_configuration.dart';
 ///
 /// Receives the configured [oldLabel] and [newLabel] strings (may be `null`
 /// when the header is intentionally unlabelled) and the active
-/// [DiffViewerConfiguration].
+/// [FlutterDiffViewerConfiguration].
 ///
 /// Return a [Widget] that occupies the full width of the viewer header.
 ///
 /// ```dart
-/// DiffViewer(
+/// FlutterDiffViewer(
 ///   headerBuilder: (context, oldLabel, newLabel, config) {
 ///     return MyCustomHeader(old: oldLabel, new: newLabel);
 ///   },
@@ -25,7 +25,7 @@ typedef DiffHeaderBuilder = Widget Function(
   BuildContext context,
   String? oldLabel,
   String? newLabel,
-  DiffViewerConfiguration configuration,
+  FlutterDiffViewerConfiguration configuration,
 );
 
 /// Builder for an individual diff line row.
@@ -40,7 +40,7 @@ typedef DiffHeaderBuilder = Widget Function(
 typedef DiffLineBuilder = Widget Function(
   BuildContext context,
   DiffLine line,
-  DiffViewerConfiguration configuration,
+  FlutterDiffViewerConfiguration configuration,
 );
 
 /// Builder for the line-number gutter cell within a diff row.
@@ -53,7 +53,7 @@ typedef DiffLineBuilder = Widget Function(
 typedef DiffLineNumberBuilder = Widget Function(
   BuildContext context,
   int? lineNumber,
-  DiffViewerConfiguration configuration,
+  FlutterDiffViewerConfiguration configuration,
 );
 
 /// Builder for the change-indicator column cell within a diff row.
@@ -65,7 +65,7 @@ typedef DiffLineNumberBuilder = Widget Function(
 typedef DiffIndicatorBuilder = Widget Function(
   BuildContext context,
   DiffLine line,
-  DiffViewerConfiguration configuration,
+  FlutterDiffViewerConfiguration configuration,
 );
 
 /// Builder for a single intra-line diff [DiffSegment].
@@ -76,7 +76,7 @@ typedef DiffIndicatorBuilder = Widget Function(
 typedef DiffSegmentBuilder = Widget Function(
   BuildContext context,
   DiffSegment segment,
-  DiffViewerConfiguration configuration,
+  FlutterDiffViewerConfiguration configuration,
 );
 
 /// Builder for the summary statistics bar.
@@ -86,7 +86,7 @@ typedef DiffSegmentBuilder = Widget Function(
 typedef DiffSummaryBuilder = Widget Function(
   BuildContext context,
   DiffResult result,
-  DiffViewerConfiguration configuration,
+  FlutterDiffViewerConfiguration configuration,
 );
 
 /// Builder for the empty state shown when no changes are detected.
@@ -94,7 +94,7 @@ typedef DiffSummaryBuilder = Widget Function(
 /// Rendered instead of the diff view when [DiffResult.hasNoChanges] is `true`.
 typedef DiffEmptyStateBuilder = Widget Function(
   BuildContext context,
-  DiffViewerConfiguration configuration,
+  FlutterDiffViewerConfiguration configuration,
 );
 
 /// Builder for the error state shown when diff computation fails.
@@ -105,7 +105,7 @@ typedef DiffEmptyStateBuilder = Widget Function(
 typedef DiffErrorBuilder = Widget Function(
   BuildContext context,
   Object error,
-  DiffViewerConfiguration configuration,
+  FlutterDiffViewerConfiguration configuration,
 );
 
 /// Builder for the loading state while the diff is being computed.
@@ -114,12 +114,12 @@ typedef DiffErrorBuilder = Widget Function(
 /// in progress (e.g., when running in an isolate).
 typedef DiffLoadingBuilder = Widget Function(
   BuildContext context,
-  DiffViewerConfiguration configuration,
+  FlutterDiffViewerConfiguration configuration,
 );
 
 /// Builder for collapsed-section placeholder rows.
 ///
-/// When [DiffViewerConfiguration.collapseUnchangedLines] is `true`,
+/// When [FlutterDiffViewerConfiguration.collapseUnchangedLines] is `true`,
 /// runs of unchanged lines beyond the context window are replaced by a single
 /// placeholder row.
 ///
@@ -129,7 +129,7 @@ typedef DiffCollapsedSectionBuilder = Widget Function(
   BuildContext context,
   int collapsedLineCount,
   VoidCallback onExpand,
-  DiffViewerConfiguration configuration,
+  FlutterDiffViewerConfiguration configuration,
 );
 
 /// Builder for the footer section rendered below the diff content.
@@ -139,7 +139,7 @@ typedef DiffCollapsedSectionBuilder = Widget Function(
 typedef DiffFooterBuilder = Widget Function(
   BuildContext context,
   DiffResult result,
-  DiffViewerConfiguration configuration,
+  FlutterDiffViewerConfiguration configuration,
 );
 
 /// Builder for the change-navigation bar (previous / next buttons).
@@ -154,7 +154,7 @@ typedef DiffChangeNavigationBuilder = Widget Function(
   int totalChanges,
   VoidCallback onPrevious,
   VoidCallback onNext,
-  DiffViewerConfiguration configuration,
+  FlutterDiffViewerConfiguration configuration,
 );
 
 // Explicit reference to suppress "unused import" warnings if this file is

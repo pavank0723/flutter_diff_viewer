@@ -19,7 +19,7 @@ class DiffHeader extends StatelessWidget {
   final bool isSideBySide;
 
   /// The configuration providing theme, typography, and spacing.
-  final DiffViewerConfiguration configuration;
+  final FlutterDiffViewerConfiguration configuration;
 
   /// Creates a [DiffHeader].
   const DiffHeader({

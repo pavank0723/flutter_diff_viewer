@@ -13,7 +13,7 @@ enum PlaygroundTab {
 }
 
 class PlaygroundState {
-  final DiffViewerConfiguration configuration;
+  final FlutterDiffViewerConfiguration configuration;
   final String oldContent;
   final String newContent;
   final String oldLabel;
@@ -49,7 +49,7 @@ class PlaygroundState {
   bool get canRedo => historyIndex < history.length - 1;
 
   PlaygroundState copyWith({
-    DiffViewerConfiguration? configuration,
+    FlutterDiffViewerConfiguration? configuration,
     String? oldContent,
     String? newContent,
     String? oldLabel,

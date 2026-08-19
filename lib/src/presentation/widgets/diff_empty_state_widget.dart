@@ -7,7 +7,7 @@ import '../configuration/diff_viewer_configuration.dart';
 /// Shown when both [oldContent] and [newContent] are identical.
 class DiffEmptyStateWidget extends StatelessWidget {
   /// The configuration providing theme and localizations.
-  final DiffViewerConfiguration configuration;
+  final FlutterDiffViewerConfiguration configuration;
 
   /// Creates a [DiffEmptyStateWidget].
   const DiffEmptyStateWidget({required this.configuration, super.key});
@@ -49,7 +49,7 @@ class DiffErrorWidget extends StatelessWidget {
   final Object error;
 
   /// The configuration providing theme and localizations.
-  final DiffViewerConfiguration configuration;
+  final FlutterDiffViewerConfiguration configuration;
 
   /// Creates a [DiffErrorWidget].
   const DiffErrorWidget({
@@ -103,7 +103,7 @@ class DiffErrorWidget extends StatelessWidget {
 /// Displays a loading state while diff calculation is in progress.
 class DiffLoadingWidget extends StatelessWidget {
   /// The configuration providing theme and localizations.
-  final DiffViewerConfiguration configuration;
+  final FlutterDiffViewerConfiguration configuration;
 
   /// Creates a [DiffLoadingWidget].
   const DiffLoadingWidget({required this.configuration, super.key});

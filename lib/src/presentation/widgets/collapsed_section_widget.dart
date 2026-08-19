@@ -14,7 +14,7 @@ class CollapsedSectionWidget extends StatelessWidget {
   final VoidCallback onExpand;
 
   /// The configuration providing theme and localizations.
-  final DiffViewerConfiguration configuration;
+  final FlutterDiffViewerConfiguration configuration;
 
   /// Creates a [CollapsedSectionWidget].
   const CollapsedSectionWidget({

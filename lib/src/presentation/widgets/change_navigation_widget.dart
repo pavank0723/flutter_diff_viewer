@@ -8,14 +8,14 @@ import '../controllers/diff_viewer_controller.dart';
 /// Allows users to jump between detected changes. Buttons are disabled
 /// when navigation is not possible (e.g., first/last change).
 ///
-/// Wraps [DiffViewerController] state via [ListenableBuilder] for efficient
+/// Wraps [FlutterDiffViewerController] state via [ListenableBuilder] for efficient
 /// rebuilding.
 class ChangeNavigationWidget extends StatelessWidget {
   /// The controller managing navigation state.
-  final DiffViewerController controller;
+  final FlutterDiffViewerController controller;
 
   /// The configuration providing theme and localizations.
-  final DiffViewerConfiguration configuration;
+  final FlutterDiffViewerConfiguration configuration;
 
   /// Creates a [ChangeNavigationWidget].
   const ChangeNavigationWidget({
@@ -94,7 +94,7 @@ class _NavButton extends StatelessWidget {
   final IconData icon;
   final bool enabled;
   final VoidCallback onPressed;
-  final DiffViewerConfiguration configuration;
+  final FlutterDiffViewerConfiguration configuration;
 
   const _NavButton({
     required this.tooltip,

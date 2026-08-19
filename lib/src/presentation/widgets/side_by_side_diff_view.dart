@@ -16,16 +16,16 @@ import 'diff_line_widget.dart';
 ///
 /// Uses two parallel [ListView.builder] instances for virtual rendering.
 /// Scroll synchronization is managed by [DiffScrollSynchronizer] inside
-/// [DiffViewerController].
+/// [FlutterDiffViewerController].
 class SideBySideDiffView extends StatelessWidget {
   /// The diff result to render.
   final DiffResult result;
 
   /// The configuration controlling layout and appearance.
-  final DiffViewerConfiguration configuration;
+  final FlutterDiffViewerConfiguration configuration;
 
   /// The controller providing synchronized scroll controllers.
-  final DiffViewerController controller;
+  final FlutterDiffViewerController controller;
 
   /// Optional custom line builder.
   final DiffLineBuilder? lineBuilder;
@@ -111,13 +111,13 @@ class _DiffPanel extends StatelessWidget {
   final List<_SideBySideItem> items;
   final bool isOldSide;
   final ScrollController scrollController;
-  final DiffViewerConfiguration configuration;
+  final FlutterDiffViewerConfiguration configuration;
   final DiffLineBuilder? lineBuilder;
   final DiffLineNumberBuilder? lineNumberBuilder;
   final DiffIndicatorBuilder? indicatorBuilder;
   final DiffSegmentBuilder? segmentBuilder;
   final DiffCollapsedSectionBuilder? collapsedSectionBuilder;
-  final DiffViewerController controller;
+  final FlutterDiffViewerController controller;
 
   const _DiffPanel({
     required this.items,
@@ -194,8 +194,8 @@ final class _CollapsedSideBySideItem extends _SideBySideItem {
 
 List<_SideBySideItem> _buildSideBySideItems(
   DiffResult result,
-  DiffViewerConfiguration configuration,
-  DiffViewerController controller,
+  FlutterDiffViewerConfiguration configuration,
+  FlutterDiffViewerController controller,
 ) {
   final items = <_SideBySideItem>[];
   final contextLines = configuration.contextLines;

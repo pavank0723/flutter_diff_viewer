@@ -15,7 +15,7 @@ class DiffIndicatorWidget extends StatelessWidget {
   final DiffType diffType;
 
   /// The configuration providing theme and spacing.
-  final DiffViewerConfiguration configuration;
+  final FlutterDiffViewerConfiguration configuration;
 
   /// Creates a [DiffIndicatorWidget].
   const DiffIndicatorWidget({

@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'screens/home_screen.dart';
 
 void main() {
-  runApp(const DiffViewerExampleApp());
+  runApp(const FlutterDiffViewerExampleApp());
 }
 
-class DiffViewerExampleApp extends StatelessWidget {
-  const DiffViewerExampleApp({super.key});
+class FlutterDiffViewerExampleApp extends StatelessWidget {
+  const FlutterDiffViewerExampleApp({super.key});
 
   @override
   Widget build(BuildContext context) {

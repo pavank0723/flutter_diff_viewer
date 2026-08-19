@@ -15,7 +15,7 @@ import 'diff_line_widget.dart';
 /// collapsible blocks, inserting [CollapsedSectionWidget]s in their place.
 List<_DiffViewItem> _buildViewItems({
   required DiffResult result,
-  required DiffViewerConfiguration configuration,
+  required FlutterDiffViewerConfiguration configuration,
   required Set<int> collapsedIndices,
 }) {
   final items = <_DiffViewItem>[];
@@ -90,10 +90,10 @@ class UnifiedDiffView extends StatelessWidget {
   final DiffResult result;
 
   /// The configuration controlling layout and appearance.
-  final DiffViewerConfiguration configuration;
+  final FlutterDiffViewerConfiguration configuration;
 
   /// The controller for scroll state management.
-  final DiffViewerController controller;
+  final FlutterDiffViewerController controller;
 
   /// Optional custom line builder.
   final DiffLineBuilder? lineBuilder;

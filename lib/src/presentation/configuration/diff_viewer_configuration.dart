@@ -10,16 +10,16 @@ import 'diff_viewer_theme.dart';
 
 /// The top-level configuration object for the diff viewer widget.
 ///
-/// [DiffViewerConfiguration] is the single source of truth for every
-/// behavioural, visual, and localisation setting.  Pass it to `DiffViewer`
-/// or `DiffViewerController`; all child widgets receive it through the
+/// [FlutterDiffViewerConfiguration] is the single source of truth for every
+/// behavioural, visual, and localisation setting.  Pass it to `FlutterDiffViewer`
+/// or `FlutterDiffViewerController`; all child widgets receive it through the
 /// widget tree.
 ///
 /// ## Quick start
 ///
 /// ```dart
-/// DiffViewer(
-///   configuration: DiffViewerConfiguration.defaults(),
+/// FlutterDiffViewer(
+///   configuration: FlutterDiffViewerConfiguration.defaults(),
 ///   oldContent: oldText,
 ///   newContent: newText,
 /// )
@@ -28,15 +28,15 @@ import 'diff_viewer_theme.dart';
 /// ## Custom configuration
 ///
 /// ```dart
-/// DiffViewer(
-///   configuration: DiffViewerConfiguration.defaults().copyWith(
+/// FlutterDiffViewer(
+///   configuration: FlutterDiffViewerConfiguration.defaults().copyWith(
 ///     layout: DiffLayout.sideBySide,
 ///     collapseUnchangedLines: false,
-///     theme: DiffViewerTheme.dark(),
+///     theme: FlutterDiffViewerTheme.dark(),
 ///   ),
 /// )
 /// ```
-class DiffViewerConfiguration {
+class FlutterDiffViewerConfiguration {
   // ---------------------------------------------------------------------------
   // Layout
   // ---------------------------------------------------------------------------
@@ -139,7 +139,7 @@ class DiffViewerConfiguration {
   // ---------------------------------------------------------------------------
 
   /// The color theme for all diff viewer widgets.
-  final DiffViewerTheme theme;
+  final FlutterDiffViewerTheme theme;
 
   /// The typography (text styles) for all diff viewer widgets.
   final DiffTypography typography;
@@ -154,14 +154,14 @@ class DiffViewerConfiguration {
   // Constructor
   // ---------------------------------------------------------------------------
 
-  /// Creates an immutable [DiffViewerConfiguration].
+  /// Creates an immutable [FlutterDiffViewerConfiguration].
   ///
   /// The [theme], [typography], [spacing], and [localizations] fields are
   /// **required** to allow `const` construction.  For a zero-configuration
-  /// setup, use the [DiffViewerConfiguration.defaults] factory instead.
+  /// setup, use the [FlutterDiffViewerConfiguration.defaults] factory instead.
   ///
   /// [contextLines] must be >= 0.
-  const DiffViewerConfiguration({
+  const FlutterDiffViewerConfiguration({
     required this.theme,
     required this.typography,
     required this.spacing,
@@ -187,29 +187,30 @@ class DiffViewerConfiguration {
   // Factory constructors
   // ---------------------------------------------------------------------------
 
-  /// Creates a [DiffViewerConfiguration] with all default values.
+  /// Creates a [FlutterDiffViewerConfiguration] with all default values.
   ///
-  /// Uses [DiffViewerTheme.light], [DiffTypography.defaults],
+  /// Uses [FlutterDiffViewerTheme.light], [DiffTypography.defaults],
   /// [DiffSpacing.defaults], and [DiffLocalizations.defaults].
   ///
   /// ```dart
-  /// final config = DiffViewerConfiguration.defaults();
+  /// final config = FlutterDiffViewerConfiguration.defaults();
   /// ```
-  factory DiffViewerConfiguration.defaults() => DiffViewerConfiguration(
-        theme: DiffViewerTheme.light(),
+  factory FlutterDiffViewerConfiguration.defaults() =>
+      FlutterDiffViewerConfiguration(
+        theme: FlutterDiffViewerTheme.light(),
         typography: DiffTypography.defaults(),
         spacing: const DiffSpacing.defaults(),
         localizations: const DiffLocalizations.defaults(),
       );
 
-  /// Creates a [DiffViewerConfiguration] that automatically adapts its
+  /// Creates a [FlutterDiffViewerConfiguration] that automatically adapts its
   /// [theme] to the ambient [BuildContext] brightness.
   ///
   /// All other settings use their default values unless overridden via
   /// [copyWith] after construction.
-  factory DiffViewerConfiguration.adaptive(BuildContext context) =>
-      DiffViewerConfiguration(
-        theme: DiffViewerTheme.resolveFromContext(context),
+  factory FlutterDiffViewerConfiguration.adaptive(BuildContext context) =>
+      FlutterDiffViewerConfiguration(
+        theme: FlutterDiffViewerTheme.resolveFromContext(context),
         typography: DiffTypography.defaults(),
         spacing: const DiffSpacing.defaults(),
         localizations: const DiffLocalizations.defaults(),
@@ -240,7 +241,7 @@ class DiffViewerConfiguration {
   // ---------------------------------------------------------------------------
 
   /// Returns a copy of this configuration with the given fields replaced.
-  DiffViewerConfiguration copyWith({
+  FlutterDiffViewerConfiguration copyWith({
     DiffLayout? layout,
     double? sideBySideBreakpoint,
     bool? showHeader,
@@ -256,12 +257,12 @@ class DiffViewerConfiguration {
     bool? caseSensitive,
     int? contextLines,
     bool? useIsolateForLargeDocuments,
-    DiffViewerTheme? theme,
+    FlutterDiffViewerTheme? theme,
     DiffTypography? typography,
     DiffSpacing? spacing,
     DiffLocalizations? localizations,
   }) {
-    return DiffViewerConfiguration(
+    return FlutterDiffViewerConfiguration(
       layout: layout ?? this.layout,
       sideBySideBreakpoint: sideBySideBreakpoint ?? this.sideBySideBreakpoint,
       showHeader: showHeader ?? this.showHeader,
@@ -294,7 +295,7 @@ class DiffViewerConfiguration {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is DiffViewerConfiguration &&
+      other is FlutterDiffViewerConfiguration &&
           runtimeType == other.runtimeType &&
           layout == other.layout &&
           sideBySideBreakpoint == other.sideBySideBreakpoint &&
@@ -340,7 +341,7 @@ class DiffViewerConfiguration {
       ]);
 
   @override
-  String toString() => 'DiffViewerConfiguration('
+  String toString() => 'FlutterDiffViewerConfiguration('
       'layout: $layout, '
       'showHeader: $showHeader, '
       'showLineNumbers: $showLineNumbers, '

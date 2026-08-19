@@ -2,7 +2,7 @@ import 'package:flutter_diff_viewer/flutter_diff_viewer.dart';
 
 class ConfigurationSnapshot {
   final String description;
-  final DiffViewerConfiguration configuration;
+  final FlutterDiffViewerConfiguration configuration;
   final DateTime timestamp;
 
   ConfigurationSnapshot({

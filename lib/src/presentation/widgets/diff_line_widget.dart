@@ -19,7 +19,7 @@ import 'diff_segment_widget.dart';
 /// line renderer in [SideBySideDiffView].
 ///
 /// All rendering decisions (colors, typography) are driven by
-/// [DiffViewerConfiguration] — no hardcoded values.
+/// [FlutterDiffViewerConfiguration] — no hardcoded values.
 class DiffLineWidget extends StatelessWidget {
   /// The diff line data to render.
   final DiffLine line;
@@ -31,7 +31,7 @@ class DiffLineWidget extends StatelessWidget {
   final bool isOldSide;
 
   /// The configuration providing theme, typography, spacing, and localizations.
-  final DiffViewerConfiguration configuration;
+  final FlutterDiffViewerConfiguration configuration;
 
   /// Optional custom line number builder.
   final DiffLineNumberBuilder? lineNumberBuilder;

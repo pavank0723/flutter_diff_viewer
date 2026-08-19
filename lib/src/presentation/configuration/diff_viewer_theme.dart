@@ -3,20 +3,20 @@ import 'package:flutter/material.dart';
 /// An immutable theme that controls every color used by the diff viewer.
 ///
 /// Use the pre-built factories for common themes:
-/// - [DiffViewerTheme.light] — GitHub-style light theme (green/red)
-/// - [DiffViewerTheme.dark]  — GitHub Dark-style theme
+/// - [FlutterDiffViewerTheme.light] — GitHub-style light theme (green/red)
+/// - [FlutterDiffViewerTheme.dark]  — GitHub Dark-style theme
 ///
-/// Or call [DiffViewerTheme.resolveFromContext] to automatically select
+/// Or call [FlutterDiffViewerTheme.resolveFromContext] to automatically select
 /// between light and dark based on the ambient [ThemeData.brightness].
 ///
 /// ```dart
-/// DiffViewer(
-///   configuration: DiffViewerConfiguration(
-///     theme: DiffViewerTheme.dark(),
+/// FlutterDiffViewer(
+///   configuration: FlutterDiffViewerConfiguration(
+///     theme: FlutterDiffViewerTheme.dark(),
 ///   ),
 /// )
 /// ```
-class DiffViewerTheme {
+class FlutterDiffViewerTheme {
   // ---------------------------------------------------------------------------
   // Row background colors
   // ---------------------------------------------------------------------------
@@ -119,11 +119,11 @@ class DiffViewerTheme {
   // Constructor
   // ---------------------------------------------------------------------------
 
-  /// Creates an immutable [DiffViewerTheme].
+  /// Creates an immutable [FlutterDiffViewerTheme].
   ///
   /// Every field is required; prefer the factory constructors ([light], [dark])
   /// or [resolveFromContext] as starting points and override with [copyWith].
-  const DiffViewerTheme({
+  const FlutterDiffViewerTheme({
     required this.addedBackgroundColor,
     required this.removedBackgroundColor,
     required this.modifiedBackgroundColor,
@@ -156,7 +156,7 @@ class DiffViewerTheme {
   // ---------------------------------------------------------------------------
 
   /// GitHub-style **light** theme with green additions and red removals.
-  factory DiffViewerTheme.light() => const DiffViewerTheme(
+  factory FlutterDiffViewerTheme.light() => const FlutterDiffViewerTheme(
         addedBackgroundColor: Color(0xFFE6FFEC),
         removedBackgroundColor: Color(0xFFFFEBE9),
         modifiedBackgroundColor: Color(0xFFFFF8C5),
@@ -185,7 +185,7 @@ class DiffViewerTheme {
       );
 
   /// GitHub Dark-style **dark** theme.
-  factory DiffViewerTheme.dark() => const DiffViewerTheme(
+  factory FlutterDiffViewerTheme.dark() => const FlutterDiffViewerTheme(
         addedBackgroundColor: Color(0xFF0D4429),
         removedBackgroundColor: Color(0xFF4A1010),
         modifiedBackgroundColor: Color(0xFF3D3000),
@@ -219,17 +219,17 @@ class DiffViewerTheme {
 
   /// Resolves the appropriate theme for the given [context].
   ///
-  /// Returns [DiffViewerTheme.dark] when [ThemeData.brightness] is
-  /// [Brightness.dark], and [DiffViewerTheme.light] otherwise.
+  /// Returns [FlutterDiffViewerTheme.dark] when [ThemeData.brightness] is
+  /// [Brightness.dark], and [FlutterDiffViewerTheme.light] otherwise.
   ///
   /// ```dart
-  /// final theme = DiffViewerTheme.resolveFromContext(context);
+  /// final theme = FlutterDiffViewerTheme.resolveFromContext(context);
   /// ```
-  static DiffViewerTheme resolveFromContext(BuildContext context) {
+  static FlutterDiffViewerTheme resolveFromContext(BuildContext context) {
     final brightness = Theme.of(context).brightness;
     return brightness == Brightness.dark
-        ? DiffViewerTheme.dark()
-        : DiffViewerTheme.light();
+        ? FlutterDiffViewerTheme.dark()
+        : FlutterDiffViewerTheme.light();
   }
 
   // ---------------------------------------------------------------------------
@@ -237,7 +237,7 @@ class DiffViewerTheme {
   // ---------------------------------------------------------------------------
 
   /// Returns a copy of this theme with the given fields replaced.
-  DiffViewerTheme copyWith({
+  FlutterDiffViewerTheme copyWith({
     Color? addedBackgroundColor,
     Color? removedBackgroundColor,
     Color? modifiedBackgroundColor,
@@ -264,7 +264,7 @@ class DiffViewerTheme {
     Color? navigationButtonTextColor,
     Color? backgroundColor,
   }) {
-    return DiffViewerTheme(
+    return FlutterDiffViewerTheme(
       addedBackgroundColor: addedBackgroundColor ?? this.addedBackgroundColor,
       removedBackgroundColor:
           removedBackgroundColor ?? this.removedBackgroundColor,
@@ -313,7 +313,7 @@ class DiffViewerTheme {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is DiffViewerTheme &&
+      other is FlutterDiffViewerTheme &&
           runtimeType == other.runtimeType &&
           addedBackgroundColor == other.addedBackgroundColor &&
           removedBackgroundColor == other.removedBackgroundColor &&
@@ -371,7 +371,7 @@ class DiffViewerTheme {
       ]);
 
   @override
-  String toString() => 'DiffViewerTheme('
+  String toString() => 'FlutterDiffViewerTheme('
       'backgroundColor: $backgroundColor, '
       'addedBackgroundColor: $addedBackgroundColor, '
       'removedBackgroundColor: $removedBackgroundColor, '

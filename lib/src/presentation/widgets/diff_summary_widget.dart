@@ -6,13 +6,13 @@ import '../configuration/diff_viewer_configuration.dart';
 /// Displays a summary bar showing the number of additions and deletions.
 ///
 /// Styled like GitHub's diff summary: green for additions, red for deletions.
-/// All colors come from [DiffViewerTheme] — never hardcoded.
+/// All colors come from [FlutterDiffViewerTheme] — never hardcoded.
 class DiffSummaryWidget extends StatelessWidget {
   /// The diff result to display summary statistics for.
   final DiffResult result;
 
   /// The configuration providing theme, typography, and localizations.
-  final DiffViewerConfiguration configuration;
+  final FlutterDiffViewerConfiguration configuration;
 
   /// Creates a [DiffSummaryWidget].
   const DiffSummaryWidget({

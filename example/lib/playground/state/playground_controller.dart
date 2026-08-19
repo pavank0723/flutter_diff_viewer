@@ -12,7 +12,7 @@ class PlaygroundController extends ChangeNotifier {
   PlaygroundState get state => _state;
 
   PlaygroundController() {
-    final defaultConfig = DiffViewerConfiguration.defaults().copyWith(
+    final defaultConfig = FlutterDiffViewerConfiguration.defaults().copyWith(
       layout: DiffLayout.sideBySide,
       granularity: DiffGranularity.word,
       showSummary: true,
@@ -45,7 +45,7 @@ class PlaygroundController extends ChangeNotifier {
   }
 
   void updateConfiguration(
-      DiffViewerConfiguration newConfig, String actionDescription) {
+      FlutterDiffViewerConfiguration newConfig, String actionDescription) {
     // Truncate future history if after an undo
     final newHistory = _state.history.sublist(0, _state.historyIndex + 1);
     final snapshot = ConfigurationSnapshot(
@@ -105,7 +105,7 @@ class PlaygroundController extends ChangeNotifier {
   }
 
   void resetAll() {
-    final defaultConfig = DiffViewerConfiguration.defaults();
+    final defaultConfig = FlutterDiffViewerConfiguration.defaults();
     updateConfiguration(defaultConfig, 'Reset All Properties');
   }
 

@@ -25,10 +25,10 @@ class _CustomThemeScreenState extends State<CustomThemeScreen> {
   ThemePalette _palette = ThemePalette.purpleTeal;
   double _borderRadius = 8.0;
 
-  DiffViewerTheme _buildTheme() {
+  FlutterDiffViewerTheme _buildTheme() {
     switch (_palette) {
       case ThemePalette.purpleTeal:
-        return DiffViewerTheme.light().copyWith(
+        return FlutterDiffViewerTheme.light().copyWith(
           addedBackgroundColor: const Color(0xFFE8F5E9),
           removedBackgroundColor: const Color(0xFFEDE7F6),
           addedHighlightColor: const Color(0xFFC8E6C9),
@@ -37,7 +37,7 @@ class _CustomThemeScreenState extends State<CustomThemeScreen> {
           removedTextColor: const Color(0xFF6A1B9A),
         );
       case ThemePalette.emerald:
-        return DiffViewerTheme.light().copyWith(
+        return FlutterDiffViewerTheme.light().copyWith(
           addedBackgroundColor: const Color(0xFFE0F2F1),
           removedBackgroundColor: const Color(0xFFFFEBEE),
           addedHighlightColor: const Color(0xFFB2DFDB),
@@ -46,7 +46,7 @@ class _CustomThemeScreenState extends State<CustomThemeScreen> {
           removedTextColor: const Color(0xFFC62828),
         );
       case ThemePalette.solarized:
-        return DiffViewerTheme.light().copyWith(
+        return FlutterDiffViewerTheme.light().copyWith(
           addedBackgroundColor: const Color(0xFFFDF6E3),
           removedBackgroundColor: const Color(0xFFFEECEB),
           addedHighlightColor: const Color(0xFFEEE8D5),
@@ -60,14 +60,14 @@ class _CustomThemeScreenState extends State<CustomThemeScreen> {
   void _showCode() {
     final theme = _buildTheme();
     final code = '''
-DiffViewer(
+FlutterDiffViewer(
   oldContent: oldText,
   newContent: newText,
-  configuration: DiffViewerConfiguration.defaults().copyWith(
+  configuration: FlutterDiffViewerConfiguration.defaults().copyWith(
     spacing: DiffSpacing.defaults().copyWith(
       borderRadius: $_borderRadius,
     ),
-    theme: DiffViewerTheme.light().copyWith(
+    theme: FlutterDiffViewerTheme.light().copyWith(
       addedBackgroundColor: const Color(0x${theme.addedBackgroundColor.toARGB32().toRadixString(16).toUpperCase()}),
       addedTextColor: const Color(0x${theme.addedTextColor.toARGB32().toRadixString(16).toUpperCase()}),
       removedBackgroundColor: const Color(0x${theme.removedBackgroundColor.toARGB32().toRadixString(16).toUpperCase()}),
@@ -87,7 +87,7 @@ DiffViewer(
 
   @override
   Widget build(BuildContext context) {
-    final config = DiffViewerConfiguration.defaults().copyWith(
+    final config = FlutterDiffViewerConfiguration.defaults().copyWith(
       layout: DiffLayout.sideBySide,
       theme: _buildTheme(),
       spacing: DiffSpacing(
@@ -177,7 +177,7 @@ DiffViewer(
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(16.0),
-              child: DiffViewer(
+              child: FlutterDiffViewer(
                 key: ValueKey('custom_${_palette.name}_$_borderRadius'),
                 oldContent: SampleData.shortOld,
                 newContent: SampleData.shortNew,

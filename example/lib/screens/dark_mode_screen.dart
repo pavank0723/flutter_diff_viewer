@@ -20,13 +20,13 @@ class _DarkModeScreenState extends State<DarkModeScreen> {
     final code = '''
 Theme(
   data: ThemeData.dark(),
-  child: DiffViewer(
+  child: FlutterDiffViewer(
     oldContent: oldText,
     newContent: newText,
-    configuration: DiffViewerConfiguration.defaults().copyWith(
+    configuration: FlutterDiffViewerConfiguration.defaults().copyWith(
       layout: DiffLayout.${_layout.name},
       showLineNumbers: $_showLineNumbers,
-      theme: DiffViewerTheme.dark(),
+      theme: FlutterDiffViewerTheme.dark(),
     ),
   ),
 )''';
@@ -42,10 +42,10 @@ Theme(
 
   @override
   Widget build(BuildContext context) {
-    final config = DiffViewerConfiguration.defaults().copyWith(
+    final config = FlutterDiffViewerConfiguration.defaults().copyWith(
       layout: _layout,
       showLineNumbers: _showLineNumbers,
-      theme: DiffViewerTheme.dark(),
+      theme: FlutterDiffViewerTheme.dark(),
     );
 
     return Theme(
@@ -118,7 +118,7 @@ Theme(
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
-                child: DiffViewer(
+                child: FlutterDiffViewer(
                   key: ValueKey('dark_${_layout.name}_$_showLineNumbers'),
                   oldContent: SampleData.codeOld,
                   newContent: SampleData.codeNew,

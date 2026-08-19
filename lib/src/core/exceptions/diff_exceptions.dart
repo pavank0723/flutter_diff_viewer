@@ -53,7 +53,7 @@ final class DiffConfigurationException extends DiffException {
 
 /// Thrown when a requested change index is out of bounds.
 ///
-/// This typically occurs when [DiffViewerController.goToChange] is called
+/// This typically occurs when [FlutterDiffViewerController.goToChange] is called
 /// with an index that does not exist in the current diff result.
 final class DiffIndexOutOfBoundsException extends DiffException {
   /// The index that was requested.

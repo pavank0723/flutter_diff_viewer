@@ -19,12 +19,12 @@ class _EnterpriseScreenState extends State<EnterpriseScreen> {
 
   void _showCode() {
     final code = '''
-DiffViewer(
+FlutterDiffViewer(
   oldContent: privacyNoticeV1_2,
   newContent: privacyNoticeV1_3,
   oldLabel: 'PN00736 v1.2',
   newLabel: 'PN00736 v1.3',
-  configuration: DiffViewerConfiguration.defaults().copyWith(
+  configuration: FlutterDiffViewerConfiguration.defaults().copyWith(
     layout: DiffLayout.sideBySide,
     granularity: DiffGranularity.${_granularity.name},
     showSummary: $_showSummary,
@@ -44,7 +44,7 @@ DiffViewer(
 
   @override
   Widget build(BuildContext context) {
-    final config = DiffViewerConfiguration.defaults().copyWith(
+    final config = FlutterDiffViewerConfiguration.defaults().copyWith(
       layout: DiffLayout.sideBySide,
       granularity: _granularity,
       showSummary: _showSummary,
@@ -128,7 +128,7 @@ DiffViewer(
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(16.0),
-              child: DiffViewer(
+              child: FlutterDiffViewer(
                 key: ValueKey(
                     'enterprise_${_granularity.name}_${_showNavigation}_$_showSummary'),
                 oldContent: SampleData.privacyOld,

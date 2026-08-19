@@ -32,7 +32,7 @@ class IntegrationGuideDialog extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               const Text(
-                'Follow these simple steps to integrate this customized DiffViewer into your existing codebase:',
+                'Follow these simple steps to integrate this customized FlutterDiffViewer into your existing codebase:',
                 style: TextStyle(fontSize: 13),
               ),
               const SizedBox(height: 12),
@@ -67,7 +67,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_diff_viewer/flutter_diff_viewer.dart';
 
 // Copy-pasted from Flutter Diff Viewer Customization Studio
-Widget buildMyDiffViewer(String oldText, String newText) {
+Widget buildMyFlutterDiffViewer(String oldText, String newText) {
   return $currentCode;
 }
 ''';

@@ -7,8 +7,8 @@ import '../configuration/diff_viewer_configuration.dart';
 /// Renders a single intra-line diff segment with appropriate highlighting.
 ///
 /// A segment is a run of text with a single [DiffType] classification.
-/// Added segments are highlighted with [DiffViewerTheme.addedHighlightColor],
-/// removed segments with [DiffViewerTheme.removedHighlightColor], and
+/// Added segments are highlighted with [FlutterDiffViewerTheme.addedHighlightColor],
+/// removed segments with [FlutterDiffViewerTheme.removedHighlightColor], and
 /// unchanged segments have no background highlight.
 ///
 /// Used within [DiffLineWidget] when word or character granularity is enabled.
@@ -17,7 +17,7 @@ class DiffSegmentWidget extends StatelessWidget {
   final DiffSegment segment;
 
   /// The configuration providing theme and typography.
-  final DiffViewerConfiguration configuration;
+  final FlutterDiffViewerConfiguration configuration;
 
   /// Creates a [DiffSegmentWidget].
   const DiffSegmentWidget({

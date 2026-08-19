@@ -3,7 +3,7 @@ import '../enums/diff_type.dart';
 /// An immutable entity representing a navigable change within a diff result.
 ///
 /// A [DiffChange] groups related [DiffLine] entries that form a single
-/// logical change block. Used by [DiffViewerController] for change navigation
+/// logical change block. Used by [FlutterDiffViewerController] for change navigation
 /// (next/previous change).
 ///
 /// ```dart

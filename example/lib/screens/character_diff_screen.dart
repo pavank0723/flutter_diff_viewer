@@ -18,10 +18,10 @@ class _CharacterDiffScreenState extends State<CharacterDiffScreen> {
 
   void _showCode() {
     final code = '''
-DiffViewer(
+FlutterDiffViewer(
   oldContent: oldText,
   newContent: newText,
-  configuration: DiffViewerConfiguration.defaults().copyWith(
+  configuration: FlutterDiffViewerConfiguration.defaults().copyWith(
     granularity: DiffGranularity.${_granularity.name},
     caseSensitive: $_caseSensitive,
   ),
@@ -38,7 +38,7 @@ DiffViewer(
 
   @override
   Widget build(BuildContext context) {
-    final config = DiffViewerConfiguration.defaults().copyWith(
+    final config = FlutterDiffViewerConfiguration.defaults().copyWith(
       granularity: _granularity,
       caseSensitive: _caseSensitive,
     );
@@ -117,7 +117,7 @@ DiffViewer(
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(16.0),
-              child: DiffViewer(
+              child: FlutterDiffViewer(
                 key: ValueKey('char_${_granularity.name}_$_caseSensitive'),
                 oldContent: SampleData.wordOld,
                 newContent: SampleData.wordNew,

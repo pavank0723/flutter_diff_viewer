@@ -6,7 +6,7 @@
 /// ```dart
 /// import 'package:flutter_diff_viewer/flutter_diff_viewer.dart';
 ///
-/// DiffViewer(
+/// FlutterDiffViewer(
 ///   oldContent: 'Hello World',
 ///   newContent: 'Hello Dart',
 /// )
@@ -15,14 +15,14 @@
 /// ## Advanced Usage
 ///
 /// ```dart
-/// DiffViewer(
+/// FlutterDiffViewer(
 ///   oldContent: oldText,
 ///   newContent: newText,
-///   configuration: DiffViewerConfiguration(
+///   configuration: FlutterDiffViewerConfiguration(
 ///     layout: DiffLayout.sideBySide,
 ///     granularity: DiffGranularity.word,
 ///     collapseUnchangedLines: true,
-///     theme: DiffViewerTheme.dark(),
+///     theme: FlutterDiffViewerTheme.dark(),
 ///     typography: DiffTypography.defaults(),
 ///     spacing: DiffSpacing.defaults(),
 ///     localizations: DiffLocalizations.defaults(),

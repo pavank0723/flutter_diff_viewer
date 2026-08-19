@@ -19,12 +19,12 @@ class _SideBySideScreenState extends State<SideBySideScreen> {
 
   void _showCode() {
     final code = '''
-DiffViewer(
+FlutterDiffViewer(
   oldContent: oldContent,
   newContent: newContent,
   oldLabel: 'main.dart (v1.0)',
   newLabel: 'main.dart (v2.0)',
-  configuration: DiffViewerConfiguration.defaults().copyWith(
+  configuration: FlutterDiffViewerConfiguration.defaults().copyWith(
     layout: DiffLayout.sideBySide,
     showLineNumbers: $_showLineNumbers,
     synchronizedScrolling: $_synchronizedScrolling,
@@ -45,7 +45,7 @@ DiffViewer(
 
   @override
   Widget build(BuildContext context) {
-    final config = DiffViewerConfiguration.defaults().copyWith(
+    final config = FlutterDiffViewerConfiguration.defaults().copyWith(
       layout: DiffLayout.sideBySide,
       showLineNumbers: _showLineNumbers,
       synchronizedScrolling: _synchronizedScrolling,
@@ -140,7 +140,7 @@ DiffViewer(
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(16.0),
-              child: DiffViewer(
+              child: FlutterDiffViewer(
                 key: ValueKey(
                     'side_by_side_${_showLineNumbers}_${_synchronizedScrolling}_$_dividerWidth'),
                 oldContent: SampleData.codeOld,

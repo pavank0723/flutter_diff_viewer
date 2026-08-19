@@ -6,7 +6,7 @@ class PlaygroundPreset {
   final String name;
   final String description;
   final IconData icon;
-  final DiffViewerConfiguration configuration;
+  final FlutterDiffViewerConfiguration configuration;
 
   const PlaygroundPreset({
     required this.id,
@@ -22,14 +22,14 @@ class PlaygroundPreset {
           name: 'GitHub Light',
           description: 'Standard GitHub desktop pull request diff view',
           icon: Icons.light_mode,
-          configuration: DiffViewerConfiguration.defaults().copyWith(
+          configuration: FlutterDiffViewerConfiguration.defaults().copyWith(
             layout: DiffLayout.sideBySide,
             granularity: DiffGranularity.word,
             showSummary: true,
             showLineNumbers: true,
             showIndicators: true,
             collapseUnchangedLines: true,
-            theme: DiffViewerTheme.light(),
+            theme: FlutterDiffViewerTheme.light(),
           ),
         ),
         PlaygroundPreset(
@@ -37,14 +37,14 @@ class PlaygroundPreset {
           name: 'GitHub Dark',
           description: 'Dark mode PR viewer with vibrant highlights',
           icon: Icons.dark_mode,
-          configuration: DiffViewerConfiguration.defaults().copyWith(
+          configuration: FlutterDiffViewerConfiguration.defaults().copyWith(
             layout: DiffLayout.sideBySide,
             granularity: DiffGranularity.word,
             showSummary: true,
             showLineNumbers: true,
             showIndicators: true,
             collapseUnchangedLines: true,
-            theme: DiffViewerTheme.dark(),
+            theme: FlutterDiffViewerTheme.dark(),
           ),
         ),
         PlaygroundPreset(
@@ -53,7 +53,7 @@ class PlaygroundPreset {
           description:
               'Clean borderless layout without line numbers or headers',
           icon: Icons.cleaning_services,
-          configuration: DiffViewerConfiguration.defaults().copyWith(
+          configuration: FlutterDiffViewerConfiguration.defaults().copyWith(
             layout: DiffLayout.unified,
             showHeader: false,
             showLineNumbers: false,
@@ -68,7 +68,7 @@ class PlaygroundPreset {
           name: 'Enterprise Audit',
           description: 'Full legal document review with change navigation',
           icon: Icons.gavel,
-          configuration: DiffViewerConfiguration.defaults().copyWith(
+          configuration: FlutterDiffViewerConfiguration.defaults().copyWith(
             layout: DiffLayout.sideBySide,
             granularity: DiffGranularity.character,
             showHeader: true,
@@ -76,7 +76,7 @@ class PlaygroundPreset {
             showChangeNavigation: true,
             collapseUnchangedLines: true,
             contextLines: 2,
-            theme: DiffViewerTheme.light().copyWith(
+            theme: FlutterDiffViewerTheme.light().copyWith(
               addedBackgroundColor: const Color(0xFFE8F5E9),
               addedTextColor: const Color(0xFF1B5E20),
               removedBackgroundColor: const Color(0xFFFFEBEE),
@@ -91,7 +91,7 @@ class PlaygroundPreset {
           name: 'Mobile Stacked',
           description: 'Stacked layout optimized for small mobile screens',
           icon: Icons.phone_android,
-          configuration: DiffViewerConfiguration.defaults().copyWith(
+          configuration: FlutterDiffViewerConfiguration.defaults().copyWith(
             layout: DiffLayout.stacked,
             granularity: DiffGranularity.word,
             showLineNumbers: true,
@@ -115,12 +115,12 @@ class PlaygroundPreset {
           name: 'High Contrast (a11y)',
           description: 'Accessibility-first palette with bold indicators',
           icon: Icons.accessibility_new,
-          configuration: DiffViewerConfiguration.defaults().copyWith(
+          configuration: FlutterDiffViewerConfiguration.defaults().copyWith(
             layout: DiffLayout.unified,
             granularity: DiffGranularity.character,
             showIndicators: true,
             showLineNumbers: true,
-            theme: DiffViewerTheme.light().copyWith(
+            theme: FlutterDiffViewerTheme.light().copyWith(
               addedBackgroundColor: const Color(0xFFD4EDDA),
               addedTextColor: const Color(0xFF004085),
               addedHighlightColor: const Color(0xFFC3E6CB),

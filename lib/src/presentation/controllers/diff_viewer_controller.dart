@@ -7,7 +7,7 @@ import '../../domain/enums/diff_type.dart';
 import '../utils/scroll_synchronizer.dart';
 
 /// State of the diff viewer.
-enum DiffViewerState {
+enum FlutterDiffViewerState {
   /// Initial state before any diff has been calculated.
   idle,
 
@@ -21,13 +21,13 @@ enum DiffViewerState {
   error,
 }
 
-/// Controls a [DiffViewer] widget's navigation, scrolling, and collapse state.
+/// Controls a [FlutterDiffViewer] widget's navigation, scrolling, and collapse state.
 ///
 /// Provides programmatic access to change navigation, scrolling to specific
 /// lines, and expanding/collapsing unchanged sections.
 ///
 /// ```dart
-/// final controller = DiffViewerController();
+/// final controller = FlutterDiffViewerController();
 ///
 /// // Navigate changes
 /// controller.nextChange();
@@ -41,14 +41,14 @@ enum DiffViewerState {
 /// controller.dispose();
 /// ```
 ///
-/// **Lifecycle note**: If you create a [DiffViewerController] yourself, you
-/// are responsible for calling [dispose]. The [DiffViewer] widget will NOT
+/// **Lifecycle note**: If you create a [FlutterDiffViewerController] yourself, you
+/// are responsible for calling [dispose]. The [FlutterDiffViewer] widget will NOT
 /// dispose externally provided controllers.
-class DiffViewerController extends ChangeNotifier {
+class FlutterDiffViewerController extends ChangeNotifier {
   DiffResult? _result;
   List<DiffChange> _changes = const [];
   int _currentChangeIndex = -1;
-  DiffViewerState _state = DiffViewerState.idle;
+  FlutterDiffViewerState _state = FlutterDiffViewerState.idle;
   Object? _error;
   final Set<int> _collapsedLineIndices = {};
 
@@ -69,7 +69,7 @@ class DiffViewerController extends ChangeNotifier {
   int get totalChanges => _changes.length;
 
   /// The current state of the diff viewer.
-  DiffViewerState get state => _state;
+  FlutterDiffViewerState get state => _state;
 
   /// The error from the last failed diff calculation, or `null`.
   Object? get error => _error;
@@ -106,36 +106,37 @@ class DiffViewerController extends ChangeNotifier {
   ScrollController get rightScrollController =>
       _scrollSynchronizer.rightController;
 
-  /// Creates a [DiffViewerController].
-  DiffViewerController() : _scrollSynchronizer = DiffScrollSynchronizer();
+  /// Creates a [FlutterDiffViewerController].
+  FlutterDiffViewerController()
+      : _scrollSynchronizer = DiffScrollSynchronizer();
 
-  // ── Internal update methods (called by DiffViewer) ─────────────────────────
+  // ── Internal update methods (called by FlutterDiffViewer) ─────────────────────────
 
   /// Updates the controller with a new diff result.
   ///
-  /// Called internally by [DiffViewer] after successful diff calculation.
+  /// Called internally by [FlutterDiffViewer] after successful diff calculation.
   void setResult(DiffResult result) {
     _result = result;
     _changes = _extractChanges(result);
     _currentChangeIndex = _changes.isEmpty ? -1 : 0;
-    _state = DiffViewerState.loaded;
+    _state = FlutterDiffViewerState.loaded;
     _error = null;
     notifyListeners();
   }
 
   /// Transitions to the loading state.
   ///
-  /// Called internally by [DiffViewer] when diff calculation begins.
+  /// Called internally by [FlutterDiffViewer] when diff calculation begins.
   void setLoading() {
-    _state = DiffViewerState.loading;
+    _state = FlutterDiffViewerState.loading;
     notifyListeners();
   }
 
   /// Transitions to the error state.
   ///
-  /// Called internally by [DiffViewer] when diff calculation fails.
+  /// Called internally by [FlutterDiffViewer] when diff calculation fails.
   void setError(Object error) {
-    _state = DiffViewerState.error;
+    _state = FlutterDiffViewerState.error;
     _error = error;
     notifyListeners();
   }

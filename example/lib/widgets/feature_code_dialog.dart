@@ -123,7 +123,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_diff_viewer/flutter_diff_viewer.dart';
 
 // $title
-Widget buildDiffViewer(String oldContent, String newContent) {
+Widget buildFlutterDiffViewer(String oldContent, String newContent) {
   return $code;
 }
 ''';

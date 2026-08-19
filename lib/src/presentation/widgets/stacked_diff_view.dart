@@ -21,10 +21,10 @@ class StackedDiffView extends StatelessWidget {
   final DiffResult result;
 
   /// The configuration controlling layout and appearance.
-  final DiffViewerConfiguration configuration;
+  final FlutterDiffViewerConfiguration configuration;
 
   /// The controller managing state.
-  final DiffViewerController controller;
+  final FlutterDiffViewerController controller;
 
   /// Optional custom line builder.
   final DiffLineBuilder? lineBuilder;
@@ -144,8 +144,8 @@ class StackedDiffView extends StatelessWidget {
 class _StackedPanel extends StatelessWidget {
   final List<_StackedItem> items;
   final bool isOldSide;
-  final DiffViewerConfiguration configuration;
-  final DiffViewerController controller;
+  final FlutterDiffViewerConfiguration configuration;
+  final FlutterDiffViewerController controller;
   final DiffLineBuilder? lineBuilder;
   final DiffLineNumberBuilder? lineNumberBuilder;
   final DiffIndicatorBuilder? indicatorBuilder;

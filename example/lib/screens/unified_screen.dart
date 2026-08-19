@@ -20,12 +20,12 @@ class _UnifiedScreenState extends State<UnifiedScreen> {
 
   void _showCode() {
     final code = '''
-DiffViewer(
+FlutterDiffViewer(
   oldContent: oldContent,
   newContent: newContent,
   oldLabel: 'Current',
   newLabel: 'Modified',
-  configuration: DiffViewerConfiguration.defaults().copyWith(
+  configuration: FlutterDiffViewerConfiguration.defaults().copyWith(
     layout: DiffLayout.unified,
     showLineNumbers: $_showLineNumbers,
     showIndicators: $_showIndicators,
@@ -45,7 +45,7 @@ DiffViewer(
 
   @override
   Widget build(BuildContext context) {
-    final config = DiffViewerConfiguration.defaults().copyWith(
+    final config = FlutterDiffViewerConfiguration.defaults().copyWith(
       layout: DiffLayout.unified,
       showLineNumbers: _showLineNumbers,
       showIndicators: _showIndicators,
@@ -135,7 +135,7 @@ DiffViewer(
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(16.0),
-              child: DiffViewer(
+              child: FlutterDiffViewer(
                 key: ValueKey(
                     'unified_${_showLineNumbers}_${_showIndicators}_${_collapseUnchanged}_$_contextLines'),
                 oldContent: SampleData.shortOld,

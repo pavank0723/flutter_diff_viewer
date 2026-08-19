@@ -13,12 +13,12 @@ class ChangeNavigationScreen extends StatefulWidget {
 }
 
 class _ChangeNavigationScreenState extends State<ChangeNavigationScreen> {
-  late final DiffViewerController _diffController;
+  late final FlutterDiffViewerController _diffController;
 
   @override
   void initState() {
     super.initState();
-    _diffController = DiffViewerController();
+    _diffController = FlutterDiffViewerController();
   }
 
   @override
@@ -29,18 +29,18 @@ class _ChangeNavigationScreenState extends State<ChangeNavigationScreen> {
 
   void _showCode() {
     const code = '''
-final controller = DiffViewerController();
+final controller = FlutterDiffViewerController();
 
 // Programmatic navigation:
 controller.nextChange();
 controller.previousChange();
 controller.jumpToChange(2);
 
-DiffViewer(
+FlutterDiffViewer(
   oldContent: oldText,
   newContent: newText,
   controller: controller,
-  configuration: DiffViewerConfiguration.defaults().copyWith(
+  configuration: FlutterDiffViewerConfiguration.defaults().copyWith(
     showChangeNavigation: true,
   ),
 )''';
@@ -49,14 +49,14 @@ DiffViewer(
       context,
       title: 'Programmatic Change Navigation',
       description:
-          'Control diff line jumping programmatically using DiffViewerController.nextChange() and previousChange().',
+          'Control diff line jumping programmatically using FlutterDiffViewerController.nextChange() and previousChange().',
       code: code,
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    final config = DiffViewerConfiguration.defaults().copyWith(
+    final config = FlutterDiffViewerConfiguration.defaults().copyWith(
       layout: DiffLayout.sideBySide,
       showChangeNavigation: true,
     );
@@ -128,7 +128,7 @@ DiffViewer(
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(16.0),
-              child: DiffViewer(
+              child: FlutterDiffViewer(
                 oldContent: SampleData.privacyOld,
                 newContent: SampleData.privacyNew,
                 controller: _diffController,

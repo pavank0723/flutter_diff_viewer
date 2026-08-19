@@ -73,11 +73,11 @@ class LivePreviewPanel extends StatelessWidget {
             ),
             const Divider(height: 1),
 
-            // Main Live DiffViewer Widget
+            // Main Live FlutterDiffViewer Widget
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(12.0),
-                child: DiffViewer(
+                child: FlutterDiffViewer(
                   key: ValueKey(
                     'preview_${state.configuration.hashCode}_${state.oldLabel}_${state.newLabel}',
                   ),

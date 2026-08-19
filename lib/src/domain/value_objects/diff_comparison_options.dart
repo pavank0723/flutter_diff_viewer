@@ -3,7 +3,7 @@ import '../enums/diff_granularity.dart';
 /// Immutable value object encapsulating all options that control how
 /// a diff comparison is performed.
 ///
-/// Pass this to [DiffRepository.compare] or via [DiffViewerConfiguration].
+/// Pass this to [DiffRepository.compare] or via [FlutterDiffViewerConfiguration].
 ///
 /// ```dart
 /// const options = DiffComparisonOptions(
@@ -30,7 +30,7 @@ class DiffComparisonOptions {
 
   /// The number of unchanged context lines to include around each change block.
   ///
-  /// Used when [DiffViewerConfiguration.collapseUnchangedLines] is `true`.
+  /// Used when [FlutterDiffViewerConfiguration.collapseUnchangedLines] is `true`.
   /// Must be >= 0. Defaults to `3`.
   final int contextLines;
 

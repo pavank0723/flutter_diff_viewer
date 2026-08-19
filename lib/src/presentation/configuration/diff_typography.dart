@@ -32,7 +32,7 @@ class DiffTypography {
 
   /// Style applied to text spans on **added** lines.
   ///
-  /// Color is usually overridden at render time from [DiffViewerTheme];
+  /// Color is usually overridden at render time from [FlutterDiffViewerTheme];
   /// this controls font metrics.
   final TextStyle addedStyle;
 

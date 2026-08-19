@@ -31,10 +31,10 @@ class _LargeDocumentScreenState extends State<LargeDocumentScreen> {
 
   void _showCode() {
     final code = '''
-DiffViewer(
+FlutterDiffViewer(
   oldContent: largeOldText, // $_lineCount lines
   newContent: largeNewText, // $_lineCount lines
-  configuration: DiffViewerConfiguration.defaults().copyWith(
+  configuration: FlutterDiffViewerConfiguration.defaults().copyWith(
     useIsolateForLargeDocuments: $_useIsolate,
     collapseUnchangedLines: true,
     contextLines: 3,
@@ -52,7 +52,7 @@ DiffViewer(
 
   @override
   Widget build(BuildContext context) {
-    final config = DiffViewerConfiguration.defaults().copyWith(
+    final config = FlutterDiffViewerConfiguration.defaults().copyWith(
       useIsolateForLargeDocuments: _useIsolate,
       collapseUnchangedLines: true,
       contextLines: 3,
@@ -155,7 +155,7 @@ DiffViewer(
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(16.0),
-              child: DiffViewer(
+              child: FlutterDiffViewer(
                 key: ValueKey('large_${_lineCount}_$_useIsolate'),
                 oldContent: _oldText,
                 newContent: _newText,
