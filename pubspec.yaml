@@ -4,9 +4,9 @@ description: >
   comparison and diff viewing. Supports side-by-side, unified, and stacked
   layouts with line, word, and character-level diff granularity.
 version: 1.0.0
-homepage: https://github.com/your-org/flutter_diff_viewer
-repository: https://github.com/your-org/flutter_diff_viewer
-issue_tracker: https://github.com/your-org/flutter_diff_viewer/issues
+homepage: https://github.com/pavank0723/flutter_diff_viewer
+repository: https://github.com/pavank0723/flutter_diff_viewer
+issue_tracker: https://github.com/pavank0723/flutter_diff_viewer/issues
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
@@ -20,7 +20,3 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
-
-flutter:
-  # No assets or fonts required for core package.
-  # Developers can customize via DiffViewerTheme and DiffTypography.

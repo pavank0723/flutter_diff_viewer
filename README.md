@@ -451,7 +451,7 @@ See the [pub.dev documentation](https://pub.dev/documentation/flutter_diff_viewe
 
 ## Contributing
 
-Contributions are welcome! Please read our contributing guidelines and submit pull requests to our [GitHub repository](https://github.com/your-org/flutter_diff_viewer).
+Contributions are welcome! Please read our contributing guidelines and submit pull requests to our [GitHub repository](https://github.com/pavank0723/flutter_diff_viewer).
 
 1. Fork the repository
 2. Create your feature branch (`git checkout -b feature/my-feature`)
