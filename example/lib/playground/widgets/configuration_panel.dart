@@ -64,7 +64,7 @@ class _ConfigurationPanelState extends State<ConfigurationPanel> {
         final state = controller.state;
         final query = state.searchQuery.toLowerCase().trim();
 
-        final filtered = PropertyRegistry.definitions.where((def) {
+        final filtered = PropertyRegistry.properties.where((def) {
           if (query.isEmpty) return true;
           return def.label.toLowerCase().contains(query) ||
               def.key.toLowerCase().contains(query) ||
@@ -410,6 +410,13 @@ class _ConfigurationPanelState extends State<ConfigurationPanel> {
                   theme: config.theme.copyWith(removedHighlightColor: val)),
               'Changed Removed Highlight Color'),
         );
+      case 'splitPanels':
+        return BooleanEditor(
+          definition: def,
+          value: config.splitPanels,
+          onChanged: (val) => ctrl.updateConfiguration(
+              config.copyWith(splitPanels: val), 'Toggled Split Panels'),
+        );
       case 'unchangedBackgroundColor':
         return ColorEditor(
           definition: def,
@@ -418,6 +425,24 @@ class _ConfigurationPanelState extends State<ConfigurationPanel> {
               config.copyWith(
                   theme: config.theme.copyWith(unchangedBackgroundColor: val)),
               'Changed Unchanged Background Color'),
+        );
+      case 'panelBackgroundColor':
+        return ColorEditor(
+          definition: def,
+          value: config.theme.panelBackgroundColor,
+          onChanged: (val) => ctrl.updateConfiguration(
+              config.copyWith(
+                  theme: config.theme.copyWith(panelBackgroundColor: val)),
+              'Changed Panel Card Background Color'),
+        );
+      case 'panelBorderColor':
+        return ColorEditor(
+          definition: def,
+          value: config.theme.panelBorderColor,
+          onChanged: (val) => ctrl.updateConfiguration(
+              config.copyWith(
+                  theme: config.theme.copyWith(panelBorderColor: val)),
+              'Changed Panel Card Border Color'),
         );
       case 'lineNumberBackgroundColor':
         return ColorEditor(
@@ -443,6 +468,36 @@ class _ConfigurationPanelState extends State<ConfigurationPanel> {
           onChanged: (val) => ctrl.updateConfiguration(
               config.copyWith(theme: config.theme.copyWith(dividerColor: val)),
               'Changed Divider Color'),
+        );
+      case 'panelSpacing':
+        return NumberEditor(
+          definition: def,
+          value: config.spacing.panelSpacing,
+          onChanged: (val) => ctrl.updateConfiguration(
+              config.copyWith(
+                  spacing:
+                      config.spacing.copyWith(panelSpacing: val.toDouble())),
+              'Changed Panel Gap Spacing'),
+        );
+      case 'panelBorderRadius':
+        return NumberEditor(
+          definition: def,
+          value: config.spacing.panelBorderRadius,
+          onChanged: (val) => ctrl.updateConfiguration(
+              config.copyWith(
+                  spacing: config.spacing
+                      .copyWith(panelBorderRadius: val.toDouble())),
+              'Changed Panel Card Border Radius'),
+        );
+      case 'panelBorderWidth':
+        return NumberEditor(
+          definition: def,
+          value: config.spacing.panelBorderWidth,
+          onChanged: (val) => ctrl.updateConfiguration(
+              config.copyWith(
+                  spacing: config.spacing
+                      .copyWith(panelBorderWidth: val.toDouble())),
+              'Changed Panel Card Border Width'),
         );
       case 'dividerWidth':
         return NumberEditor(

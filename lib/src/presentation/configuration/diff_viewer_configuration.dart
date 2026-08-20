@@ -11,7 +11,7 @@ import 'diff_viewer_theme.dart';
 /// The top-level configuration object for the diff viewer widget.
 ///
 /// [FlutterDiffViewerConfiguration] is the single source of truth for every
-/// behavioural, visual, and localisation setting.  Pass it to `FlutterDiffViewer`
+/// behavioural, visual, and localisation setting. Pass it to `FlutterDiffViewer`
 /// or `FlutterDiffViewerController`; all child widgets receive it through the
 /// widget tree.
 ///
@@ -31,8 +31,9 @@ import 'diff_viewer_theme.dart';
 /// FlutterDiffViewer(
 ///   configuration: FlutterDiffViewerConfiguration.defaults().copyWith(
 ///     layout: DiffLayout.sideBySide,
-///     collapseUnchangedLines: false,
-///     theme: FlutterDiffViewerTheme.dark(),
+///     splitPanels: true,
+///     spacing: DiffSpacing.defaults().copyWith(panelSpacing: 16.0),
+///     theme: FlutterDiffViewerTheme.light(),
 ///   ),
 /// )
 /// ```
@@ -53,6 +54,13 @@ class FlutterDiffViewerConfiguration {
   /// Screens narrower than this value fall back to [DiffLayout.unified].
   /// Defaults to `768.0`.
   final double sideBySideBreakpoint;
+
+  /// Whether to render the original and modified diff views as separate box cards
+  /// with an in-between customizable gap ([DiffSpacing.panelSpacing]).
+  ///
+  /// Defaults to `false`. When `true` or when [DiffSpacing.panelSpacing] > 0,
+  /// original and modified panels render in distinct card boxes.
+  final bool splitPanels;
 
   // ---------------------------------------------------------------------------
   // Feature flags
@@ -157,7 +165,7 @@ class FlutterDiffViewerConfiguration {
   /// Creates an immutable [FlutterDiffViewerConfiguration].
   ///
   /// The [theme], [typography], [spacing], and [localizations] fields are
-  /// **required** to allow `const` construction.  For a zero-configuration
+  /// **required** to allow `const` construction. For a zero-configuration
   /// setup, use the [FlutterDiffViewerConfiguration.defaults] factory instead.
   ///
   /// [contextLines] must be >= 0.
@@ -168,6 +176,7 @@ class FlutterDiffViewerConfiguration {
     required this.localizations,
     this.layout = DiffLayout.auto,
     this.sideBySideBreakpoint = 768.0,
+    this.splitPanels = false,
     this.showHeader = true,
     this.showLineNumbers = true,
     this.showIndicators = true,
@@ -244,6 +253,7 @@ class FlutterDiffViewerConfiguration {
   FlutterDiffViewerConfiguration copyWith({
     DiffLayout? layout,
     double? sideBySideBreakpoint,
+    bool? splitPanels,
     bool? showHeader,
     bool? showLineNumbers,
     bool? showIndicators,
@@ -265,6 +275,7 @@ class FlutterDiffViewerConfiguration {
     return FlutterDiffViewerConfiguration(
       layout: layout ?? this.layout,
       sideBySideBreakpoint: sideBySideBreakpoint ?? this.sideBySideBreakpoint,
+      splitPanels: splitPanels ?? this.splitPanels,
       showHeader: showHeader ?? this.showHeader,
       showLineNumbers: showLineNumbers ?? this.showLineNumbers,
       showIndicators: showIndicators ?? this.showIndicators,
@@ -299,6 +310,7 @@ class FlutterDiffViewerConfiguration {
           runtimeType == other.runtimeType &&
           layout == other.layout &&
           sideBySideBreakpoint == other.sideBySideBreakpoint &&
+          splitPanels == other.splitPanels &&
           showHeader == other.showHeader &&
           showLineNumbers == other.showLineNumbers &&
           showIndicators == other.showIndicators &&
@@ -321,6 +333,7 @@ class FlutterDiffViewerConfiguration {
   int get hashCode => Object.hashAll([
         layout,
         sideBySideBreakpoint,
+        splitPanels,
         showHeader,
         showLineNumbers,
         showIndicators,
@@ -343,10 +356,9 @@ class FlutterDiffViewerConfiguration {
   @override
   String toString() => 'FlutterDiffViewerConfiguration('
       'layout: $layout, '
+      'splitPanels: $splitPanels, '
+      'granularity: $granularity, '
       'showHeader: $showHeader, '
       'showLineNumbers: $showLineNumbers, '
-      'showSummary: $showSummary, '
-      'granularity: $granularity, '
-      'contextLines: $contextLines, '
       'collapseUnchangedLines: $collapseUnchangedLines)';
 }

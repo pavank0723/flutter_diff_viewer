@@ -196,6 +196,8 @@ FlutterDiffViewer(
         current.removedTextColor != defaults.removedTextColor ||
         current.removedHighlightColor != defaults.removedHighlightColor ||
         current.unchangedBackgroundColor != defaults.unchangedBackgroundColor ||
+        current.panelBackgroundColor != defaults.panelBackgroundColor ||
+        current.panelBorderColor != defaults.panelBorderColor ||
         current.lineNumberBackgroundColor !=
             defaults.lineNumberBackgroundColor ||
         current.borderColor != defaults.borderColor ||
@@ -240,6 +242,15 @@ FlutterDiffViewer(
           '      unchangedBackgroundColor: ${_colorToCode(current.unchangedBackgroundColor)},');
     }
     if (!minimalMode ||
+        current.panelBackgroundColor != defaults.panelBackgroundColor) {
+      b.writeln(
+          '      panelBackgroundColor: ${_colorToCode(current.panelBackgroundColor)},');
+    }
+    if (!minimalMode || current.panelBorderColor != defaults.panelBorderColor) {
+      b.writeln(
+          '      panelBorderColor: ${_colorToCode(current.panelBorderColor)},');
+    }
+    if (!minimalMode ||
         current.lineNumberBackgroundColor !=
             defaults.lineNumberBackgroundColor) {
       b.writeln(
@@ -259,7 +270,10 @@ FlutterDiffViewer(
     return current.lineHeight != defaults.lineHeight ||
         current.lineNumberWidth != defaults.lineNumberWidth ||
         current.dividerWidth != defaults.dividerWidth ||
-        current.borderRadius != defaults.borderRadius;
+        current.borderRadius != defaults.borderRadius ||
+        current.panelSpacing != defaults.panelSpacing ||
+        current.panelBorderRadius != defaults.panelBorderRadius ||
+        current.panelBorderWidth != defaults.panelBorderWidth;
   }
 
   static String _generateSpacingCode(
@@ -277,6 +291,16 @@ FlutterDiffViewer(
     }
     if (!minimalMode || current.borderRadius != defaults.borderRadius) {
       b.writeln('      borderRadius: ${current.borderRadius},');
+    }
+    if (!minimalMode || current.panelSpacing != defaults.panelSpacing) {
+      b.writeln('      panelSpacing: ${current.panelSpacing},');
+    }
+    if (!minimalMode ||
+        current.panelBorderRadius != defaults.panelBorderRadius) {
+      b.writeln('      panelBorderRadius: ${current.panelBorderRadius},');
+    }
+    if (!minimalMode || current.panelBorderWidth != defaults.panelBorderWidth) {
+      b.writeln('      panelBorderWidth: ${current.panelBorderWidth},');
     }
     b.writeln('    ),');
     return b.toString();

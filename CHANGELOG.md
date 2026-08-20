@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2026-08-20
+
+### Added
+- **Split Dual-Card Panel Mode (`splitPanels`)**: Render original and modified diff views as two distinct separate card containers.
+- **Customizable In-Between Box Gap (`panelSpacing`)**: Responsive spacing gap in pixels between the left/original and right/modified panel cards.
+- **Customizable Card Box Borders & Radius**: Added `panelBorderRadius` and `panelBorderWidth` in `DiffSpacing`, plus `panelBackgroundColor` and `panelBorderColor` in `FlutterDiffViewerTheme`.
+- **Card-Embedded Version Headers**: In split panel mode, version titles ("Current V1.1", "Modified V1.2") render cleanly inside each card header bar.
+
 ## [1.0.0] - 2026-08-17
 
 ### Added

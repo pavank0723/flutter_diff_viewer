@@ -115,6 +115,12 @@ class FlutterDiffViewerTheme {
   /// The overall background color of the diff viewer widget.
   final Color backgroundColor;
 
+  /// Background color of individual left and right panel cards when split.
+  final Color panelBackgroundColor;
+
+  /// Border color of individual left and right panel cards when split.
+  final Color panelBorderColor;
+
   // ---------------------------------------------------------------------------
   // Constructor
   // ---------------------------------------------------------------------------
@@ -149,6 +155,8 @@ class FlutterDiffViewerTheme {
     required this.navigationButtonColor,
     required this.navigationButtonTextColor,
     required this.backgroundColor,
+    required this.panelBackgroundColor,
+    required this.panelBorderColor,
   });
 
   // ---------------------------------------------------------------------------
@@ -182,6 +190,8 @@ class FlutterDiffViewerTheme {
         navigationButtonColor: Color(0xFF0969DA),
         navigationButtonTextColor: Color(0xFFFFFFFF),
         backgroundColor: Color(0xFFFFFFFF),
+        panelBackgroundColor: Color(0xFFFFFFFF),
+        panelBorderColor: Color(0xFFD0D7DE),
       );
 
   /// GitHub Dark-style **dark** theme.
@@ -211,6 +221,8 @@ class FlutterDiffViewerTheme {
         navigationButtonColor: Color(0xFF388BFD),
         navigationButtonTextColor: Color(0xFFFFFFFF),
         backgroundColor: Color(0xFF0D1117),
+        panelBackgroundColor: Color(0xFF0D1117),
+        panelBorderColor: Color(0xFF30363D),
       );
 
   // ---------------------------------------------------------------------------
@@ -263,6 +275,8 @@ class FlutterDiffViewerTheme {
     Color? navigationButtonColor,
     Color? navigationButtonTextColor,
     Color? backgroundColor,
+    Color? panelBackgroundColor,
+    Color? panelBorderColor,
   }) {
     return FlutterDiffViewerTheme(
       addedBackgroundColor: addedBackgroundColor ?? this.addedBackgroundColor,
@@ -303,6 +317,8 @@ class FlutterDiffViewerTheme {
       navigationButtonTextColor:
           navigationButtonTextColor ?? this.navigationButtonTextColor,
       backgroundColor: backgroundColor ?? this.backgroundColor,
+      panelBackgroundColor: panelBackgroundColor ?? this.panelBackgroundColor,
+      panelBorderColor: panelBorderColor ?? this.panelBorderColor,
     );
   }
 
@@ -339,7 +355,9 @@ class FlutterDiffViewerTheme {
           collapsedSectionTextColor == other.collapsedSectionTextColor &&
           navigationButtonColor == other.navigationButtonColor &&
           navigationButtonTextColor == other.navigationButtonTextColor &&
-          backgroundColor == other.backgroundColor;
+          backgroundColor == other.backgroundColor &&
+          panelBackgroundColor == other.panelBackgroundColor &&
+          panelBorderColor == other.panelBorderColor;
 
   @override
   int get hashCode => Object.hashAll([
@@ -368,12 +386,14 @@ class FlutterDiffViewerTheme {
         navigationButtonColor,
         navigationButtonTextColor,
         backgroundColor,
+        panelBackgroundColor,
+        panelBorderColor,
       ]);
 
   @override
   String toString() => 'FlutterDiffViewerTheme('
       'backgroundColor: $backgroundColor, '
-      'addedBackgroundColor: $addedBackgroundColor, '
-      'removedBackgroundColor: $removedBackgroundColor, '
-      'modifiedBackgroundColor: $modifiedBackgroundColor)';
+      'panelBackgroundColor: $panelBackgroundColor, '
+      'panelBorderColor: $panelBorderColor, '
+      'addedBackgroundColor: $addedBackgroundColor)';
 }

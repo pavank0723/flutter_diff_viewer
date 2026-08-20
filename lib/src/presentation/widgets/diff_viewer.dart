@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../../core/exceptions/diff_exceptions.dart';
 import '../../data/engines/default_diff_engine.dart';
-import '../../data/engines/diff_engine.dart';
 import '../../data/repositories/diff_repository_impl.dart';
 import '../../domain/entities/diff_result.dart';
 import '../../domain/enums/diff_layout.dart';
-import '../../domain/repositories/diff_repository.dart';
 import '../../domain/usecases/calculate_diff.dart';
 import '../builders/diff_builders.dart';
 import '../configuration/diff_viewer_configuration.dart';
@@ -20,128 +17,110 @@ import 'side_by_side_diff_view.dart';
 import 'stacked_diff_view.dart';
 import 'unified_diff_view.dart';
 
-/// A Flutter widget that displays a GitHub/GitLab-style comparison between
-/// two versions of text content.
+/// The primary widget for displaying content comparison diffs.
 ///
-/// ## Simple usage
+/// Accepts [oldContent] and [newContent] strings, calculates the diff
+/// asynchronously (using background isolates for large documents), and renders
+/// a responsive, accessible diff view.
+///
+/// Features:
+/// - Side-by-side dual-panel view with synchronized scrolling
+/// - Unified single-column view
+/// - Stacked mobile-optimized view
+/// - Split dual-card panel mode with customizable gap ([DiffSpacing.panelSpacing])
+/// - Line, word, and character-level granularity
+/// - Unchanged section collapsing with expand controls
+/// - Change navigation bar (keyboard and touch accessible)
+/// - Theme customization (light, dark, custom)
+///
+/// ## Basic Usage
 ///
 /// ```dart
 /// FlutterDiffViewer(
 ///   oldContent: 'Hello World',
-///   newContent: 'Hello Dart',
-/// )
+///   newContent: 'Hello Flutter',
+/// );
 /// ```
 ///
-/// ## Advanced usage
+/// ## Custom Configuration
 ///
 /// ```dart
 /// FlutterDiffViewer(
 ///   oldContent: oldText,
 ///   newContent: newText,
-///   oldLabel: 'v1.2',
-///   newLabel: 'v1.3',
-///   controller: myController,
-///   configuration: FlutterDiffViewerConfiguration(
+///   oldLabel: 'v1.0',
+///   newLabel: 'v2.0',
+///   configuration: FlutterDiffViewerConfiguration.defaults().copyWith(
 ///     layout: DiffLayout.sideBySide,
-///     granularity: DiffGranularity.word,
-///     collapseUnchangedLines: true,
-///     showSummary: true,
-///     showChangeNavigation: true,
+///     splitPanels: true,
+///     spacing: DiffSpacing.defaults().copyWith(
+///       panelSpacing: 16.0,
+///       panelBorderRadius: 8.0,
+///     ),
+///     theme: FlutterDiffViewerTheme.dark(),
 ///   ),
-///   theme: FlutterDiffViewerTheme.dark(),
-///   diffEngine: myCustomEngine,
-///   headerBuilder: (ctx, old, new_, config) => MyHeader(),
-///   lineBuilder: (ctx, line, config) => MyLine(line),
-/// )
+/// );
 /// ```
-///
-/// ## Controller ownership
-///
-/// If you provide a [controller], YOU are responsible for disposing it.
-/// If you do not provide one, [FlutterDiffViewer] creates and disposes its own.
-///
-/// ## Diff engine
-///
-/// By default, [FlutterDiffViewer] uses the built-in Myers LCS diff engine. To use
-/// a custom algorithm, implement [DiffEngine] and pass it via [diffEngine].
 class FlutterDiffViewer extends StatefulWidget {
-  /// The original content to compare from.
+  /// The original (old) text content to compare.
   final String oldContent;
 
-  /// The modified content to compare to.
+  /// The modified (new) text content to compare.
   final String newContent;
 
-  /// Optional label for the old (left/top) panel. Defaults to "Current".
+  /// Optional label for the old content version (e.g. "v1.0", "Current").
   final String? oldLabel;
 
-  /// Optional label for the new (right/bottom) panel. Defaults to "Modified".
+  /// Optional label for the new content version (e.g. "v2.0", "Modified").
   final String? newLabel;
 
-  /// Configuration controlling layout, features, and appearance.
+  /// Configuration object controlling layout, features, theme, and typography.
   ///
   /// Defaults to [FlutterDiffViewerConfiguration.defaults()].
   final FlutterDiffViewerConfiguration configuration;
 
-  /// Theme overrides. If provided, overrides [configuration.theme].
+  /// Optional explicit color theme. Overrides `configuration.theme` when provided.
   final FlutterDiffViewerTheme? theme;
 
-  /// An optional external controller for programmatic navigation and scrolling.
+  /// Optional external controller for programmatic scrolling and change navigation.
   ///
-  /// If not provided, [FlutterDiffViewer] creates and manages its own controller.
-  /// If provided, [FlutterDiffViewer] does NOT dispose it — you are responsible.
+  /// If omitted, an internal controller is managed automatically.
   final FlutterDiffViewerController? controller;
 
-  /// A custom diff engine implementation.
-  ///
-  /// If not provided, the built-in [DefaultDiffEngine] (Myers LCS) is used.
-  ///
-  /// ```dart
-  /// FlutterDiffViewer(
-  ///   diffEngine: MyCustomDiffEngine(),
-  ///   ...
-  /// )
-  /// ```
-  final DiffEngine? diffEngine;
-
-  // ── Builder callbacks ───────────────────────────────────────────────────────
-
-  /// Custom builder for the header section.
+  /// Optional custom builder for the header section.
   final DiffHeaderBuilder? headerBuilder;
 
-  /// Custom builder for individual diff line rows.
+  /// Optional custom builder for diff lines.
   final DiffLineBuilder? lineBuilder;
 
-  /// Custom builder for the line number gutter.
+  /// Optional custom builder for line numbers.
   final DiffLineNumberBuilder? lineNumberBuilder;
 
-  /// Custom builder for the change indicator (+, -, space).
+  /// Optional custom builder for change indicators (+/-).
   final DiffIndicatorBuilder? indicatorBuilder;
 
-  /// Custom builder for inline diff segments (words/characters).
+  /// Optional custom builder for intra-line diff segments.
   final DiffSegmentBuilder? segmentBuilder;
 
-  /// Custom builder for the summary bar.
+  /// Optional custom builder for the summary bar.
   final DiffSummaryBuilder? summaryBuilder;
 
-  /// Custom builder for the empty state (no changes detected).
+  /// Optional custom builder for the empty state (no changes).
   final DiffEmptyStateBuilder? emptyStateBuilder;
 
-  /// Custom builder for the error state.
+  /// Optional custom builder for the error state.
   final DiffErrorBuilder? errorBuilder;
 
-  /// Custom builder for the loading state.
+  /// Optional custom builder for the loading state.
   final DiffLoadingBuilder? loadingBuilder;
 
-  /// Custom builder for collapsed unchanged sections.
+  /// Optional custom builder for collapsed section placeholders.
   final DiffCollapsedSectionBuilder? collapsedSectionBuilder;
 
-  /// Custom builder for the footer section.
+  /// Optional custom builder for the footer section below the diff.
   final DiffFooterBuilder? footerBuilder;
 
   /// Creates a [FlutterDiffViewer].
-  ///
-  /// [oldContent] and [newContent] are required. All other parameters are
-  /// optional and have sensible defaults.
   FlutterDiffViewer({
     required this.oldContent,
     required this.newContent,
@@ -151,7 +130,6 @@ class FlutterDiffViewer extends StatefulWidget {
     FlutterDiffViewerConfiguration? configuration,
     this.theme,
     this.controller,
-    this.diffEngine,
     this.headerBuilder,
     this.lineBuilder,
     this.lineNumberBuilder,
@@ -172,16 +150,13 @@ class FlutterDiffViewer extends StatefulWidget {
 
 class _FlutterDiffViewerState extends State<FlutterDiffViewer> {
   late FlutterDiffViewerController _controller;
-  late DiffRepository _repository;
-  late CalculateDiff _calculateDiff;
   bool _ownsController = false;
 
   @override
   void initState() {
     super.initState();
     _initController();
-    _initRepository();
-    _startDiffCalculation();
+    _computeDiff();
   }
 
   void _initController() {
@@ -194,59 +169,48 @@ class _FlutterDiffViewerState extends State<FlutterDiffViewer> {
     }
   }
 
-  void _initRepository() {
-    final engine = widget.diffEngine ?? const DefaultDiffEngine();
-    _repository = DiffRepositoryImpl(engine: engine);
-    _calculateDiff = CalculateDiff(_repository);
-  }
-
   FlutterDiffViewerConfiguration get _effectiveConfig {
-    final config = widget.configuration;
     if (widget.theme != null) {
-      return config.copyWith(theme: widget.theme);
+      return widget.configuration.copyWith(theme: widget.theme);
     }
-    return config;
+    return widget.configuration;
   }
 
-  Future<void> _startDiffCalculation() async {
+  void _computeDiff() {
+    final config = _effectiveConfig;
+    final options = config.toComparisonOptions();
+
+    const engine = DefaultDiffEngine();
+    const repository = DiffRepositoryImpl(engine: engine);
+    const calculateDiff = CalculateDiff(repository);
+
     _controller.setLoading();
-    try {
-      final options = _effectiveConfig.toComparisonOptions();
-      final result = await _calculateDiff(
-        oldContent: widget.oldContent,
-        newContent: widget.newContent,
-        options: options,
-      );
+
+    calculateDiff(
+      oldContent: widget.oldContent,
+      newContent: widget.newContent,
+      options: options,
+    ).then((result) {
       if (mounted) {
         _controller.setResult(result);
       }
-    } on DiffException catch (e) {
-      if (mounted) _controller.setError(e);
-    } catch (e) {
+    }).catchError((dynamic error) {
       if (mounted) {
-        _controller.setError(
-          DiffCalculationException(
-            'Unexpected error during diff calculation',
-            cause: e,
-          ),
-        );
+        _controller.setError(error as Object);
       }
-    }
+    });
   }
 
   @override
   void didUpdateWidget(FlutterDiffViewer oldWidget) {
     super.didUpdateWidget(oldWidget);
-
-    // Re-run diff if content or engine changed
     if (oldWidget.oldContent != widget.oldContent ||
         oldWidget.newContent != widget.newContent ||
-        oldWidget.diffEngine != widget.diffEngine) {
-      _initRepository();
-      _startDiffCalculation();
+        oldWidget.configuration != widget.configuration ||
+        oldWidget.theme != widget.theme) {
+      _computeDiff();
     }
 
-    // Swap controller if externally provided controller changed
     if (oldWidget.controller != widget.controller) {
       if (_ownsController) _controller.dispose();
       _initController();
@@ -266,22 +230,26 @@ class _FlutterDiffViewerState extends State<FlutterDiffViewer> {
       builder: (context, _) {
         final config = _effectiveConfig;
         final state = _controller.state;
+        final isSplit = config.splitPanels || config.spacing.panelSpacing > 0;
 
         return Container(
-          decoration: BoxDecoration(
-            color: config.theme.backgroundColor,
-            border: Border.all(
-              color: config.theme.borderColor,
-              width: config.spacing.borderWidth,
-            ),
-            borderRadius: BorderRadius.circular(config.spacing.borderRadius),
-          ),
-          clipBehavior: Clip.antiAlias,
+          decoration: isSplit
+              ? null
+              : BoxDecoration(
+                  color: config.theme.backgroundColor,
+                  border: Border.all(
+                    color: config.theme.borderColor,
+                    width: config.spacing.borderWidth,
+                  ),
+                  borderRadius:
+                      BorderRadius.circular(config.spacing.borderRadius),
+                ),
+          clipBehavior: isSplit ? Clip.none : Clip.antiAlias,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // Header
-              if (config.showHeader) _buildHeader(config),
+              // Header (only rendered globally when NOT split into separate cards)
+              if (config.showHeader && !isSplit) _buildHeader(config),
 
               // Summary bar (shown only when loaded)
               if (config.showSummary && state == FlutterDiffViewerState.loaded)
@@ -352,15 +320,45 @@ class _FlutterDiffViewerState extends State<FlutterDiffViewer> {
         if (widget.loadingBuilder != null) {
           return widget.loadingBuilder!(context, config);
         }
-        return DiffLoadingWidget(configuration: config);
+        return Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const CircularProgressIndicator(),
+              const SizedBox(height: 12),
+              Text(
+                config.localizations.loadingLabel,
+                style: config.typography.summaryStyle.copyWith(
+                  color: config.theme.unchangedTextColor,
+                ),
+              ),
+            ],
+          ),
+        );
 
       case FlutterDiffViewerState.error:
         if (widget.errorBuilder != null) {
           return widget.errorBuilder!(context, _controller.error!, config);
         }
-        return DiffErrorWidget(
-          error: _controller.error!,
-          configuration: config,
+        return Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.error_outline, color: Colors.red, size: 32),
+              const SizedBox(height: 8),
+              Text(
+                config.localizations.errorLabel,
+                style: config.typography.summaryStyle.copyWith(
+                  color: config.theme.removedTextColor,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                _controller.error.toString(),
+                style: config.typography.lineNumberStyle,
+              ),
+            ],
+          ),
         );
 
       case FlutterDiffViewerState.loaded:
@@ -403,6 +401,8 @@ class _FlutterDiffViewerState extends State<FlutterDiffViewer> {
           result: result,
           configuration: config,
           controller: _controller,
+          oldLabel: widget.oldLabel,
+          newLabel: widget.newLabel,
           lineBuilder: widget.lineBuilder,
           lineNumberBuilder: widget.lineNumberBuilder,
           indicatorBuilder: widget.indicatorBuilder,

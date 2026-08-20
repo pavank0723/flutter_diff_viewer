@@ -1,7 +1,7 @@
 /// An immutable set of spacing and sizing constants for the diff viewer.
 ///
 /// Controls dimensions of gutter columns, row heights, paddings, border
-/// metrics, and fixed-height sections.
+/// metrics, panel card gaps, and fixed-height sections.
 ///
 /// Use [DiffSpacing.defaults] as a starting point and override with
 /// [copyWith] for custom layouts.
@@ -11,6 +11,7 @@
 ///   lineNumberWidth: 64.0,
 ///   horizontalPadding: 12.0,
 ///   dividerWidth: 2.0,
+///   panelSpacing: 16.0,
 /// );
 /// ```
 class DiffSpacing {
@@ -44,6 +45,15 @@ class DiffSpacing {
   /// Fixed height of the summary statistics bar.
   final double summaryHeight;
 
+  /// Spacing gap in logical pixels between the left (original) and right (modified) panel cards when split.
+  final double panelSpacing;
+
+  /// Corner radius of individual left and right panel cards when split into separate boxes.
+  final double panelBorderRadius;
+
+  /// Border width of individual left and right panel cards when split into separate boxes.
+  final double panelBorderWidth;
+
   /// Creates an immutable [DiffSpacing].
   ///
   /// All values must be non-negative. Prefer [DiffSpacing.defaults] and
@@ -59,6 +69,9 @@ class DiffSpacing {
     required this.headerHeight,
     required this.summaryHeight,
     this.dividerWidth = 1.0,
+    this.panelSpacing = 0.0,
+    this.panelBorderRadius = 6.0,
+    this.panelBorderWidth = 1.0,
   })  : assert(lineHeight > 0, 'lineHeight must be > 0'),
         assert(lineNumberWidth >= 0, 'lineNumberWidth must be >= 0'),
         assert(indicatorWidth >= 0, 'indicatorWidth must be >= 0'),
@@ -68,7 +81,10 @@ class DiffSpacing {
         assert(dividerWidth >= 0, 'dividerWidth must be >= 0'),
         assert(borderRadius >= 0, 'borderRadius must be >= 0'),
         assert(headerHeight >= 0, 'headerHeight must be >= 0'),
-        assert(summaryHeight >= 0, 'summaryHeight must be >= 0');
+        assert(summaryHeight >= 0, 'summaryHeight must be >= 0'),
+        assert(panelSpacing >= 0, 'panelSpacing must be >= 0'),
+        assert(panelBorderRadius >= 0, 'panelBorderRadius must be >= 0'),
+        assert(panelBorderWidth >= 0, 'panelBorderWidth must be >= 0');
 
   // ---------------------------------------------------------------------------
   // Named constants (avoid magic numbers at call sites)
@@ -104,6 +120,15 @@ class DiffSpacing {
   /// Default height of the summary bar (32 dp).
   static const double defaultSummaryHeight = 32.0;
 
+  /// Default spacing gap between split panel cards (0 dp).
+  static const double defaultPanelSpacing = 0.0;
+
+  /// Default corner radius for individual split panel cards (6 dp).
+  static const double defaultPanelBorderRadius = 6.0;
+
+  /// Default border width for individual split panel cards (1 dp).
+  static const double defaultPanelBorderWidth = 1.0;
+
   // ---------------------------------------------------------------------------
   // Factory constructor
   // ---------------------------------------------------------------------------
@@ -136,6 +161,9 @@ class DiffSpacing {
     double? borderRadius,
     double? headerHeight,
     double? summaryHeight,
+    double? panelSpacing,
+    double? panelBorderRadius,
+    double? panelBorderWidth,
   }) {
     return DiffSpacing(
       lineHeight: lineHeight ?? this.lineHeight,
@@ -148,6 +176,9 @@ class DiffSpacing {
       borderRadius: borderRadius ?? this.borderRadius,
       headerHeight: headerHeight ?? this.headerHeight,
       summaryHeight: summaryHeight ?? this.summaryHeight,
+      panelSpacing: panelSpacing ?? this.panelSpacing,
+      panelBorderRadius: panelBorderRadius ?? this.panelBorderRadius,
+      panelBorderWidth: panelBorderWidth ?? this.panelBorderWidth,
     );
   }
 
@@ -169,7 +200,10 @@ class DiffSpacing {
           dividerWidth == other.dividerWidth &&
           borderRadius == other.borderRadius &&
           headerHeight == other.headerHeight &&
-          summaryHeight == other.summaryHeight;
+          summaryHeight == other.summaryHeight &&
+          panelSpacing == other.panelSpacing &&
+          panelBorderRadius == other.panelBorderRadius &&
+          panelBorderWidth == other.panelBorderWidth;
 
   @override
   int get hashCode => Object.hash(
@@ -183,6 +217,9 @@ class DiffSpacing {
         borderRadius,
         headerHeight,
         summaryHeight,
+        panelSpacing,
+        panelBorderRadius,
+        panelBorderWidth,
       );
 
   @override
@@ -191,6 +228,9 @@ class DiffSpacing {
       'lineNumberWidth: $lineNumberWidth, '
       'indicatorWidth: $indicatorWidth, '
       'dividerWidth: $dividerWidth, '
+      'panelSpacing: $panelSpacing, '
+      'panelBorderRadius: $panelBorderRadius, '
+      'panelBorderWidth: $panelBorderWidth, '
       'horizontalPadding: $horizontalPadding, '
       'borderRadius: $borderRadius)';
 }
@@ -209,5 +249,8 @@ class _DefaultDiffSpacing extends DiffSpacing {
           borderRadius: DiffSpacing.defaultBorderRadius,
           headerHeight: DiffSpacing.defaultHeaderHeight,
           summaryHeight: DiffSpacing.defaultSummaryHeight,
+          panelSpacing: DiffSpacing.defaultPanelSpacing,
+          panelBorderRadius: DiffSpacing.defaultPanelBorderRadius,
+          panelBorderWidth: DiffSpacing.defaultPanelBorderWidth,
         );
 }

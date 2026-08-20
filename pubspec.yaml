@@ -3,7 +3,7 @@ description: >
   A production-grade Flutter package providing GitHub/GitLab-style content
   comparison and diff viewing. Supports side-by-side, unified, and stacked
   layouts with line, word, and character-level diff granularity.
-version: 1.0.0
+version: 1.1.0
 homepage: https://github.com/pavank0723/flutter_diff_viewer
 repository: https://github.com/pavank0723/flutter_diff_viewer
 issue_tracker: https://github.com/pavank0723/flutter_diff_viewer/issues

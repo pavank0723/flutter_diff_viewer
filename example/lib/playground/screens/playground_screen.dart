@@ -63,9 +63,9 @@ class _PlaygroundScreenState extends State<PlaygroundScreen>
         final isDesktop = MediaQuery.of(context).size.width >= 1024;
 
         final selectedDef = state.selectedPropertyKey != null
-            ? PropertyRegistry.definitions.firstWhere(
+            ? PropertyRegistry.properties.firstWhere(
                 (d) => d.key == state.selectedPropertyKey,
-                orElse: () => PropertyRegistry.definitions.first,
+                orElse: () => PropertyRegistry.properties.first,
               )
             : null;
 

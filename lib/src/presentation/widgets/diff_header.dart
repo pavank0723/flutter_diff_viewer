@@ -5,7 +5,8 @@ import '../configuration/diff_viewer_configuration.dart';
 /// Renders the header bar of the diff viewer showing old and new version labels.
 ///
 /// In side-by-side mode, two labels are shown side by side. In unified/stacked
-/// mode, a single unified header is shown.
+/// mode, a single unified header is shown. In split-panel mode, single-side
+/// headers are rendered inside each card box.
 ///
 /// Fully theme-driven — no hardcoded colors or typography.
 class DiffHeader extends StatelessWidget {
@@ -18,6 +19,12 @@ class DiffHeader extends StatelessWidget {
   /// Whether this is a side-by-side header (two columns) or a unified header.
   final bool isSideBySide;
 
+  /// Whether this header is being rendered inside an individual panel card box.
+  final bool isPanelCardHeader;
+
+  /// Whether this single panel card header belongs to the old (left/top) panel.
+  final bool isOldPanelHeader;
+
   /// The configuration providing theme, typography, and spacing.
   final FlutterDiffViewerConfiguration configuration;
 
@@ -28,6 +35,8 @@ class DiffHeader extends StatelessWidget {
     super.key,
     this.oldLabel,
     this.newLabel,
+    this.isPanelCardHeader = false,
+    this.isOldPanelHeader = true,
   });
 
   @override
@@ -53,6 +62,20 @@ class DiffHeader extends StatelessWidget {
     final labelStyle = typography.headerStyle.copyWith(
       color: theme.headerTextColor,
     );
+
+    if (isPanelCardHeader) {
+      final labelText =
+          isOldPanelHeader ? effectiveOldLabel : effectiveNewLabel;
+      return Container(
+        height: spacing.headerHeight,
+        decoration: headerDecoration,
+        alignment: Alignment.centerLeft,
+        padding: EdgeInsets.symmetric(
+          horizontal: spacing.horizontalPadding * 2,
+        ),
+        child: Text(labelText, style: labelStyle),
+      );
+    }
 
     if (isSideBySide) {
       return SizedBox(
