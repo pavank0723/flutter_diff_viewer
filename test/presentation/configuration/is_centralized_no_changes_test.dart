@@ -45,6 +45,8 @@ void main() {
 
       // Right panel renders panel-level empty state widget
       expect(find.byType(DiffEmptyStateWidget), findsOneWidget);
+      // Left panel renders current content text
+      expect(find.text('same content'), findsOneWidget);
     });
   });
 }

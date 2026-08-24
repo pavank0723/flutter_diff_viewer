@@ -425,8 +425,10 @@ List<_SideBySideItem> _buildSideBySideItems(
 
   int i = 0;
   while (i < lines.length) {
-    // Check for collapsed section
-    if (configuration.collapseUnchangedLines && controller.isLineCollapsed(i)) {
+    // Check for collapsed section (only when there are actual changes)
+    if (configuration.collapseUnchangedLines &&
+        !result.hasNoChanges &&
+        controller.isLineCollapsed(i)) {
       int count = 0;
       final startIdx = i;
       while (i < lines.length && controller.isLineCollapsed(i)) {

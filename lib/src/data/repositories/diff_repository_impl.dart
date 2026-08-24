@@ -107,8 +107,7 @@ final class DiffRepositoryImpl implements DiffRepository {
 
     // Fast path: both strings are identical.
     if (oldContent == newContent) {
-      final lines = oldContent.toLines();
-      return _identicalResult(lines.length);
+      return engine.compare(oldContent, newContent, options);
     }
 
     final payload = _DiffPayload(
@@ -155,22 +154,5 @@ final class DiffRepositoryImpl implements DiffRepository {
   void _validateInputs(String oldContent, String newContent) {
     // Currently no hard size limit, but this is the right place to add one.
     // Both inputs being empty is valid (empty-to-empty diff).
-  }
-
-  /// Builds an empty (zero-change) [DiffResult] for identical inputs.
-  DiffResult _identicalResult(int lineCount) {
-    // We do not expand lines here to avoid allocation for large identical docs.
-    // The engine would build unchanged DiffLines — but since callers only
-    // need statistics for identical docs, we return a summary result.
-    // If callers need lines they should call engine.compare directly.
-    return DiffResult(
-      lines: const [],
-      additions: 0,
-      deletions: 0,
-      modifications: 0,
-      unchanged: lineCount,
-      oldLineCount: lineCount,
-      newLineCount: lineCount,
-    );
   }
 }

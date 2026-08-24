@@ -325,6 +325,31 @@ class _ConfigurationPanelState extends State<ConfigurationPanel> {
               config.copyWith(collapseUnchangedLines: val),
               'Toggled Collapse Unchanged'),
         );
+      case 'isCentralizedNoChanges':
+        return BooleanEditor(
+          definition: def,
+          value: config.isCentralizedNoChanges,
+          onChanged: (val) => ctrl.updateConfiguration(
+              config.copyWith(isCentralizedNoChanges: val),
+              'Toggled Centralized No Changes (${val ? "ON" : "OFF"})'),
+        );
+      case 'showContentWhenIdentical':
+        return BooleanEditor(
+          definition: def,
+          value: config.showContentWhenIdentical,
+          onChanged: (val) => ctrl.updateConfiguration(
+              config.copyWith(showContentWhenIdentical: val),
+              'Toggled Show Content When Identical (${val ? "ON" : "OFF"})'),
+        );
+      case 'showHeaderDivider':
+        return BooleanEditor(
+          definition: def,
+          value: config.theme.showHeaderDivider,
+          onChanged: (val) => ctrl.updateConfiguration(
+              config.copyWith(
+                  theme: config.theme.copyWith(showHeaderDivider: val)),
+              'Toggled Header Bottom Divider (${val ? "ON" : "OFF"})'),
+        );
       case 'contextLines':
         return NumberEditor(
           definition: def,

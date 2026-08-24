@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.3] - 2026-08-24
+
+### Fixed
+- **Identical Content Line Population**: Fixed `DiffRepositoryImpl` to populate unchanged text lines for identical inputs, enabling the left panel ("Current") to display current version text when `isCentralizedNoChanges: false`.
+- **Studio Switch Editors**: Added boolean switch editors for `isCentralizedNoChanges`, `showContentWhenIdentical`, and `showHeaderDivider` in the interactive Customization Studio.
+
 ## [1.3.2] - 2026-08-24
 
 ### Added
