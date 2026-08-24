@@ -3,8 +3,11 @@
 [![pub.dev](https://img.shields.io/pub/v/flutter_diff_viewer.svg)](https://pub.dev/packages/flutter_diff_viewer)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Flutter](https://img.shields.io/badge/Flutter-≥3.10.0-blue.svg)](https://flutter.dev)
+[![Live Demo](https://img.shields.io/badge/Live_Demo-GitHub_Pages-blue?logo=github)](https://pavank0723.github.io/flutter_diff_viewer/)
 
 A production-grade Flutter package providing **GitHub/GitLab-style content comparison and diff viewing**. Built with Clean Architecture, SOLID principles, and designed for enterprise use.
+
+> **🚀 [Live Demo →](https://pavank0723.github.io/flutter_diff_viewer/)**
 
 ---
 
