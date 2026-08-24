@@ -1,7 +1,9 @@
+import 'package:flutter/widgets.dart';
+
 /// An immutable set of spacing and sizing constants for the diff viewer.
 ///
 /// Controls dimensions of gutter columns, row heights, paddings, border
-/// metrics, panel card gaps, and fixed-height sections.
+/// metrics, panel card gaps, diff block gaps, and fixed-height sections.
 ///
 /// Use [DiffSpacing.defaults] as a starting point and override with
 /// [copyWith] for custom layouts.
@@ -12,6 +14,7 @@
 ///   horizontalPadding: 12.0,
 ///   dividerWidth: 2.0,
 ///   panelSpacing: 16.0,
+///   blockSpacing: 12.0,
 /// );
 /// ```
 class DiffSpacing {
@@ -54,6 +57,18 @@ class DiffSpacing {
   /// Border width of individual left and right panel cards when split into separate boxes.
   final double panelBorderWidth;
 
+  /// Vertical gap in logical pixels between separate diff change blocks / hunks.
+  final double blockSpacing;
+
+  /// Corner radius of individual diff change block cards.
+  final double blockBorderRadius;
+
+  /// Border width of individual diff change block cards.
+  final double blockBorderWidth;
+
+  /// Padding applied inside each diff change block card container.
+  final EdgeInsets blockPadding;
+
   /// Creates an immutable [DiffSpacing].
   ///
   /// All values must be non-negative. Prefer [DiffSpacing.defaults] and
@@ -72,6 +87,10 @@ class DiffSpacing {
     this.panelSpacing = 0.0,
     this.panelBorderRadius = 6.0,
     this.panelBorderWidth = 1.0,
+    this.blockSpacing = 0.0,
+    this.blockBorderRadius = 4.0,
+    this.blockBorderWidth = 1.0,
+    this.blockPadding = EdgeInsets.zero,
   })  : assert(lineHeight > 0, 'lineHeight must be > 0'),
         assert(lineNumberWidth >= 0, 'lineNumberWidth must be >= 0'),
         assert(indicatorWidth >= 0, 'indicatorWidth must be >= 0'),
@@ -84,7 +103,10 @@ class DiffSpacing {
         assert(summaryHeight >= 0, 'summaryHeight must be >= 0'),
         assert(panelSpacing >= 0, 'panelSpacing must be >= 0'),
         assert(panelBorderRadius >= 0, 'panelBorderRadius must be >= 0'),
-        assert(panelBorderWidth >= 0, 'panelBorderWidth must be >= 0');
+        assert(panelBorderWidth >= 0, 'panelBorderWidth must be >= 0'),
+        assert(blockSpacing >= 0, 'blockSpacing must be >= 0'),
+        assert(blockBorderRadius >= 0, 'blockBorderRadius must be >= 0'),
+        assert(blockBorderWidth >= 0, 'blockBorderWidth must be >= 0');
 
   // ---------------------------------------------------------------------------
   // Named constants (avoid magic numbers at call sites)
@@ -129,6 +151,18 @@ class DiffSpacing {
   /// Default border width for individual split panel cards (1 dp).
   static const double defaultPanelBorderWidth = 1.0;
 
+  /// Default vertical gap between diff blocks (0 dp).
+  static const double defaultBlockSpacing = 0.0;
+
+  /// Default corner radius for diff block cards (4 dp).
+  static const double defaultBlockBorderRadius = 4.0;
+
+  /// Default border width for diff block cards (1 dp).
+  static const double defaultBlockBorderWidth = 1.0;
+
+  /// Default padding inside diff block cards.
+  static const EdgeInsets defaultBlockPadding = EdgeInsets.zero;
+
   // ---------------------------------------------------------------------------
   // Factory constructor
   // ---------------------------------------------------------------------------
@@ -164,6 +198,10 @@ class DiffSpacing {
     double? panelSpacing,
     double? panelBorderRadius,
     double? panelBorderWidth,
+    double? blockSpacing,
+    double? blockBorderRadius,
+    double? blockBorderWidth,
+    EdgeInsets? blockPadding,
   }) {
     return DiffSpacing(
       lineHeight: lineHeight ?? this.lineHeight,
@@ -179,6 +217,10 @@ class DiffSpacing {
       panelSpacing: panelSpacing ?? this.panelSpacing,
       panelBorderRadius: panelBorderRadius ?? this.panelBorderRadius,
       panelBorderWidth: panelBorderWidth ?? this.panelBorderWidth,
+      blockSpacing: blockSpacing ?? this.blockSpacing,
+      blockBorderRadius: blockBorderRadius ?? this.blockBorderRadius,
+      blockBorderWidth: blockBorderWidth ?? this.blockBorderWidth,
+      blockPadding: blockPadding ?? this.blockPadding,
     );
   }
 
@@ -203,7 +245,11 @@ class DiffSpacing {
           summaryHeight == other.summaryHeight &&
           panelSpacing == other.panelSpacing &&
           panelBorderRadius == other.panelBorderRadius &&
-          panelBorderWidth == other.panelBorderWidth;
+          panelBorderWidth == other.panelBorderWidth &&
+          blockSpacing == other.blockSpacing &&
+          blockBorderRadius == other.blockBorderRadius &&
+          blockBorderWidth == other.blockBorderWidth &&
+          blockPadding == other.blockPadding;
 
   @override
   int get hashCode => Object.hash(
@@ -220,6 +266,10 @@ class DiffSpacing {
         panelSpacing,
         panelBorderRadius,
         panelBorderWidth,
+        blockSpacing,
+        blockBorderRadius,
+        blockBorderWidth,
+        blockPadding,
       );
 
   @override
@@ -231,6 +281,9 @@ class DiffSpacing {
       'panelSpacing: $panelSpacing, '
       'panelBorderRadius: $panelBorderRadius, '
       'panelBorderWidth: $panelBorderWidth, '
+      'blockSpacing: $blockSpacing, '
+      'blockBorderRadius: $blockBorderRadius, '
+      'blockBorderWidth: $blockBorderWidth, '
       'horizontalPadding: $horizontalPadding, '
       'borderRadius: $borderRadius)';
 }
@@ -252,5 +305,9 @@ class _DefaultDiffSpacing extends DiffSpacing {
           panelSpacing: DiffSpacing.defaultPanelSpacing,
           panelBorderRadius: DiffSpacing.defaultPanelBorderRadius,
           panelBorderWidth: DiffSpacing.defaultPanelBorderWidth,
+          blockSpacing: DiffSpacing.defaultBlockSpacing,
+          blockBorderRadius: DiffSpacing.defaultBlockBorderRadius,
+          blockBorderWidth: DiffSpacing.defaultBlockBorderWidth,
+          blockPadding: DiffSpacing.defaultBlockPadding,
         );
 }
