@@ -78,6 +78,11 @@ class FlutterDiffViewerTheme {
   /// Text color of the header bar labels.
   final Color headerTextColor;
 
+  /// Whether to show the bottom border divider on the header bar.
+  ///
+  /// Defaults to `false` for a clean look without the divider line.
+  final bool showHeaderDivider;
+
   /// Color of the `+` badge or gutter indicator for added lines.
   final Color indicatorAddedColor;
 
@@ -232,6 +237,7 @@ class FlutterDiffViewerTheme {
     required this.backgroundColor,
     required this.panelBackgroundColor,
     required this.panelBorderColor,
+    this.showHeaderDivider = false,
     this.leftPanelBackgroundColor,
     this.rightPanelBackgroundColor,
     this.leftPanelBorderColor,
@@ -436,6 +442,7 @@ class FlutterDiffViewerTheme {
     Color? borderColor,
     Color? headerBackgroundColor,
     Color? headerTextColor,
+    bool? showHeaderDivider,
     Color? indicatorAddedColor,
     Color? indicatorRemovedColor,
     Color? indicatorUnchangedColor,
@@ -499,6 +506,7 @@ class FlutterDiffViewerTheme {
       headerBackgroundColor:
           headerBackgroundColor ?? this.headerBackgroundColor,
       headerTextColor: headerTextColor ?? this.headerTextColor,
+      showHeaderDivider: showHeaderDivider ?? this.showHeaderDivider,
       indicatorAddedColor: indicatorAddedColor ?? this.indicatorAddedColor,
       indicatorRemovedColor:
           indicatorRemovedColor ?? this.indicatorRemovedColor,
@@ -596,6 +604,7 @@ class FlutterDiffViewerTheme {
           borderColor == other.borderColor &&
           headerBackgroundColor == other.headerBackgroundColor &&
           headerTextColor == other.headerTextColor &&
+          showHeaderDivider == other.showHeaderDivider &&
           indicatorAddedColor == other.indicatorAddedColor &&
           indicatorRemovedColor == other.indicatorRemovedColor &&
           indicatorUnchangedColor == other.indicatorUnchangedColor &&
@@ -654,6 +663,7 @@ class FlutterDiffViewerTheme {
         borderColor,
         headerBackgroundColor,
         headerTextColor,
+        showHeaderDivider,
         indicatorAddedColor,
         indicatorRemovedColor,
         indicatorUnchangedColor,

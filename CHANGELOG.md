@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.2] - 2026-08-24
+
+### Added
+- **Redesigned Header Bar (Title + Version Badge)**: Headers now render a clean `"Title"` + `"Version Badge"` layout (e.g., `"Current V1.1"`). Added `oldVersionCode` and `newVersionCode` parameters.
+- **Custom Version Widget Overrides**: Added `oldVersionWidget` and `newVersionWidget` to replace default version badges with custom widgets.
+- **Optional Header Bottom Divider (`showHeaderDivider`)**: Header bottom divider is now off by default (`false`) for a clean borderless look, and fully configurable in `FlutterDiffViewerTheme`.
+- **Configurable Version Badge Styling**: Customizable badge colors (`versionBadgeBackgroundColor`, `versionBadgeTextColor`, `versionBadgeBorderRadius`), typography (`versionBadgeStyle`), and padding (`versionBadgeHorizontalPadding`, `versionBadgeVerticalPadding`).
+- **Configurable Centralized Empty State (`isCentralizedNoChanges`)**: Added `isCentralizedNoChanges` flag in `FlutterDiffViewerConfiguration` (default: `true`). When set to `false`, displays current content on the left panel and a panel-level empty state on the right panel.
+- **Configurable Empty State (`showContentWhenIdentical`)**: Added `showContentWhenIdentical` flag in `FlutterDiffViewerConfiguration`. When set to `true`, renders identical content as unchanged lines instead of hiding content behind the empty state.
+- **Interactive Studio Updates**: Added interactive controls and code generator support for `isCentralizedNoChanges`, `showContentWhenIdentical`, and `showHeaderDivider` in the demo studio.
+
 ## [1.1.0] - 2026-08-20
 
 ### Added

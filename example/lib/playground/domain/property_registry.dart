@@ -124,6 +124,35 @@ class PropertyRegistry {
           defaultValue: true,
         ),
         PlaygroundPropertyDefinition(
+          key: 'isCentralizedNoChanges',
+          apiPath: 'configuration.isCentralizedNoChanges',
+          label: 'Centralized No Changes Banner',
+          description:
+              'When true, displays central No Changes banner. When false, shows current content on left and No Changes on right.',
+          category: PropertyCategory.lineDisplay,
+          editorType: EditorType.boolean,
+          defaultValue: true,
+        ),
+        PlaygroundPropertyDefinition(
+          key: 'showContentWhenIdentical',
+          apiPath: 'configuration.showContentWhenIdentical',
+          label: 'Show Content When Identical',
+          description:
+              'When true, renders content lines as unchanged instead of showing No Changes banner.',
+          category: PropertyCategory.lineDisplay,
+          editorType: EditorType.boolean,
+          defaultValue: false,
+        ),
+        PlaygroundPropertyDefinition(
+          key: 'showHeaderDivider',
+          apiPath: 'configuration.theme.showHeaderDivider',
+          label: 'Header Bottom Divider Line',
+          description: 'Draws a border divider line below the top header bar.',
+          category: PropertyCategory.lineDisplay,
+          editorType: EditorType.boolean,
+          defaultValue: false,
+        ),
+        PlaygroundPropertyDefinition(
           key: 'contextLines',
           apiPath: 'configuration.contextLines',
           label: 'Context Lines',

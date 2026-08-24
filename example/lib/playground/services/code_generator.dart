@@ -36,6 +36,10 @@ class CodeGenerator {
         config.showChangeNavigation != defaults.showChangeNavigation;
     final isCollapseChanged =
         config.collapseUnchangedLines != defaults.collapseUnchangedLines;
+    final isShowContentIdenticalChanged =
+        config.showContentWhenIdentical != defaults.showContentWhenIdentical;
+    final isCentralizedNoChangesChanged =
+        config.isCentralizedNoChanges != defaults.isCentralizedNoChanges;
     final isContextLinesChanged = config.contextLines != defaults.contextLines;
     final isGranularityChanged = config.granularity != defaults.granularity;
     final isIgnoreWhitespaceChanged =
@@ -75,6 +79,8 @@ class CodeGenerator {
         isShowSummaryChanged ||
         isShowChangeNavChanged ||
         isCollapseChanged ||
+        isShowContentIdenticalChanged ||
+        isCentralizedNoChangesChanged ||
         isContextLinesChanged ||
         isGranularityChanged ||
         isIgnoreWhitespaceChanged ||
@@ -115,6 +121,14 @@ class CodeGenerator {
       if (!minimalMode || isCollapseChanged) {
         buffer.writeln(
             '    collapseUnchangedLines: ${config.collapseUnchangedLines},');
+      }
+      if (!minimalMode || isShowContentIdenticalChanged) {
+        buffer.writeln(
+            '    showContentWhenIdentical: ${config.showContentWhenIdentical},');
+      }
+      if (!minimalMode || isCentralizedNoChangesChanged) {
+        buffer.writeln(
+            '    isCentralizedNoChanges: ${config.isCentralizedNoChanges},');
       }
       if (!minimalMode || isContextLinesChanged) {
         buffer.writeln('    contextLines: ${config.contextLines},');
@@ -201,13 +215,17 @@ FlutterDiffViewer(
         current.lineNumberBackgroundColor !=
             defaults.lineNumberBackgroundColor ||
         current.borderColor != defaults.borderColor ||
-        current.dividerColor != defaults.dividerColor;
+        current.dividerColor != defaults.dividerColor ||
+        current.showHeaderDivider != defaults.showHeaderDivider;
   }
 
   static String _generateThemeCode(FlutterDiffViewerTheme current,
       FlutterDiffViewerTheme defaults, bool minimalMode) {
     final b = StringBuffer();
     b.writeln('    theme: FlutterDiffViewerTheme.light().copyWith(');
+    if (!minimalMode || current.showHeaderDivider != defaults.showHeaderDivider) {
+      b.writeln('      showHeaderDivider: ${current.showHeaderDivider},');
+    }
     if (!minimalMode ||
         current.addedBackgroundColor != defaults.addedBackgroundColor) {
       b.writeln(

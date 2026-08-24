@@ -121,6 +121,19 @@ class FlutterDiffViewerConfiguration {
   /// Defaults to `true`.
   final bool collapseUnchangedLines;
 
+  /// When true, shows the actual content as unchanged lines even when
+  /// old and new content are identical, instead of the "No changes" empty state.
+  ///
+  /// Defaults to `false` (shows the empty state banner).
+  final bool showContentWhenIdentical;
+
+  /// Whether the "No changes" empty state is displayed as a single centralized banner
+  /// across the entire diff viewer container when no changes exist.
+  ///
+  /// Defaults to `true`. When `false`, side-by-side view displays current content
+  /// on the left panel and a panel-level "No changes" indicator on the right panel.
+  final bool isCentralizedNoChanges;
+
   // ---------------------------------------------------------------------------
   // Comparison options
   // ---------------------------------------------------------------------------
@@ -194,6 +207,8 @@ class FlutterDiffViewerConfiguration {
     this.enableTextSelection = true,
     this.synchronizedScrolling = true,
     this.collapseUnchangedLines = true,
+    this.showContentWhenIdentical = false,
+    this.isCentralizedNoChanges = true,
     this.granularity = DiffGranularity.word,
     this.ignoreWhitespace = false,
     this.caseSensitive = true,
@@ -257,6 +272,8 @@ class FlutterDiffViewerConfiguration {
     bool? enableTextSelection,
     bool? synchronizedScrolling,
     bool? collapseUnchangedLines,
+    bool? showContentWhenIdentical,
+    bool? isCentralizedNoChanges,
     DiffGranularity? granularity,
     bool? ignoreWhitespace,
     bool? caseSensitive,
@@ -282,6 +299,10 @@ class FlutterDiffViewerConfiguration {
           synchronizedScrolling ?? this.synchronizedScrolling,
       collapseUnchangedLines:
           collapseUnchangedLines ?? this.collapseUnchangedLines,
+      showContentWhenIdentical:
+          showContentWhenIdentical ?? this.showContentWhenIdentical,
+      isCentralizedNoChanges:
+          isCentralizedNoChanges ?? this.isCentralizedNoChanges,
       granularity: granularity ?? this.granularity,
       ignoreWhitespace: ignoreWhitespace ?? this.ignoreWhitespace,
       caseSensitive: caseSensitive ?? this.caseSensitive,
@@ -316,6 +337,8 @@ class FlutterDiffViewerConfiguration {
           enableTextSelection == other.enableTextSelection &&
           synchronizedScrolling == other.synchronizedScrolling &&
           collapseUnchangedLines == other.collapseUnchangedLines &&
+          showContentWhenIdentical == other.showContentWhenIdentical &&
+          isCentralizedNoChanges == other.isCentralizedNoChanges &&
           granularity == other.granularity &&
           ignoreWhitespace == other.ignoreWhitespace &&
           caseSensitive == other.caseSensitive &&
@@ -340,6 +363,8 @@ class FlutterDiffViewerConfiguration {
         enableTextSelection,
         synchronizedScrolling,
         collapseUnchangedLines,
+        showContentWhenIdentical,
+        isCentralizedNoChanges,
         granularity,
         ignoreWhitespace,
         caseSensitive,

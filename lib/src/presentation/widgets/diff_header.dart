@@ -51,12 +51,14 @@ class DiffHeader extends StatelessWidget {
 
     final headerDecoration = BoxDecoration(
       color: theme.headerBackgroundColor,
-      border: Border(
-        bottom: BorderSide(
-          color: theme.borderColor,
-          width: spacing.borderWidth,
-        ),
-      ),
+      border: theme.showHeaderDivider
+          ? Border(
+              bottom: BorderSide(
+                color: theme.borderColor,
+                width: spacing.borderWidth,
+              ),
+            )
+          : null,
     );
 
     final labelStyle = typography.headerStyle.copyWith(

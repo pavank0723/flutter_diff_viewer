@@ -7,6 +7,7 @@ import '../builders/diff_builders.dart';
 import '../configuration/diff_viewer_configuration.dart';
 import '../controllers/diff_viewer_controller.dart';
 import 'collapsed_section_widget.dart';
+import 'diff_empty_state_widget.dart';
 import 'diff_header.dart';
 import 'diff_line_widget.dart';
 
@@ -139,18 +140,22 @@ class SideBySideDiffView extends StatelessWidget {
             Expanded(
               child: wrapPanelCard(
                 isOldSide: false,
-                child: _DiffPanel(
-                  items: items,
-                  isOldSide: false,
-                  scrollController: controller.rightScrollController,
-                  configuration: configuration,
-                  lineBuilder: lineBuilder,
-                  lineNumberBuilder: lineNumberBuilder,
-                  indicatorBuilder: indicatorBuilder,
-                  segmentBuilder: segmentBuilder,
-                  collapsedSectionBuilder: collapsedSectionBuilder,
-                  controller: controller,
-                ),
+                child: (result.hasNoChanges &&
+                        !configuration.isCentralizedNoChanges &&
+                        !configuration.showContentWhenIdentical)
+                    ? DiffEmptyStateWidget(configuration: configuration)
+                    : _DiffPanel(
+                        items: items,
+                        isOldSide: false,
+                        scrollController: controller.rightScrollController,
+                        configuration: configuration,
+                        lineBuilder: lineBuilder,
+                        lineNumberBuilder: lineNumberBuilder,
+                        indicatorBuilder: indicatorBuilder,
+                        segmentBuilder: segmentBuilder,
+                        collapsedSectionBuilder: collapsedSectionBuilder,
+                        controller: controller,
+                      ),
               ),
             ),
           ],

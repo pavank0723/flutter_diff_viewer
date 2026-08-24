@@ -363,7 +363,9 @@ class _FlutterDiffViewerState extends State<FlutterDiffViewer> {
 
       case FlutterDiffViewerState.loaded:
         final result = _controller.result!;
-        if (result.hasNoChanges) {
+        if (result.hasNoChanges &&
+            !config.showContentWhenIdentical &&
+            config.isCentralizedNoChanges) {
           if (widget.emptyStateBuilder != null) {
             return widget.emptyStateBuilder!(context, config);
           }
