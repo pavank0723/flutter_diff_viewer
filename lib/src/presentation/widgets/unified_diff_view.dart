@@ -10,9 +10,6 @@ import 'collapsed_section_widget.dart';
 import 'diff_line_widget.dart';
 
 /// A helper for building the list of items in a view, handling collapsed sections.
-///
-/// Encapsulates the logic that groups consecutive unchanged lines into
-/// collapsible blocks, inserting [CollapsedSectionWidget]s in their place.
 List<_DiffViewItem> _buildViewItems({
   required DiffResult result,
   required FlutterDiffViewerConfiguration configuration,
@@ -22,12 +19,10 @@ List<_DiffViewItem> _buildViewItems({
   final contextLines = configuration.contextLines;
 
   // Determine which unchanged line indices should be visible
-  // (within contextLines of a change).
   final visibleUnchangedIndices = <int>{};
   if (configuration.collapseUnchangedLines) {
     for (var i = 0; i < result.lines.length; i++) {
       if (result.lines[i].type != DiffType.unchanged) {
-        // Mark context lines around this change as visible
         for (var c = i - contextLines; c <= i + contextLines; c++) {
           if (c >= 0 && c < result.lines.length) {
             visibleUnchangedIndices.add(c);
@@ -44,7 +39,6 @@ List<_DiffViewItem> _buildViewItems({
     if (configuration.collapseUnchangedLines &&
         line.type == DiffType.unchanged &&
         !visibleUnchangedIndices.contains(i)) {
-      // Start of a collapsed block — find its end
       final blockStart = i;
       while (i < result.lines.length &&
           result.lines[i].type == DiffType.unchanged &&
@@ -79,12 +73,53 @@ final class _CollapsedItem extends _DiffViewItem {
   _CollapsedItem({required this.lineIndex, required this.lineCount});
 }
 
+class _UnifiedBlock {
+  final List<_DiffViewItem> items;
+  final bool isCollapsed;
+
+  const _UnifiedBlock.lines(this.items) : isCollapsed = false;
+  const _UnifiedBlock.collapsed(this.items) : isCollapsed = true;
+}
+
+List<_UnifiedBlock> _groupUnifiedBlocks(List<_DiffViewItem> items) {
+  final blocks = <_UnifiedBlock>[];
+  if (items.isEmpty) return blocks;
+
+  List<_DiffViewItem> currentGroup = [];
+  bool? inChangeGroup;
+
+  for (final item in items) {
+    if (item is _CollapsedItem) {
+      if (currentGroup.isNotEmpty) {
+        blocks.add(_UnifiedBlock.lines(currentGroup));
+        currentGroup = [];
+        inChangeGroup = null;
+      }
+      blocks.add(_UnifiedBlock.collapsed([item]));
+      continue;
+    }
+
+    final lineItem = item as _LineItem;
+    final isChange = lineItem.line.type != DiffType.unchanged;
+
+    if (inChangeGroup == null || inChangeGroup != isChange) {
+      if (currentGroup.isNotEmpty) {
+        blocks.add(_UnifiedBlock.lines(currentGroup));
+        currentGroup = [];
+      }
+      inChangeGroup = isChange;
+    }
+    currentGroup.add(item);
+  }
+
+  if (currentGroup.isNotEmpty) {
+    blocks.add(_UnifiedBlock.lines(currentGroup));
+  }
+
+  return blocks;
+}
+
 /// Renders a unified diff view (single column, +/- indicators).
-///
-/// Each changed line appears once with its indicator. The unified view works
-/// well on any screen width including mobile.
-///
-/// Uses [ListView.builder] for virtual rendering — efficient for large diffs.
 class UnifiedDiffView extends StatelessWidget {
   /// The diff result to render.
   final DiffResult result;
@@ -125,6 +160,10 @@ class UnifiedDiffView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = configuration.theme;
+    final spacing = configuration.spacing;
+    final isBlockMode = configuration.splitBlocks || spacing.blockSpacing > 0;
+
     return ListenableBuilder(
       listenable: controller,
       builder: (context, _) {
@@ -133,6 +172,70 @@ class UnifiedDiffView extends StatelessWidget {
           configuration: configuration,
           collapsedIndices: controller.collapsedLineIndices,
         );
+
+        if (isBlockMode) {
+          final blocks = _groupUnifiedBlocks(items);
+          return ListView.builder(
+            controller: controller.primaryScrollController,
+            itemCount: blocks.length,
+            itemBuilder: (context, index) {
+              final block = blocks[index];
+
+              if (block.isCollapsed) {
+                final collapsedItem = block.items.first as _CollapsedItem;
+                if (collapsedSectionBuilder != null) {
+                  return collapsedSectionBuilder!(
+                    context,
+                    collapsedItem.lineCount,
+                    () => controller.expandSection(collapsedItem.lineIndex),
+                    configuration,
+                  );
+                }
+                return CollapsedSectionWidget(
+                  collapsedLineCount: collapsedItem.lineCount,
+                  onExpand: () => controller.expandSection(collapsedItem.lineIndex),
+                  configuration: configuration,
+                );
+              }
+
+              final blockBg = theme.resolveBlockBackgroundColor(isOldSide: false);
+              final blockBorder = theme.resolveBlockBorderColor(isOldSide: false);
+
+              return Container(
+                margin: EdgeInsets.only(
+                  bottom: index == blocks.length - 1 ? 0 : spacing.blockSpacing,
+                ),
+                padding: spacing.blockPadding,
+                decoration: BoxDecoration(
+                  color: blockBg,
+                  border: Border.all(
+                    color: blockBorder,
+                    width: spacing.blockBorderWidth,
+                  ),
+                  borderRadius: BorderRadius.circular(spacing.blockBorderRadius),
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: block.items.map((item) {
+                    final lineItem = item as _LineItem;
+                    if (lineBuilder != null) {
+                      return lineBuilder!(context, lineItem.line, configuration);
+                    }
+                    return DiffLineWidget(
+                      key: ValueKey('unified_${lineItem.lineIndex}'),
+                      line: lineItem.line,
+                      configuration: configuration,
+                      lineNumberBuilder: lineNumberBuilder,
+                      indicatorBuilder: indicatorBuilder,
+                      segmentBuilder: segmentBuilder,
+                    );
+                  }).toList(growable: false),
+                ),
+              );
+            },
+          );
+        }
 
         return ListView.builder(
           controller: controller.primaryScrollController,
