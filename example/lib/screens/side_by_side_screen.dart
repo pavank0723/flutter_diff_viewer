@@ -15,6 +15,11 @@ class SideBySideScreen extends StatefulWidget {
 class _SideBySideScreenState extends State<SideBySideScreen> {
   bool _showLineNumbers = true;
   bool _synchronizedScrolling = true;
+  bool _splitPanels = false;
+  bool _splitBlocks = false;
+  bool _customContainerColors = false;
+  double _panelSpacing = 0.0;
+  double _blockSpacing = 0.0;
   double _dividerWidth = 1.0;
 
   void _showCode() {
@@ -22,15 +27,20 @@ class _SideBySideScreenState extends State<SideBySideScreen> {
 FlutterDiffViewer(
   oldContent: oldContent,
   newContent: newContent,
-  oldLabel: 'main.dart (v1.0)',
-  newLabel: 'main.dart (v2.0)',
+  oldLabel: 'Current V1.1',
+  newLabel: 'Modified V1.2',
   configuration: FlutterDiffViewerConfiguration.defaults().copyWith(
     layout: DiffLayout.sideBySide,
     showLineNumbers: $_showLineNumbers,
     synchronizedScrolling: $_synchronizedScrolling,
+    splitPanels: $_splitPanels,
+    splitBlocks: $_splitBlocks,
     spacing: DiffSpacing.defaults().copyWith(
+      panelSpacing: $_panelSpacing,
+      blockSpacing: $_blockSpacing,
       dividerWidth: $_dividerWidth,
     ),
+    theme: ${_customContainerColors ? "FlutterDiffViewerTheme.light().copyWith(\n      leftPanelBackgroundColor: const Color(0xFFF8FAFC),\n      rightPanelBackgroundColor: const Color(0xFFF0FDF4),\n    )" : "FlutterDiffViewerTheme.light()"},
   ),
 )''';
 
@@ -38,7 +48,7 @@ FlutterDiffViewer(
       context,
       title: 'Side-by-Side Diff View',
       description:
-          'Displays original and modified content in two parallel synchronized scrolling columns.',
+          'Displays original and modified content in parallel columns with configurable container background colors, panel gaps, and diff block gaps.',
       code: code,
     );
   }
@@ -49,18 +59,23 @@ FlutterDiffViewer(
       layout: DiffLayout.sideBySide,
       showLineNumbers: _showLineNumbers,
       synchronizedScrolling: _synchronizedScrolling,
-      spacing: DiffSpacing(
-        lineHeight: 22.0,
-        lineNumberWidth: 52.0,
-        indicatorWidth: 20.0,
-        horizontalPadding: 8.0,
-        verticalPadding: 2.0,
-        borderWidth: 1.0,
-        borderRadius: 6.0,
-        headerHeight: 40.0,
-        summaryHeight: 32.0,
+      splitPanels: _splitPanels,
+      splitBlocks: _splitBlocks,
+      spacing: DiffSpacing.defaults().copyWith(
+        panelSpacing: _panelSpacing,
+        blockSpacing: _blockSpacing,
         dividerWidth: _dividerWidth,
       ),
+      theme: _customContainerColors
+          ? FlutterDiffViewerTheme.light().copyWith(
+              leftPanelBackgroundColor: const Color(0xFFF8FAFC),
+              rightPanelBackgroundColor: const Color(0xFFF0FDF4),
+              leftPanelBorderColor: const Color(0xFFCBD5E1),
+              rightPanelBorderColor: const Color(0xFF86EFAC),
+              rightAddedBackgroundColor: const Color(0xFFDCFCE7),
+              rightAddedHighlightColor: const Color(0xFF86EFAC),
+            )
+          : FlutterDiffViewerTheme.light(),
     );
 
     return Scaffold(
@@ -94,39 +109,71 @@ FlutterDiffViewer(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             color: Theme.of(context).colorScheme.surfaceContainerLow,
             child: Wrap(
-              spacing: 16,
+              spacing: 12,
               runSpacing: 8,
               crossAxisAlignment: WrapCrossAlignment.center,
               children: [
                 FilterChip(
-                  label:
-                      Text('Line Numbers: ${_showLineNumbers ? "ON" : "OFF"}'),
+                  label: Text('Line Numbers: ${_showLineNumbers ? "ON" : "OFF"}'),
                   selected: _showLineNumbers,
                   onSelected: (val) => setState(() => _showLineNumbers = val),
                 ),
                 FilterChip(
-                  label: Text(
-                      'Sync Scroll: ${_synchronizedScrolling ? "ON" : "OFF"}'),
+                  label: Text('Sync Scroll: ${_synchronizedScrolling ? "ON" : "OFF"}'),
                   selected: _synchronizedScrolling,
                   onSelected: (val) =>
                       setState(() => _synchronizedScrolling = val),
                 ),
+                FilterChip(
+                  label: Text('Container Colors: ${_customContainerColors ? "Custom" : "Default"}'),
+                  selected: _customContainerColors,
+                  onSelected: (val) =>
+                      setState(() => _customContainerColors = val),
+                ),
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Text('Divider Width: ',
-                        style: TextStyle(fontSize: 12)),
+                    const Text('Panel Gap: ', style: TextStyle(fontSize: 12)),
                     DropdownButton<double>(
-                      value: _dividerWidth,
+                      value: _panelSpacing,
                       isDense: true,
                       items: const [
-                        DropdownMenuItem(
-                            value: 1.0, child: Text('1 px (Default)')),
-                        DropdownMenuItem(value: 3.0, child: Text('3 px')),
-                        DropdownMenuItem(value: 6.0, child: Text('6 px')),
+                        DropdownMenuItem(value: 0.0, child: Text('0 px (None)')),
+                        DropdownMenuItem(value: 12.0, child: Text('12 px')),
+                        DropdownMenuItem(value: 16.0, child: Text('16 px')),
+                        DropdownMenuItem(value: 24.0, child: Text('24 px')),
                       ],
                       onChanged: (val) {
-                        if (val != null) setState(() => _dividerWidth = val);
+                        if (val != null) {
+                          setState(() {
+                            _panelSpacing = val;
+                            if (val > 0) _splitPanels = true;
+                          });
+                        }
+                      },
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text('Block Gap: ', style: TextStyle(fontSize: 12)),
+                    DropdownButton<double>(
+                      value: _blockSpacing,
+                      isDense: true,
+                      items: const [
+                        DropdownMenuItem(value: 0.0, child: Text('0 px (None)')),
+                        DropdownMenuItem(value: 8.0, child: Text('8 px')),
+                        DropdownMenuItem(value: 12.0, child: Text('12 px')),
+                        DropdownMenuItem(value: 16.0, child: Text('16 px')),
+                      ],
+                      onChanged: (val) {
+                        if (val != null) {
+                          setState(() {
+                            _blockSpacing = val;
+                            if (val > 0) _splitBlocks = true;
+                          });
+                        }
                       },
                     ),
                   ],
@@ -142,11 +189,12 @@ FlutterDiffViewer(
               padding: const EdgeInsets.all(16.0),
               child: FlutterDiffViewer(
                 key: ValueKey(
-                    'side_by_side_${_showLineNumbers}_${_synchronizedScrolling}_$_dividerWidth'),
+                  'side_by_side_${_showLineNumbers}_${_synchronizedScrolling}_${_panelSpacing}_${_blockSpacing}_$_customContainerColors',
+                ),
                 oldContent: SampleData.codeOld,
                 newContent: SampleData.codeNew,
-                oldLabel: 'main.dart (v1.0)',
-                newLabel: 'main.dart (v2.0)',
+                oldLabel: 'Current V1.1',
+                newLabel: 'Modified V1.2',
                 configuration: config,
               ),
             ),
