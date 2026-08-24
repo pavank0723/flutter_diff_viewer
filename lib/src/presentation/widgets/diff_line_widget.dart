@@ -5,21 +5,19 @@ import '../../domain/entities/diff_segment.dart';
 import '../../domain/enums/diff_type.dart';
 import '../builders/diff_builders.dart';
 import '../configuration/diff_viewer_configuration.dart';
+import '../configuration/diff_viewer_theme.dart';
 import 'diff_indicator_widget.dart';
 import 'diff_line_number_widget.dart';
 import 'diff_segment_widget.dart';
 
-/// Renders a single line row in the unified diff view.
+/// Renders a single line row in the diff view.
 ///
 /// Includes (optionally) the line number, indicator, and text content.
 /// When segments are available, renders inline highlights using
 /// [DiffSegmentWidget]; otherwise renders the full line text.
 ///
-/// This widget is used in [UnifiedDiffView] and serves as the default
-/// line renderer in [SideBySideDiffView].
-///
 /// All rendering decisions (colors, typography) are driven by
-/// [FlutterDiffViewerConfiguration] — no hardcoded values.
+/// [FlutterDiffViewerConfiguration] and side-aware resolvers.
 class DiffLineWidget extends StatelessWidget {
   /// The diff line data to render.
   final DiffLine line;
@@ -123,7 +121,7 @@ class DiffLineWidget extends StatelessWidget {
     List<DiffSegment> segments,
     DiffType displayType,
     dynamic typography,
-    dynamic theme,
+    FlutterDiffViewerTheme theme,
   ) {
     if (text == null) {
       return const SizedBox.shrink();
@@ -142,6 +140,7 @@ class DiffLineWidget extends StatelessWidget {
             return DiffSegmentWidget(
               segment: segment,
               configuration: configuration,
+              isOldSide: isOldSide,
             );
           }).toList(growable: false),
         ),
@@ -163,43 +162,42 @@ class DiffLineWidget extends StatelessWidget {
     );
   }
 
-  Color _resolveBackground(dynamic theme) {
+  Color _resolveBackground(FlutterDiffViewerTheme theme) {
     switch (line.type) {
       case DiffType.added:
-        return theme.addedBackgroundColor as Color;
+        return theme.resolveAddedBackgroundColor(isOldSide: isOldSide);
       case DiffType.removed:
-        return theme.removedBackgroundColor as Color;
+        return theme.resolveRemovedBackgroundColor(isOldSide: isOldSide);
       case DiffType.modified:
-        // For modified lines, old side shows removed color, new side shows added
         return isOldSide
-            ? theme.removedBackgroundColor as Color
-            : theme.addedBackgroundColor as Color;
+            ? theme.resolveRemovedBackgroundColor(isOldSide: true)
+            : theme.resolveAddedBackgroundColor(isOldSide: false);
       case DiffType.unchanged:
-        return theme.unchangedBackgroundColor as Color;
+        return theme.resolveUnchangedBackgroundColor(isOldSide: isOldSide);
     }
   }
 
   TextStyle _resolveTextStyle(
     DiffType displayType,
     dynamic typography,
-    dynamic theme,
+    FlutterDiffViewerTheme theme,
   ) {
     switch (displayType) {
       case DiffType.added:
         return (typography.addedStyle as TextStyle).copyWith(
-          color: theme.addedTextColor as Color,
+          color: theme.resolveAddedTextColor(isOldSide: isOldSide),
         );
       case DiffType.removed:
         return (typography.removedStyle as TextStyle).copyWith(
-          color: theme.removedTextColor as Color,
+          color: theme.resolveRemovedTextColor(isOldSide: isOldSide),
         );
       case DiffType.modified:
         return (typography.modifiedStyle as TextStyle).copyWith(
-          color: theme.modifiedTextColor as Color,
+          color: theme.resolveModifiedTextColor(isOldSide: isOldSide),
         );
       case DiffType.unchanged:
         return (typography.unchangedStyle as TextStyle).copyWith(
-          color: theme.unchangedTextColor as Color,
+          color: theme.resolveUnchangedTextColor(isOldSide: isOldSide),
         );
     }
   }
