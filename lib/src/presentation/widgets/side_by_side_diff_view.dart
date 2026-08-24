@@ -15,8 +15,9 @@ import 'diff_line_widget.dart';
 /// Displays old content on the left panel and new content on the right panel,
 /// with corresponding lines aligned. Both panels scroll in sync.
 ///
-/// Supports classic unified frame mode and split dual-card panel mode with
-/// customizable in-between gap ([DiffSpacing.panelSpacing]).
+/// Supports classic unified frame mode, split dual-card panel mode with
+/// customizable in-between gap ([DiffSpacing.panelSpacing]), and customizable
+/// change block cards with vertical block gap ([DiffSpacing.blockSpacing]).
 class SideBySideDiffView extends StatelessWidget {
   /// The diff result to render.
   final DiffResult result;
@@ -72,12 +73,15 @@ class SideBySideDiffView extends StatelessWidget {
     Widget wrapPanelCard({required bool isOldSide, required Widget child}) {
       if (!isSplit) return child;
 
+      final panelBg = theme.resolvePanelBackgroundColor(isOldSide: isOldSide);
+      final panelBorder = theme.resolvePanelBorderColor(isOldSide: isOldSide);
+
       return Container(
         clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
-          color: theme.panelBackgroundColor,
+          color: panelBg,
           border: Border.all(
-            color: theme.panelBorderColor,
+            color: panelBorder,
             width: spacing.panelBorderWidth,
           ),
           borderRadius: BorderRadius.circular(spacing.panelBorderRadius),
@@ -184,8 +188,99 @@ class _DiffPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = configuration.theme;
+    final spacing = configuration.spacing;
+    final panelBg = theme.resolvePanelBackgroundColor(isOldSide: isOldSide);
+    final isBlockMode = configuration.splitBlocks || spacing.blockSpacing > 0;
+
+    if (isBlockMode) {
+      final blocks = _groupSideBySideBlocks(items);
+
+      return Container(
+        color: panelBg,
+        child: Scrollbar(
+          controller: scrollController,
+          child: ListView.builder(
+            controller: scrollController,
+            itemCount: blocks.length,
+            itemBuilder: (context, index) {
+              final block = blocks[index];
+
+              if (block.isCollapsed) {
+                final item = block.items.first;
+                if (collapsedSectionBuilder != null) {
+                  return collapsedSectionBuilder!(
+                    context,
+                    item.collapsedCount,
+                    () => controller.expandSection(item.collapsedStartIndex),
+                    configuration,
+                  );
+                }
+                return CollapsedSectionWidget(
+                  collapsedLineCount: item.collapsedCount,
+                  configuration: configuration,
+                  onExpand: () {
+                    controller.expandSection(item.collapsedStartIndex);
+                  },
+                );
+              }
+
+              final blockBg = theme.resolveBlockBackgroundColor(isOldSide: isOldSide);
+              final blockBorder = theme.resolveBlockBorderColor(isOldSide: isOldSide);
+
+              return Container(
+                margin: EdgeInsets.only(
+                  bottom: index == blocks.length - 1 ? 0 : spacing.blockSpacing,
+                ),
+                padding: spacing.blockPadding,
+                decoration: BoxDecoration(
+                  color: blockBg,
+                  border: Border.all(
+                    color: blockBorder,
+                    width: spacing.blockBorderWidth,
+                  ),
+                  borderRadius: BorderRadius.circular(spacing.blockBorderRadius),
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: block.items.map((item) {
+                    final line = isOldSide ? item.oldLine : item.newLine;
+
+                    if (line == null) {
+                      return SizedBox(
+                        height: spacing.lineHeight,
+                        child: Container(
+                          color: theme.resolveUnchangedBackgroundColor(
+                            isOldSide: isOldSide,
+                          ),
+                        ),
+                      );
+                    }
+
+                    if (lineBuilder != null) {
+                      return lineBuilder!(context, line, configuration);
+                    }
+
+                    return DiffLineWidget(
+                      line: line,
+                      configuration: configuration,
+                      isOldSide: isOldSide,
+                      lineNumberBuilder: lineNumberBuilder,
+                      indicatorBuilder: indicatorBuilder,
+                      segmentBuilder: segmentBuilder,
+                    );
+                  }).toList(growable: false),
+                ),
+              );
+            },
+          ),
+        ),
+      );
+    }
+
     return Container(
-      color: configuration.theme.backgroundColor,
+      color: panelBg,
       child: Scrollbar(
         controller: scrollController,
         child: ListView.builder(
@@ -217,9 +312,11 @@ class _DiffPanel extends StatelessWidget {
             if (line == null) {
               // Empty filler row (for line alignment when change exists only on opposite side)
               return SizedBox(
-                height: configuration.spacing.lineHeight,
+                height: spacing.lineHeight,
                 child: Container(
-                  color: configuration.theme.unchangedBackgroundColor,
+                  color: theme.resolveUnchangedBackgroundColor(
+                    isOldSide: isOldSide,
+                  ),
                 ),
               );
             }
@@ -260,6 +357,54 @@ class _SideBySideItem {
       : oldLine = null,
         newLine = null,
         isCollapsedPlaceholder = true;
+}
+
+/// Helper data class representing a block of items separated by gaps.
+class _SideBySideBlock {
+  final List<_SideBySideItem> items;
+  final bool isCollapsed;
+
+  const _SideBySideBlock.lines(this.items) : isCollapsed = false;
+  const _SideBySideBlock.collapsed(this.items) : isCollapsed = true;
+}
+
+/// Groups consecutive items into change and unchanged blocks for block spacing mode.
+List<_SideBySideBlock> _groupSideBySideBlocks(List<_SideBySideItem> items) {
+  final blocks = <_SideBySideBlock>[];
+  if (items.isEmpty) return blocks;
+
+  List<_SideBySideItem> currentGroup = [];
+  bool? inChangeGroup;
+
+  for (final item in items) {
+    if (item.isCollapsedPlaceholder) {
+      if (currentGroup.isNotEmpty) {
+        blocks.add(_SideBySideBlock.lines(currentGroup));
+        currentGroup = [];
+        inChangeGroup = null;
+      }
+      blocks.add(_SideBySideBlock.collapsed([item]));
+      continue;
+    }
+
+    final isChange = (item.oldLine?.type != DiffType.unchanged) ||
+        (item.newLine?.type != DiffType.unchanged);
+
+    if (inChangeGroup == null || inChangeGroup != isChange) {
+      if (currentGroup.isNotEmpty) {
+        blocks.add(_SideBySideBlock.lines(currentGroup));
+        currentGroup = [];
+      }
+      inChangeGroup = isChange;
+    }
+    currentGroup.add(item);
+  }
+
+  if (currentGroup.isNotEmpty) {
+    blocks.add(_SideBySideBlock.lines(currentGroup));
+  }
+
+  return blocks;
 }
 
 /// Computes the aligned list of side-by-side row items from a [DiffResult].
