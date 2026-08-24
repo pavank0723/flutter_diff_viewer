@@ -32,8 +32,15 @@ import 'diff_viewer_theme.dart';
 ///   configuration: FlutterDiffViewerConfiguration.defaults().copyWith(
 ///     layout: DiffLayout.sideBySide,
 ///     splitPanels: true,
-///     spacing: DiffSpacing.defaults().copyWith(panelSpacing: 16.0),
-///     theme: FlutterDiffViewerTheme.light(),
+///     splitBlocks: true,
+///     spacing: DiffSpacing.defaults().copyWith(
+///       panelSpacing: 16.0,
+///       blockSpacing: 12.0,
+///     ),
+///     theme: FlutterDiffViewerTheme.light().copyWith(
+///       leftPanelBackgroundColor: const Color(0xFFFAFAFA),
+///       rightPanelBackgroundColor: const Color(0xFFF5F5F5),
+///     ),
 ///   ),
 /// )
 /// ```
@@ -61,6 +68,13 @@ class FlutterDiffViewerConfiguration {
   /// Defaults to `false`. When `true` or when [DiffSpacing.panelSpacing] > 0,
   /// original and modified panels render in distinct card boxes.
   final bool splitPanels;
+
+  /// Whether to render individual diff change blocks / hunks as separate cards
+  /// separated by [DiffSpacing.blockSpacing].
+  ///
+  /// Defaults to `false`. When `true` or when [DiffSpacing.blockSpacing] > 0,
+  /// diff change blocks are grouped into card containers.
+  final bool splitBlocks;
 
   // ---------------------------------------------------------------------------
   // Feature flags
@@ -163,12 +177,6 @@ class FlutterDiffViewerConfiguration {
   // ---------------------------------------------------------------------------
 
   /// Creates an immutable [FlutterDiffViewerConfiguration].
-  ///
-  /// The [theme], [typography], [spacing], and [localizations] fields are
-  /// **required** to allow `const` construction. For a zero-configuration
-  /// setup, use the [FlutterDiffViewerConfiguration.defaults] factory instead.
-  ///
-  /// [contextLines] must be >= 0.
   const FlutterDiffViewerConfiguration({
     required this.theme,
     required this.typography,
@@ -177,6 +185,7 @@ class FlutterDiffViewerConfiguration {
     this.layout = DiffLayout.auto,
     this.sideBySideBreakpoint = 768.0,
     this.splitPanels = false,
+    this.splitBlocks = false,
     this.showHeader = true,
     this.showLineNumbers = true,
     this.showIndicators = true,
@@ -197,13 +206,6 @@ class FlutterDiffViewerConfiguration {
   // ---------------------------------------------------------------------------
 
   /// Creates a [FlutterDiffViewerConfiguration] with all default values.
-  ///
-  /// Uses [FlutterDiffViewerTheme.light], [DiffTypography.defaults],
-  /// [DiffSpacing.defaults], and [DiffLocalizations.defaults].
-  ///
-  /// ```dart
-  /// final config = FlutterDiffViewerConfiguration.defaults();
-  /// ```
   factory FlutterDiffViewerConfiguration.defaults() =>
       FlutterDiffViewerConfiguration(
         theme: FlutterDiffViewerTheme.light(),
@@ -214,9 +216,6 @@ class FlutterDiffViewerConfiguration {
 
   /// Creates a [FlutterDiffViewerConfiguration] that automatically adapts its
   /// [theme] to the ambient [BuildContext] brightness.
-  ///
-  /// All other settings use their default values unless overridden via
-  /// [copyWith] after construction.
   factory FlutterDiffViewerConfiguration.adaptive(BuildContext context) =>
       FlutterDiffViewerConfiguration(
         theme: FlutterDiffViewerTheme.resolveFromContext(context),
@@ -232,11 +231,6 @@ class FlutterDiffViewerConfiguration {
   /// Converts the comparison-related settings of this configuration into a
   /// [DiffComparisonOptions] value object suitable for passing to the domain
   /// layer.
-  ///
-  /// ```dart
-  /// final options = configuration.toComparisonOptions();
-  /// await diffRepository.compare(oldText, newText, options: options);
-  /// ```
   DiffComparisonOptions toComparisonOptions() => DiffComparisonOptions(
         granularity: granularity,
         ignoreWhitespace: ignoreWhitespace,
@@ -254,6 +248,7 @@ class FlutterDiffViewerConfiguration {
     DiffLayout? layout,
     double? sideBySideBreakpoint,
     bool? splitPanels,
+    bool? splitBlocks,
     bool? showHeader,
     bool? showLineNumbers,
     bool? showIndicators,
@@ -276,6 +271,7 @@ class FlutterDiffViewerConfiguration {
       layout: layout ?? this.layout,
       sideBySideBreakpoint: sideBySideBreakpoint ?? this.sideBySideBreakpoint,
       splitPanels: splitPanels ?? this.splitPanels,
+      splitBlocks: splitBlocks ?? this.splitBlocks,
       showHeader: showHeader ?? this.showHeader,
       showLineNumbers: showLineNumbers ?? this.showLineNumbers,
       showIndicators: showIndicators ?? this.showIndicators,
@@ -311,6 +307,7 @@ class FlutterDiffViewerConfiguration {
           layout == other.layout &&
           sideBySideBreakpoint == other.sideBySideBreakpoint &&
           splitPanels == other.splitPanels &&
+          splitBlocks == other.splitBlocks &&
           showHeader == other.showHeader &&
           showLineNumbers == other.showLineNumbers &&
           showIndicators == other.showIndicators &&
@@ -334,6 +331,7 @@ class FlutterDiffViewerConfiguration {
         layout,
         sideBySideBreakpoint,
         splitPanels,
+        splitBlocks,
         showHeader,
         showLineNumbers,
         showIndicators,
@@ -357,6 +355,7 @@ class FlutterDiffViewerConfiguration {
   String toString() => 'FlutterDiffViewerConfiguration('
       'layout: $layout, '
       'splitPanels: $splitPanels, '
+      'splitBlocks: $splitBlocks, '
       'granularity: $granularity, '
       'showHeader: $showHeader, '
       'showLineNumbers: $showLineNumbers, '
