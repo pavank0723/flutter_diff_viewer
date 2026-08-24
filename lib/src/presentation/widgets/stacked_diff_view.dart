@@ -10,12 +10,6 @@ import 'collapsed_section_widget.dart';
 import 'diff_line_widget.dart';
 
 /// Renders a stacked diff view (old content above, new content below).
-///
-/// Optimized for narrow screens and mobile devices where side-by-side is not
-/// practical. Each panel has its own scrollable list.
-///
-/// Unlike [SideBySideDiffView], the two panels are NOT synchronized —
-/// they scroll independently for better mobile UX.
 class StackedDiffView extends StatelessWidget {
   /// The diff result to render.
   final DiffResult result;
@@ -166,45 +160,123 @@ class _StackedPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      controller: isOldSide
-          ? controller.leftScrollController
-          : controller.rightScrollController,
-      itemCount: items.length,
-      itemExtent: configuration.spacing.lineHeight,
-      itemBuilder: (context, index) {
-        final item = items[index];
+    final theme = configuration.theme;
+    final spacing = configuration.spacing;
+    final panelBg = theme.resolvePanelBackgroundColor(isOldSide: isOldSide);
+    final isBlockMode = configuration.splitBlocks || spacing.blockSpacing > 0;
 
-        if (item is _CollapsedStackedItem) {
-          if (collapsedSectionBuilder != null) {
-            return collapsedSectionBuilder!(
-              context,
-              item.lineCount,
-              () => controller.expandSection(item.lineIndex),
-              configuration,
+    if (isBlockMode) {
+      final blocks = _groupStackedBlocks(items);
+      return Container(
+        color: panelBg,
+        child: ListView.builder(
+          controller: isOldSide
+              ? controller.leftScrollController
+              : controller.rightScrollController,
+          itemCount: blocks.length,
+          itemBuilder: (context, index) {
+            final block = blocks[index];
+
+            if (block.isCollapsed) {
+              final collapsedItem = block.items.first as _CollapsedStackedItem;
+              if (collapsedSectionBuilder != null) {
+                return collapsedSectionBuilder!(
+                  context,
+                  collapsedItem.lineCount,
+                  () => controller.expandSection(collapsedItem.lineIndex),
+                  configuration,
+                );
+              }
+              return CollapsedSectionWidget(
+                collapsedLineCount: collapsedItem.lineCount,
+                onExpand: () => controller.expandSection(collapsedItem.lineIndex),
+                configuration: configuration,
+              );
+            }
+
+            final blockBg = theme.resolveBlockBackgroundColor(isOldSide: isOldSide);
+            final blockBorder = theme.resolveBlockBorderColor(isOldSide: isOldSide);
+
+            return Container(
+              margin: EdgeInsets.only(
+                bottom: index == blocks.length - 1 ? 0 : spacing.blockSpacing,
+              ),
+              padding: spacing.blockPadding,
+              decoration: BoxDecoration(
+                color: blockBg,
+                border: Border.all(
+                  color: blockBorder,
+                  width: spacing.blockBorderWidth,
+                ),
+                borderRadius: BorderRadius.circular(spacing.blockBorderRadius),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: block.items.map((item) {
+                  final lineItem = item as _LineStackedItem;
+                  if (lineBuilder != null) {
+                    return lineBuilder!(context, lineItem.line, configuration);
+                  }
+                  return DiffLineWidget(
+                    key: ValueKey('${isOldSide ? 'old' : 'new'}_${lineItem.lineIndex}'),
+                    line: lineItem.line,
+                    isOldSide: isOldSide,
+                    configuration: configuration,
+                    lineNumberBuilder: lineNumberBuilder,
+                    indicatorBuilder: indicatorBuilder,
+                    segmentBuilder: segmentBuilder,
+                  );
+                }).toList(growable: false),
+              ),
+            );
+          },
+        ),
+      );
+    }
+
+    return Container(
+      color: panelBg,
+      child: ListView.builder(
+        controller: isOldSide
+            ? controller.leftScrollController
+            : controller.rightScrollController,
+        itemCount: items.length,
+        itemExtent: configuration.spacing.lineHeight,
+        itemBuilder: (context, index) {
+          final item = items[index];
+
+          if (item is _CollapsedStackedItem) {
+            if (collapsedSectionBuilder != null) {
+              return collapsedSectionBuilder!(
+                context,
+                item.lineCount,
+                () => controller.expandSection(item.lineIndex),
+                configuration,
+              );
+            }
+            return CollapsedSectionWidget(
+              collapsedLineCount: item.lineCount,
+              onExpand: () => controller.expandSection(item.lineIndex),
+              configuration: configuration,
             );
           }
-          return CollapsedSectionWidget(
-            collapsedLineCount: item.lineCount,
-            onExpand: () => controller.expandSection(item.lineIndex),
-            configuration: configuration,
-          );
-        }
 
-        final lineItem = item as _LineStackedItem;
-        if (lineBuilder != null) {
-          return lineBuilder!(context, lineItem.line, configuration);
-        }
-        return DiffLineWidget(
-          key: ValueKey('${isOldSide ? 'old' : 'new'}_${lineItem.lineIndex}'),
-          line: lineItem.line,
-          isOldSide: isOldSide,
-          configuration: configuration,
-          lineNumberBuilder: lineNumberBuilder,
-          indicatorBuilder: indicatorBuilder,
-          segmentBuilder: segmentBuilder,
-        );
-      },
+          final lineItem = item as _LineStackedItem;
+          if (lineBuilder != null) {
+            return lineBuilder!(context, lineItem.line, configuration);
+          }
+          return DiffLineWidget(
+            key: ValueKey('${isOldSide ? 'old' : 'new'}_${lineItem.lineIndex}'),
+            line: lineItem.line,
+            isOldSide: isOldSide,
+            configuration: configuration,
+            lineNumberBuilder: lineNumberBuilder,
+            indicatorBuilder: indicatorBuilder,
+            segmentBuilder: segmentBuilder,
+          );
+        },
+      ),
     );
   }
 }
@@ -221,4 +293,50 @@ final class _CollapsedStackedItem extends _StackedItem {
   final int lineIndex;
   final int lineCount;
   _CollapsedStackedItem(this.lineIndex, this.lineCount);
+}
+
+class _StackedBlock {
+  final List<_StackedItem> items;
+  final bool isCollapsed;
+
+  const _StackedBlock.lines(this.items) : isCollapsed = false;
+  const _StackedBlock.collapsed(this.items) : isCollapsed = true;
+}
+
+List<_StackedBlock> _groupStackedBlocks(List<_StackedItem> items) {
+  final blocks = <_StackedBlock>[];
+  if (items.isEmpty) return blocks;
+
+  List<_StackedItem> currentGroup = [];
+  bool? inChangeGroup;
+
+  for (final item in items) {
+    if (item is _CollapsedStackedItem) {
+      if (currentGroup.isNotEmpty) {
+        blocks.add(_StackedBlock.lines(currentGroup));
+        currentGroup = [];
+        inChangeGroup = null;
+      }
+      blocks.add(_StackedBlock.collapsed([item]));
+      continue;
+    }
+
+    final lineItem = item as _LineStackedItem;
+    final isChange = lineItem.line.type != DiffType.unchanged;
+
+    if (inChangeGroup == null || inChangeGroup != isChange) {
+      if (currentGroup.isNotEmpty) {
+        blocks.add(_StackedBlock.lines(currentGroup));
+        currentGroup = [];
+      }
+      inChangeGroup = isChange;
+    }
+    currentGroup.add(item);
+  }
+
+  if (currentGroup.isNotEmpty) {
+    blocks.add(_StackedBlock.lines(currentGroup));
+  }
+
+  return blocks;
 }
