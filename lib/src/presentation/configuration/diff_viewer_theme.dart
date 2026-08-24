@@ -9,13 +9,10 @@ import 'package:flutter/material.dart';
 /// Or call [FlutterDiffViewerTheme.resolveFromContext] to automatically select
 /// between light and dark based on the ambient [ThemeData.brightness].
 ///
-/// ```dart
-/// FlutterDiffViewer(
-///   configuration: FlutterDiffViewerConfiguration(
-///     theme: FlutterDiffViewerTheme.dark(),
-///   ),
-/// )
-/// ```
+/// Distinct container background colors and diff highlight colors can be
+/// configured separately for the left ("Current") and right ("Modified") panels
+/// using fields like [leftPanelBackgroundColor], [rightPanelBackgroundColor],
+/// [leftAddedBackgroundColor], [rightAddedBackgroundColor], etc.
 class FlutterDiffViewerTheme {
   // ---------------------------------------------------------------------------
   // Row background colors
@@ -30,7 +27,7 @@ class FlutterDiffViewerTheme {
   /// Background color for rows that contain modified content (old or new side).
   final Color modifiedBackgroundColor;
 
-  /// Background color for rows that are unchanged.
+  /// Background color for rows that contain unchanged content.
   final Color unchangedBackgroundColor;
 
   // ---------------------------------------------------------------------------
@@ -38,15 +35,9 @@ class FlutterDiffViewerTheme {
   // ---------------------------------------------------------------------------
 
   /// Highlight color for individual added words or characters within a line.
-  ///
-  /// More saturated than [addedBackgroundColor] to visually stand out against
-  /// the row background.
   final Color addedHighlightColor;
 
   /// Highlight color for individual removed words or characters within a line.
-  ///
-  /// More saturated than [removedBackgroundColor] to visually stand out against
-  /// the row background.
   final Color removedHighlightColor;
 
   // ---------------------------------------------------------------------------
@@ -75,8 +66,7 @@ class FlutterDiffViewerTheme {
   /// Text color of the line-number gutter.
   final Color lineNumberTextColor;
 
-  /// Color of the vertical divider between old and new panes in side-by-side
-  /// mode.
+  /// Color of the vertical divider between old and new panes in side-by-side mode.
   final Color dividerColor;
 
   /// Color of the outer border surrounding the diff viewer widget.
@@ -122,13 +112,98 @@ class FlutterDiffViewerTheme {
   final Color panelBorderColor;
 
   // ---------------------------------------------------------------------------
+  // Per-side container and diff highlight overrides
+  // ---------------------------------------------------------------------------
+
+  /// Background color override for the left (old/current) panel container card.
+  final Color? leftPanelBackgroundColor;
+
+  /// Background color override for the right (new/modified) panel container card.
+  final Color? rightPanelBackgroundColor;
+
+  /// Border color override for the left (old/current) panel container card.
+  final Color? leftPanelBorderColor;
+
+  /// Border color override for the right (new/modified) panel container card.
+  final Color? rightPanelBorderColor;
+
+  /// Diff added background color override for left panel.
+  final Color? leftAddedBackgroundColor;
+
+  /// Diff added background color override for right panel.
+  final Color? rightAddedBackgroundColor;
+
+  /// Diff removed background color override for left panel.
+  final Color? leftRemovedBackgroundColor;
+
+  /// Diff removed background color override for right panel.
+  final Color? rightRemovedBackgroundColor;
+
+  /// Diff modified background color override for left panel.
+  final Color? leftModifiedBackgroundColor;
+
+  /// Diff modified background color override for right panel.
+  final Color? rightModifiedBackgroundColor;
+
+  /// Diff unchanged background color override for left panel.
+  final Color? leftUnchangedBackgroundColor;
+
+  /// Diff unchanged background color override for right panel.
+  final Color? rightUnchangedBackgroundColor;
+
+  /// Added intra-line highlight color override for left panel.
+  final Color? leftAddedHighlightColor;
+
+  /// Added intra-line highlight color override for right panel.
+  final Color? rightAddedHighlightColor;
+
+  /// Removed intra-line highlight color override for left panel.
+  final Color? leftRemovedHighlightColor;
+
+  /// Removed intra-line highlight color override for right panel.
+  final Color? rightRemovedHighlightColor;
+
+  /// Text color for added lines on left panel.
+  final Color? leftAddedTextColor;
+
+  /// Text color for added lines on right panel.
+  final Color? rightAddedTextColor;
+
+  /// Text color for removed lines on left panel.
+  final Color? leftRemovedTextColor;
+
+  /// Text color for removed lines on right panel.
+  final Color? rightRemovedTextColor;
+
+  /// Text color for modified lines on left panel.
+  final Color? leftModifiedTextColor;
+
+  /// Text color for modified lines on right panel.
+  final Color? rightModifiedTextColor;
+
+  /// Text color for unchanged lines on left panel.
+  final Color? leftUnchangedTextColor;
+
+  /// Text color for unchanged lines on right panel.
+  final Color? rightUnchangedTextColor;
+
+  /// Diff block card background color override for left panel.
+  final Color? leftBlockBackgroundColor;
+
+  /// Diff block card background color override for right panel.
+  final Color? rightBlockBackgroundColor;
+
+  /// Diff block card border color override for left panel.
+  final Color? leftBlockBorderColor;
+
+  /// Diff block card border color override for right panel.
+  final Color? rightBlockBorderColor;
+
+  // ---------------------------------------------------------------------------
   // Constructor
   // ---------------------------------------------------------------------------
 
   /// Creates an immutable [FlutterDiffViewerTheme].
-  ///
-  /// Every field is required; prefer the factory constructors ([light], [dark])
-  /// or [resolveFromContext] as starting points and override with [copyWith].
   const FlutterDiffViewerTheme({
     required this.addedBackgroundColor,
     required this.removedBackgroundColor,
@@ -157,7 +232,109 @@ class FlutterDiffViewerTheme {
     required this.backgroundColor,
     required this.panelBackgroundColor,
     required this.panelBorderColor,
+    this.leftPanelBackgroundColor,
+    this.rightPanelBackgroundColor,
+    this.leftPanelBorderColor,
+    this.rightPanelBorderColor,
+    this.leftAddedBackgroundColor,
+    this.rightAddedBackgroundColor,
+    this.leftRemovedBackgroundColor,
+    this.rightRemovedBackgroundColor,
+    this.leftModifiedBackgroundColor,
+    this.rightModifiedBackgroundColor,
+    this.leftUnchangedBackgroundColor,
+    this.rightUnchangedBackgroundColor,
+    this.leftAddedHighlightColor,
+    this.rightAddedHighlightColor,
+    this.leftRemovedHighlightColor,
+    this.rightRemovedHighlightColor,
+    this.leftAddedTextColor,
+    this.rightAddedTextColor,
+    this.leftRemovedTextColor,
+    this.rightRemovedTextColor,
+    this.leftModifiedTextColor,
+    this.rightModifiedTextColor,
+    this.leftUnchangedTextColor,
+    this.rightUnchangedTextColor,
+    this.leftBlockBackgroundColor,
+    this.rightBlockBackgroundColor,
+    this.leftBlockBorderColor,
+    this.rightBlockBorderColor,
   });
+
+  // ---------------------------------------------------------------------------
+  // Resolver Helpers
+  // ---------------------------------------------------------------------------
+
+  /// Resolves the panel container background color based on panel side.
+  Color resolvePanelBackgroundColor({required bool isOldSide}) => isOldSide
+      ? (leftPanelBackgroundColor ?? panelBackgroundColor)
+      : (rightPanelBackgroundColor ?? panelBackgroundColor);
+
+  /// Resolves the panel container border color based on panel side.
+  Color resolvePanelBorderColor({required bool isOldSide}) => isOldSide
+      ? (leftPanelBorderColor ?? panelBorderColor)
+      : (rightPanelBorderColor ?? panelBorderColor);
+
+  /// Resolves added background color based on panel side.
+  Color resolveAddedBackgroundColor({bool isOldSide = false}) => isOldSide
+      ? (leftAddedBackgroundColor ?? addedBackgroundColor)
+      : (rightAddedBackgroundColor ?? addedBackgroundColor);
+
+  /// Resolves removed background color based on panel side.
+  Color resolveRemovedBackgroundColor({bool isOldSide = false}) => isOldSide
+      ? (leftRemovedBackgroundColor ?? removedBackgroundColor)
+      : (rightRemovedBackgroundColor ?? removedBackgroundColor);
+
+  /// Resolves modified background color based on panel side.
+  Color resolveModifiedBackgroundColor({bool isOldSide = false}) => isOldSide
+      ? (leftModifiedBackgroundColor ?? modifiedBackgroundColor)
+      : (rightModifiedBackgroundColor ?? modifiedBackgroundColor);
+
+  /// Resolves unchanged background color based on panel side.
+  Color resolveUnchangedBackgroundColor({bool isOldSide = false}) => isOldSide
+      ? (leftUnchangedBackgroundColor ?? unchangedBackgroundColor)
+      : (rightUnchangedBackgroundColor ?? unchangedBackgroundColor);
+
+  /// Resolves added highlight color based on panel side.
+  Color resolveAddedHighlightColor({bool isOldSide = false}) => isOldSide
+      ? (leftAddedHighlightColor ?? addedHighlightColor)
+      : (rightAddedHighlightColor ?? addedHighlightColor);
+
+  /// Resolves removed highlight color based on panel side.
+  Color resolveRemovedHighlightColor({bool isOldSide = false}) => isOldSide
+      ? (leftRemovedHighlightColor ?? removedHighlightColor)
+      : (rightRemovedHighlightColor ?? removedHighlightColor);
+
+  /// Resolves added text color based on panel side.
+  Color resolveAddedTextColor({bool isOldSide = false}) => isOldSide
+      ? (leftAddedTextColor ?? addedTextColor)
+      : (rightAddedTextColor ?? addedTextColor);
+
+  /// Resolves removed text color based on panel side.
+  Color resolveRemovedTextColor({bool isOldSide = false}) => isOldSide
+      ? (leftRemovedTextColor ?? removedTextColor)
+      : (rightRemovedTextColor ?? removedTextColor);
+
+  /// Resolves modified text color based on panel side.
+  Color resolveModifiedTextColor({bool isOldSide = false}) => isOldSide
+      ? (leftModifiedTextColor ?? modifiedTextColor)
+      : (rightModifiedTextColor ?? modifiedTextColor);
+
+  /// Resolves unchanged text color based on panel side.
+  Color resolveUnchangedTextColor({bool isOldSide = false}) => isOldSide
+      ? (leftUnchangedTextColor ?? unchangedTextColor)
+      : (rightUnchangedTextColor ?? unchangedTextColor);
+
+  /// Resolves block card background color based on panel side.
+  Color resolveBlockBackgroundColor({required bool isOldSide}) => isOldSide
+      ? (leftBlockBackgroundColor ?? resolvePanelBackgroundColor(isOldSide: true))
+      : (rightBlockBackgroundColor ?? resolvePanelBackgroundColor(isOldSide: false));
+
+  /// Resolves block card border color based on panel side.
+  Color resolveBlockBorderColor({required bool isOldSide}) => isOldSide
+      ? (leftBlockBorderColor ?? resolvePanelBorderColor(isOldSide: true))
+      : (rightBlockBorderColor ?? resolvePanelBorderColor(isOldSide: false));
 
   // ---------------------------------------------------------------------------
   // Factory constructors
@@ -230,13 +407,6 @@ class FlutterDiffViewerTheme {
   // ---------------------------------------------------------------------------
 
   /// Resolves the appropriate theme for the given [context].
-  ///
-  /// Returns [FlutterDiffViewerTheme.dark] when [ThemeData.brightness] is
-  /// [Brightness.dark], and [FlutterDiffViewerTheme.light] otherwise.
-  ///
-  /// ```dart
-  /// final theme = FlutterDiffViewerTheme.resolveFromContext(context);
-  /// ```
   static FlutterDiffViewerTheme resolveFromContext(BuildContext context) {
     final brightness = Theme.of(context).brightness;
     return brightness == Brightness.dark
@@ -277,6 +447,34 @@ class FlutterDiffViewerTheme {
     Color? backgroundColor,
     Color? panelBackgroundColor,
     Color? panelBorderColor,
+    Color? leftPanelBackgroundColor,
+    Color? rightPanelBackgroundColor,
+    Color? leftPanelBorderColor,
+    Color? rightPanelBorderColor,
+    Color? leftAddedBackgroundColor,
+    Color? rightAddedBackgroundColor,
+    Color? leftRemovedBackgroundColor,
+    Color? rightRemovedBackgroundColor,
+    Color? leftModifiedBackgroundColor,
+    Color? rightModifiedBackgroundColor,
+    Color? leftUnchangedBackgroundColor,
+    Color? rightUnchangedBackgroundColor,
+    Color? leftAddedHighlightColor,
+    Color? rightAddedHighlightColor,
+    Color? leftRemovedHighlightColor,
+    Color? rightRemovedHighlightColor,
+    Color? leftAddedTextColor,
+    Color? rightAddedTextColor,
+    Color? leftRemovedTextColor,
+    Color? rightRemovedTextColor,
+    Color? leftModifiedTextColor,
+    Color? rightModifiedTextColor,
+    Color? leftUnchangedTextColor,
+    Color? rightUnchangedTextColor,
+    Color? leftBlockBackgroundColor,
+    Color? rightBlockBackgroundColor,
+    Color? leftBlockBorderColor,
+    Color? rightBlockBorderColor,
   }) {
     return FlutterDiffViewerTheme(
       addedBackgroundColor: addedBackgroundColor ?? this.addedBackgroundColor,
@@ -319,6 +517,57 @@ class FlutterDiffViewerTheme {
       backgroundColor: backgroundColor ?? this.backgroundColor,
       panelBackgroundColor: panelBackgroundColor ?? this.panelBackgroundColor,
       panelBorderColor: panelBorderColor ?? this.panelBorderColor,
+      leftPanelBackgroundColor:
+          leftPanelBackgroundColor ?? this.leftPanelBackgroundColor,
+      rightPanelBackgroundColor:
+          rightPanelBackgroundColor ?? this.rightPanelBackgroundColor,
+      leftPanelBorderColor: leftPanelBorderColor ?? this.leftPanelBorderColor,
+      rightPanelBorderColor:
+          rightPanelBorderColor ?? this.rightPanelBorderColor,
+      leftAddedBackgroundColor:
+          leftAddedBackgroundColor ?? this.leftAddedBackgroundColor,
+      rightAddedBackgroundColor:
+          rightAddedBackgroundColor ?? this.rightAddedBackgroundColor,
+      leftRemovedBackgroundColor:
+          leftRemovedBackgroundColor ?? this.leftRemovedBackgroundColor,
+      rightRemovedBackgroundColor:
+          rightRemovedBackgroundColor ?? this.rightRemovedBackgroundColor,
+      leftModifiedBackgroundColor:
+          leftModifiedBackgroundColor ?? this.leftModifiedBackgroundColor,
+      rightModifiedBackgroundColor:
+          rightModifiedBackgroundColor ?? this.rightModifiedBackgroundColor,
+      leftUnchangedBackgroundColor:
+          leftUnchangedBackgroundColor ?? this.leftUnchangedBackgroundColor,
+      rightUnchangedBackgroundColor:
+          rightUnchangedBackgroundColor ?? this.rightUnchangedBackgroundColor,
+      leftAddedHighlightColor:
+          leftAddedHighlightColor ?? this.leftAddedHighlightColor,
+      rightAddedHighlightColor:
+          rightAddedHighlightColor ?? this.rightAddedHighlightColor,
+      leftRemovedHighlightColor:
+          leftRemovedHighlightColor ?? this.leftRemovedHighlightColor,
+      rightRemovedHighlightColor:
+          rightRemovedHighlightColor ?? this.rightRemovedHighlightColor,
+      leftAddedTextColor: leftAddedTextColor ?? this.leftAddedTextColor,
+      rightAddedTextColor: rightAddedTextColor ?? this.rightAddedTextColor,
+      leftRemovedTextColor: leftRemovedTextColor ?? this.leftRemovedTextColor,
+      rightRemovedTextColor:
+          rightRemovedTextColor ?? this.rightRemovedTextColor,
+      leftModifiedTextColor:
+          leftModifiedTextColor ?? this.leftModifiedTextColor,
+      rightModifiedTextColor:
+          rightModifiedTextColor ?? this.rightModifiedTextColor,
+      leftUnchangedTextColor:
+          leftUnchangedTextColor ?? this.leftUnchangedTextColor,
+      rightUnchangedTextColor:
+          rightUnchangedTextColor ?? this.rightUnchangedTextColor,
+      leftBlockBackgroundColor:
+          leftBlockBackgroundColor ?? this.leftBlockBackgroundColor,
+      rightBlockBackgroundColor:
+          rightBlockBackgroundColor ?? this.rightBlockBackgroundColor,
+      leftBlockBorderColor: leftBlockBorderColor ?? this.leftBlockBorderColor,
+      rightBlockBorderColor:
+          rightBlockBorderColor ?? this.rightBlockBorderColor,
     );
   }
 
@@ -357,7 +606,35 @@ class FlutterDiffViewerTheme {
           navigationButtonTextColor == other.navigationButtonTextColor &&
           backgroundColor == other.backgroundColor &&
           panelBackgroundColor == other.panelBackgroundColor &&
-          panelBorderColor == other.panelBorderColor;
+          panelBorderColor == other.panelBorderColor &&
+          leftPanelBackgroundColor == other.leftPanelBackgroundColor &&
+          rightPanelBackgroundColor == other.rightPanelBackgroundColor &&
+          leftPanelBorderColor == other.leftPanelBorderColor &&
+          rightPanelBorderColor == other.rightPanelBorderColor &&
+          leftAddedBackgroundColor == other.leftAddedBackgroundColor &&
+          rightAddedBackgroundColor == other.rightAddedBackgroundColor &&
+          leftRemovedBackgroundColor == other.leftRemovedBackgroundColor &&
+          rightRemovedBackgroundColor == other.rightRemovedBackgroundColor &&
+          leftModifiedBackgroundColor == other.leftModifiedBackgroundColor &&
+          rightModifiedBackgroundColor == other.rightModifiedBackgroundColor &&
+          leftUnchangedBackgroundColor == other.leftUnchangedBackgroundColor &&
+          rightUnchangedBackgroundColor == other.rightUnchangedBackgroundColor &&
+          leftAddedHighlightColor == other.leftAddedHighlightColor &&
+          rightAddedHighlightColor == other.rightAddedHighlightColor &&
+          leftRemovedHighlightColor == other.leftRemovedHighlightColor &&
+          rightRemovedHighlightColor == other.rightRemovedHighlightColor &&
+          leftAddedTextColor == other.leftAddedTextColor &&
+          rightAddedTextColor == other.rightAddedTextColor &&
+          leftRemovedTextColor == other.leftRemovedTextColor &&
+          rightRemovedTextColor == other.rightRemovedTextColor &&
+          leftModifiedTextColor == other.leftModifiedTextColor &&
+          rightModifiedTextColor == other.rightModifiedTextColor &&
+          leftUnchangedTextColor == other.leftUnchangedTextColor &&
+          rightUnchangedTextColor == other.rightUnchangedTextColor &&
+          leftBlockBackgroundColor == other.leftBlockBackgroundColor &&
+          rightBlockBackgroundColor == other.rightBlockBackgroundColor &&
+          leftBlockBorderColor == other.leftBlockBorderColor &&
+          rightBlockBorderColor == other.rightBlockBorderColor;
 
   @override
   int get hashCode => Object.hashAll([
@@ -388,12 +665,41 @@ class FlutterDiffViewerTheme {
         backgroundColor,
         panelBackgroundColor,
         panelBorderColor,
+        leftPanelBackgroundColor,
+        rightPanelBackgroundColor,
+        leftPanelBorderColor,
+        rightPanelBorderColor,
+        leftAddedBackgroundColor,
+        rightAddedBackgroundColor,
+        leftRemovedBackgroundColor,
+        rightRemovedBackgroundColor,
+        leftModifiedBackgroundColor,
+        rightModifiedBackgroundColor,
+        leftUnchangedBackgroundColor,
+        rightUnchangedBackgroundColor,
+        leftAddedHighlightColor,
+        rightAddedHighlightColor,
+        leftRemovedHighlightColor,
+        rightRemovedHighlightColor,
+        leftAddedTextColor,
+        rightAddedTextColor,
+        leftRemovedTextColor,
+        rightRemovedTextColor,
+        leftModifiedTextColor,
+        rightModifiedTextColor,
+        leftUnchangedTextColor,
+        rightUnchangedTextColor,
+        leftBlockBackgroundColor,
+        rightBlockBackgroundColor,
+        leftBlockBorderColor,
+        rightBlockBorderColor,
       ]);
 
   @override
   String toString() => 'FlutterDiffViewerTheme('
       'backgroundColor: $backgroundColor, '
       'panelBackgroundColor: $panelBackgroundColor, '
-      'panelBorderColor: $panelBorderColor, '
+      'leftPanelBackgroundColor: $leftPanelBackgroundColor, '
+      'rightPanelBackgroundColor: $rightPanelBackgroundColor, '
       'addedBackgroundColor: $addedBackgroundColor)';
 }
