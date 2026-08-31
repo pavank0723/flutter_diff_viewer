@@ -61,10 +61,69 @@ class DiffSegmentWidget extends StatelessWidget {
         );
     }
 
-    final textWidget = Text(segment.text, style: textStyle, softWrap: false);
+    return _buildFormattedWidget(
+      text: segment.text,
+      type: segment.type,
+      defaultStyle: textStyle,
+      defaultBgColor: backgroundColor,
+    );
+  }
 
-    if (backgroundColor == null) return textWidget;
+  Widget _buildFormattedWidget({
+    required String text,
+    required DiffType type,
+    required TextStyle defaultStyle,
+    required Color? defaultBgColor,
+  }) {
+    final isDiffWhitespace = (type == DiffType.added || type == DiffType.removed) &&
+        (text.contains(' ') || text.contains('\t'));
 
-    return Container(color: backgroundColor, child: textWidget);
+    if (!configuration.highlightWhitespace || !isDiffWhitespace) {
+      final textWidget = Text(text, style: defaultStyle, softWrap: false);
+      if (defaultBgColor == null) return textWidget;
+      return Container(color: defaultBgColor, child: textWidget);
+    }
+
+    final wsBgColor = configuration.theme.resolveAddedWhitespaceBackgroundColor(isOldSide: isOldSide);
+    final wsTextColor = configuration.theme.resolveAddedWhitespaceTextColor(isOldSide: isOldSide);
+
+    final spans = <InlineSpan>[];
+    final buffer = StringBuffer();
+
+    void flushNormal() {
+      if (buffer.isNotEmpty) {
+        spans.add(TextSpan(text: buffer.toString(), style: defaultStyle));
+        buffer.clear();
+      }
+    }
+
+    for (final rune in text.runes) {
+      final char = String.fromCharCode(rune);
+      if (char == ' ' || char == '\t') {
+        flushNormal();
+        final symbol = char == ' ' ? '·' : '→';
+        spans.add(
+          TextSpan(
+            text: symbol,
+            style: defaultStyle.copyWith(
+              color: wsTextColor,
+              backgroundColor: wsBgColor,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        );
+      } else {
+        buffer.write(char);
+      }
+    }
+    flushNormal();
+
+    final textWidget = Text.rich(
+      TextSpan(children: spans),
+      softWrap: false,
+    );
+
+    if (defaultBgColor == null) return textWidget;
+    return Container(color: defaultBgColor, child: textWidget);
   }
 }
