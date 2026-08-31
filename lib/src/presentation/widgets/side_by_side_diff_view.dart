@@ -6,6 +6,7 @@ import '../../domain/enums/diff_type.dart';
 import '../builders/diff_builders.dart';
 import '../configuration/diff_viewer_configuration.dart';
 import '../controllers/diff_viewer_controller.dart';
+import '../utils/horizontal_scroll_sync.dart';
 import 'collapsed_section_widget.dart';
 import 'diff_empty_state_widget.dart';
 import 'diff_header.dart';
@@ -166,7 +167,7 @@ class SideBySideDiffView extends StatelessWidget {
 }
 
 /// A single panel (left or right) in the side-by-side view.
-class _DiffPanel extends StatelessWidget {
+class _DiffPanel extends StatefulWidget {
   final List<_SideBySideItem> items;
   final bool isOldSide;
   final ScrollController scrollController;
@@ -192,155 +193,172 @@ class _DiffPanel extends StatelessWidget {
   });
 
   @override
+  State<_DiffPanel> createState() => _DiffPanelState();
+}
+
+class _DiffPanelState extends State<_DiffPanel> {
+  late final DiffHorizontalScrollSync _horizontalScrollSync;
+
+  @override
+  void initState() {
+    super.initState();
+    _horizontalScrollSync = DiffHorizontalScrollSync();
+  }
+
+  @override
+  void dispose() {
+    _horizontalScrollSync.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final theme = configuration.theme;
-    final spacing = configuration.spacing;
-    final panelBg = theme.resolvePanelBackgroundColor(isOldSide: isOldSide);
-    final isBlockMode = configuration.splitBlocks || spacing.blockSpacing > 0;
+    final theme = widget.configuration.theme;
+    final spacing = widget.configuration.spacing;
+    final panelBg = theme.resolvePanelBackgroundColor(isOldSide: widget.isOldSide);
+    final isBlockMode = widget.configuration.splitBlocks || spacing.blockSpacing > 0;
+    final blocks = isBlockMode ? _groupSideBySideBlocks(widget.items) : const <_SideBySideBlock>[];
 
-    if (isBlockMode) {
-      final blocks = _groupSideBySideBlocks(items);
+    final panelWidget = isBlockMode
+        ? Scrollbar(
+            controller: widget.scrollController,
+            child: ListView.builder(
+              controller: widget.scrollController,
+              itemCount: blocks.length,
+              itemBuilder: (context, index) {
+                final block = blocks[index];
 
-      return Container(
-        color: panelBg,
-        child: Scrollbar(
-          controller: scrollController,
-          child: ListView.builder(
-            controller: scrollController,
-            itemCount: blocks.length,
-            itemBuilder: (context, index) {
-              final block = blocks[index];
-
-              if (block.isCollapsed) {
-                final item = block.items.first;
-                if (collapsedSectionBuilder != null) {
-                  return collapsedSectionBuilder!(
-                    context,
-                    item.collapsedCount,
-                    () => controller.expandSection(item.collapsedStartIndex),
-                    configuration,
+                if (block.isCollapsed) {
+                  final item = block.items.first;
+                  if (widget.collapsedSectionBuilder != null) {
+                    return widget.collapsedSectionBuilder!(
+                      context,
+                      item.collapsedCount,
+                      () => widget.controller.expandSection(item.collapsedStartIndex),
+                      widget.configuration,
+                    );
+                  }
+                  return CollapsedSectionWidget(
+                    collapsedLineCount: item.collapsedCount,
+                    configuration: widget.configuration,
+                    onExpand: () {
+                      widget.controller.expandSection(item.collapsedStartIndex);
+                    },
                   );
                 }
-                return CollapsedSectionWidget(
-                  collapsedLineCount: item.collapsedCount,
-                  configuration: configuration,
-                  onExpand: () {
-                    controller.expandSection(item.collapsedStartIndex);
-                  },
-                );
-              }
 
-              final blockBg = theme.resolveBlockBackgroundColor(isOldSide: isOldSide);
-              final blockBorder = theme.resolveBlockBorderColor(isOldSide: isOldSide);
+                final blockBg = theme.resolveBlockBackgroundColor(isOldSide: widget.isOldSide);
+                final blockBorder = theme.resolveBlockBorderColor(isOldSide: widget.isOldSide);
 
-              return Container(
-                margin: EdgeInsets.only(
-                  bottom: index == blocks.length - 1 ? 0 : spacing.blockSpacing,
-                ),
-                padding: spacing.blockPadding,
-                decoration: BoxDecoration(
-                  color: blockBg,
-                  border: Border.all(
-                    color: blockBorder,
-                    width: spacing.blockBorderWidth,
+                return Container(
+                  margin: EdgeInsets.only(
+                    bottom: index == blocks.length - 1 ? 0 : spacing.blockSpacing,
                   ),
-                  borderRadius: BorderRadius.circular(spacing.blockBorderRadius),
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: block.items.map((item) {
-                    final line = isOldSide ? item.oldLine : item.newLine;
+                  padding: spacing.blockPadding,
+                  decoration: BoxDecoration(
+                    color: blockBg,
+                    border: Border.all(
+                      color: blockBorder,
+                      width: spacing.blockBorderWidth,
+                    ),
+                    borderRadius: BorderRadius.circular(spacing.blockBorderRadius),
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: block.items.map((item) {
+                      final line = widget.isOldSide ? item.oldLine : item.newLine;
 
-                    if (line == null) {
-                      return SizedBox(
-                        height: spacing.lineHeight,
-                        child: Container(
-                          color: theme.resolveUnchangedBackgroundColor(
-                            isOldSide: isOldSide,
+                      if (line == null) {
+                        return SizedBox(
+                          height: spacing.lineHeight,
+                          child: Container(
+                            color: theme.resolveUnchangedBackgroundColor(
+                              isOldSide: widget.isOldSide,
+                            ),
                           ),
-                        ),
+                        );
+                      }
+
+                      if (widget.lineBuilder != null) {
+                        return widget.lineBuilder!(context, line, widget.configuration);
+                      }
+
+                      return DiffLineWidget(
+                        line: line,
+                        configuration: widget.configuration,
+                        isOldSide: widget.isOldSide,
+                        lineNumberBuilder: widget.lineNumberBuilder,
+                        indicatorBuilder: widget.indicatorBuilder,
+                        segmentBuilder: widget.segmentBuilder,
+                        horizontalScrollSync: _horizontalScrollSync,
                       );
-                    }
+                    }).toList(growable: false),
+                  ),
+                );
+              },
+            ),
+          )
+        : Scrollbar(
+            controller: widget.scrollController,
+            child: ListView.builder(
+              controller: widget.scrollController,
+              itemCount: widget.items.length,
+              itemBuilder: (context, index) {
+                final item = widget.items[index];
 
-                    if (lineBuilder != null) {
-                      return lineBuilder!(context, line, configuration);
-                    }
-
-                    return DiffLineWidget(
-                      line: line,
-                      configuration: configuration,
-                      isOldSide: isOldSide,
-                      lineNumberBuilder: lineNumberBuilder,
-                      indicatorBuilder: indicatorBuilder,
-                      segmentBuilder: segmentBuilder,
+                if (item.isCollapsedPlaceholder) {
+                  if (widget.collapsedSectionBuilder != null) {
+                    return widget.collapsedSectionBuilder!(
+                      context,
+                      item.collapsedCount,
+                      () => widget.controller.expandSection(item.collapsedStartIndex),
+                      widget.configuration,
                     );
-                  }).toList(growable: false),
-                ),
-              );
-            },
-          ),
-        ),
-      );
-    }
+                  }
+                  return CollapsedSectionWidget(
+                    collapsedLineCount: item.collapsedCount,
+                    configuration: widget.configuration,
+                    onExpand: () {
+                      widget.controller.expandSection(item.collapsedStartIndex);
+                    },
+                  );
+                }
+
+                final line = widget.isOldSide ? item.oldLine : item.newLine;
+
+                if (line == null) {
+                  // Empty filler row (for line alignment when change exists only on opposite side)
+                  return SizedBox(
+                    height: spacing.lineHeight,
+                    child: Container(
+                      color: theme.resolveUnchangedBackgroundColor(
+                        isOldSide: widget.isOldSide,
+                      ),
+                    ),
+                  );
+                }
+
+                if (widget.lineBuilder != null) {
+                  return widget.lineBuilder!(context, line, widget.configuration);
+                }
+
+                return DiffLineWidget(
+                  line: line,
+                  configuration: widget.configuration,
+                  isOldSide: widget.isOldSide,
+                  lineNumberBuilder: widget.lineNumberBuilder,
+                  indicatorBuilder: widget.indicatorBuilder,
+                  segmentBuilder: widget.segmentBuilder,
+                  horizontalScrollSync: _horizontalScrollSync,
+                );
+              },
+            ),
+          );
 
     return Container(
       color: panelBg,
-      child: Scrollbar(
-        controller: scrollController,
-        child: ListView.builder(
-          controller: scrollController,
-          itemCount: items.length,
-          itemBuilder: (context, index) {
-            final item = items[index];
-
-            if (item.isCollapsedPlaceholder) {
-              if (collapsedSectionBuilder != null) {
-                return collapsedSectionBuilder!(
-                  context,
-                  item.collapsedCount,
-                  () => controller.expandSection(item.collapsedStartIndex),
-                  configuration,
-                );
-              }
-              return CollapsedSectionWidget(
-                collapsedLineCount: item.collapsedCount,
-                configuration: configuration,
-                onExpand: () {
-                  controller.expandSection(item.collapsedStartIndex);
-                },
-              );
-            }
-
-            final line = isOldSide ? item.oldLine : item.newLine;
-
-            if (line == null) {
-              // Empty filler row (for line alignment when change exists only on opposite side)
-              return SizedBox(
-                height: spacing.lineHeight,
-                child: Container(
-                  color: theme.resolveUnchangedBackgroundColor(
-                    isOldSide: isOldSide,
-                  ),
-                ),
-              );
-            }
-
-            if (lineBuilder != null) {
-              return lineBuilder!(context, line, configuration);
-            }
-
-            return DiffLineWidget(
-              line: line,
-              configuration: configuration,
-              isOldSide: isOldSide,
-              lineNumberBuilder: lineNumberBuilder,
-              indicatorBuilder: indicatorBuilder,
-              segmentBuilder: segmentBuilder,
-            );
-          },
-        ),
-      ),
+      child: panelWidget,
     );
   }
 }
