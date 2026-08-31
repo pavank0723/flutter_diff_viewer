@@ -150,6 +150,12 @@ class FlutterDiffViewerConfiguration {
   /// Defaults to `false`.
   final bool ignoreWhitespace;
 
+  /// Whether to visually highlight added whitespace characters.
+  ///
+  /// Forwarded to [DiffComparisonOptions.highlightWhitespace].
+  /// Defaults to `true`.
+  final bool highlightWhitespace;
+
   /// Whether the comparison is case-sensitive.
   ///
   /// Forwarded to [DiffComparisonOptions.caseSensitive].
@@ -211,6 +217,7 @@ class FlutterDiffViewerConfiguration {
     this.isCentralizedNoChanges = true,
     this.granularity = DiffGranularity.word,
     this.ignoreWhitespace = false,
+    this.highlightWhitespace = true,
     this.caseSensitive = true,
     this.contextLines = 3,
     this.useIsolateForLargeDocuments = true,
@@ -249,6 +256,7 @@ class FlutterDiffViewerConfiguration {
   DiffComparisonOptions toComparisonOptions() => DiffComparisonOptions(
         granularity: granularity,
         ignoreWhitespace: ignoreWhitespace,
+        highlightWhitespace: highlightWhitespace,
         caseSensitive: caseSensitive,
         contextLines: contextLines,
         useIsolate: useIsolateForLargeDocuments,
@@ -276,6 +284,7 @@ class FlutterDiffViewerConfiguration {
     bool? isCentralizedNoChanges,
     DiffGranularity? granularity,
     bool? ignoreWhitespace,
+    bool? highlightWhitespace,
     bool? caseSensitive,
     int? contextLines,
     bool? useIsolateForLargeDocuments,
@@ -305,6 +314,7 @@ class FlutterDiffViewerConfiguration {
           isCentralizedNoChanges ?? this.isCentralizedNoChanges,
       granularity: granularity ?? this.granularity,
       ignoreWhitespace: ignoreWhitespace ?? this.ignoreWhitespace,
+      highlightWhitespace: highlightWhitespace ?? this.highlightWhitespace,
       caseSensitive: caseSensitive ?? this.caseSensitive,
       contextLines: contextLines ?? this.contextLines,
       useIsolateForLargeDocuments:
@@ -341,6 +351,7 @@ class FlutterDiffViewerConfiguration {
           isCentralizedNoChanges == other.isCentralizedNoChanges &&
           granularity == other.granularity &&
           ignoreWhitespace == other.ignoreWhitespace &&
+          highlightWhitespace == other.highlightWhitespace &&
           caseSensitive == other.caseSensitive &&
           contextLines == other.contextLines &&
           useIsolateForLargeDocuments == other.useIsolateForLargeDocuments &&
@@ -367,6 +378,7 @@ class FlutterDiffViewerConfiguration {
         isCentralizedNoChanges,
         granularity,
         ignoreWhitespace,
+        highlightWhitespace,
         caseSensitive,
         contextLines,
         useIsolateForLargeDocuments,
