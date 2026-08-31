@@ -22,6 +22,8 @@ A production-grade Flutter package providing **GitHub/GitLab-style content compa
 - 🎨 **Light and dark themes** (GitHub-style out of the box)
 - 🎯 **Fully customizable** — every UI section has a builder callback
 - 🔌 **Pluggable diff algorithm** — swap in your own engine
+- 🔍 **Added Whitespace Highlighting** — visually marks added/extra spaces (`·`) and tabs (`→`)
+- ↔️ **Synchronized Horizontal Scrolling** — all line rows scroll together smoothly across each panel
 - ♿ **Accessibility** — semantic labels, screen reader support, color-independent indicators
 - ⚡ **Performant** — `ListView.builder` handles 50,000+ line documents
 - 🖥️ **Responsive** — auto-selects layout based on screen width
@@ -35,7 +37,7 @@ Add to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  flutter_diff_viewer: ^1.0.0
+  flutter_diff_viewer: ^1.4.0
 ```
 
 Then run:
