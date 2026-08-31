@@ -40,6 +40,12 @@ class FlutterDiffViewerTheme {
   /// Highlight color for individual removed words or characters within a line.
   final Color removedHighlightColor;
 
+  /// Background color for added whitespace characters / segments.
+  final Color addedWhitespaceBackgroundColor;
+
+  /// Text color for added whitespace characters / symbols.
+  final Color addedWhitespaceTextColor;
+
   // ---------------------------------------------------------------------------
   // Text colors
   // ---------------------------------------------------------------------------
@@ -216,6 +222,8 @@ class FlutterDiffViewerTheme {
     required this.unchangedBackgroundColor,
     required this.addedHighlightColor,
     required this.removedHighlightColor,
+    required this.addedWhitespaceBackgroundColor,
+    required this.addedWhitespaceTextColor,
     required this.addedTextColor,
     required this.removedTextColor,
     required this.modifiedTextColor,
@@ -312,6 +320,14 @@ class FlutterDiffViewerTheme {
       ? (leftRemovedHighlightColor ?? removedHighlightColor)
       : (rightRemovedHighlightColor ?? removedHighlightColor);
 
+  /// Resolves added whitespace background color based on panel side.
+  Color resolveAddedWhitespaceBackgroundColor({bool isOldSide = false}) =>
+      addedWhitespaceBackgroundColor;
+
+  /// Resolves added whitespace text color based on panel side.
+  Color resolveAddedWhitespaceTextColor({bool isOldSide = false}) =>
+      addedWhitespaceTextColor;
+
   /// Resolves added text color based on panel side.
   Color resolveAddedTextColor({bool isOldSide = false}) => isOldSide
       ? (leftAddedTextColor ?? addedTextColor)
@@ -354,6 +370,8 @@ class FlutterDiffViewerTheme {
         unchangedBackgroundColor: Color(0xFFFFFFFF),
         addedHighlightColor: Color(0xFFABF2BC),
         removedHighlightColor: Color(0xFFFFCDD2),
+        addedWhitespaceBackgroundColor: Color(0xFF00897B),
+        addedWhitespaceTextColor: Color(0xFFFFFFFF),
         addedTextColor: Color(0xFF1A7F37),
         removedTextColor: Color(0xFFCF222E),
         modifiedTextColor: Color(0xFF9A6700),
@@ -385,6 +403,8 @@ class FlutterDiffViewerTheme {
         unchangedBackgroundColor: Color(0xFF0D1117),
         addedHighlightColor: Color(0xFF1A5C33),
         removedHighlightColor: Color(0xFF6B1F1F),
+        addedWhitespaceBackgroundColor: Color(0xFF00796B),
+        addedWhitespaceTextColor: Color(0xFFFFFFFF),
         addedTextColor: Color(0xFF3FB950),
         removedTextColor: Color(0xFFF85149),
         modifiedTextColor: Color(0xFFD29922),
@@ -432,6 +452,8 @@ class FlutterDiffViewerTheme {
     Color? unchangedBackgroundColor,
     Color? addedHighlightColor,
     Color? removedHighlightColor,
+    Color? addedWhitespaceBackgroundColor,
+    Color? addedWhitespaceTextColor,
     Color? addedTextColor,
     Color? removedTextColor,
     Color? modifiedTextColor,
@@ -494,6 +516,10 @@ class FlutterDiffViewerTheme {
       addedHighlightColor: addedHighlightColor ?? this.addedHighlightColor,
       removedHighlightColor:
           removedHighlightColor ?? this.removedHighlightColor,
+      addedWhitespaceBackgroundColor: addedWhitespaceBackgroundColor ??
+          this.addedWhitespaceBackgroundColor,
+      addedWhitespaceTextColor:
+          addedWhitespaceTextColor ?? this.addedWhitespaceTextColor,
       addedTextColor: addedTextColor ?? this.addedTextColor,
       removedTextColor: removedTextColor ?? this.removedTextColor,
       modifiedTextColor: modifiedTextColor ?? this.modifiedTextColor,
