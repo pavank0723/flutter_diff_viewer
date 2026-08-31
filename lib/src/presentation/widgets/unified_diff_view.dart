@@ -6,6 +6,7 @@ import '../../domain/enums/diff_type.dart';
 import '../builders/diff_builders.dart';
 import '../configuration/diff_viewer_configuration.dart';
 import '../controllers/diff_viewer_controller.dart';
+import '../utils/horizontal_scroll_sync.dart';
 import 'collapsed_section_widget.dart';
 import 'diff_line_widget.dart';
 
@@ -120,7 +121,7 @@ List<_UnifiedBlock> _groupUnifiedBlocks(List<_DiffViewItem> items) {
 }
 
 /// Renders a unified diff view (single column, +/- indicators).
-class UnifiedDiffView extends StatelessWidget {
+class UnifiedDiffView extends StatefulWidget {
   /// The diff result to render.
   final DiffResult result;
 
@@ -159,51 +160,75 @@ class UnifiedDiffView extends StatelessWidget {
   });
 
   @override
+  State<UnifiedDiffView> createState() => _UnifiedDiffViewState();
+}
+
+class _UnifiedDiffViewState extends State<UnifiedDiffView> {
+  late final DiffHorizontalScrollSync _horizontalScrollSync;
+
+  @override
+  void initState() {
+    super.initState();
+    _horizontalScrollSync = DiffHorizontalScrollSync();
+  }
+
+  @override
+  void dispose() {
+    _horizontalScrollSync.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final theme = configuration.theme;
-    final spacing = configuration.spacing;
-    final isBlockMode = configuration.splitBlocks || spacing.blockSpacing > 0;
+    final theme = widget.configuration.theme;
+    final spacing = widget.configuration.spacing;
+    final isBlockMode = widget.configuration.splitBlocks || spacing.blockSpacing > 0;
 
     return ListenableBuilder(
-      listenable: controller,
+      listenable: widget.controller,
       builder: (context, _) {
         final items = _buildViewItems(
-          result: result,
-          configuration: configuration,
-          collapsedIndices: controller.collapsedLineIndices,
+          result: widget.result,
+          configuration: widget.configuration,
+          collapsedIndices: widget.controller.collapsedLineIndices,
         );
 
+        final blocks = isBlockMode ? _groupUnifiedBlocks(items) : const <_UnifiedBlock>[];
+
         if (isBlockMode) {
-          final blocks = _groupUnifiedBlocks(items);
           return ListView.builder(
-            controller: controller.primaryScrollController,
+            controller: widget.controller.primaryScrollController,
             itemCount: blocks.length,
             itemBuilder: (context, index) {
               final block = blocks[index];
 
               if (block.isCollapsed) {
                 final collapsedItem = block.items.first as _CollapsedItem;
-                if (collapsedSectionBuilder != null) {
-                  return collapsedSectionBuilder!(
+                if (widget.collapsedSectionBuilder != null) {
+                  return widget.collapsedSectionBuilder!(
                     context,
                     collapsedItem.lineCount,
-                    () => controller.expandSection(collapsedItem.lineIndex),
-                    configuration,
+                    () => widget.controller.expandSection(collapsedItem.lineIndex),
+                    widget.configuration,
                   );
                 }
                 return CollapsedSectionWidget(
                   collapsedLineCount: collapsedItem.lineCount,
-                  onExpand: () => controller.expandSection(collapsedItem.lineIndex),
-                  configuration: configuration,
+                  onExpand: () =>
+                      widget.controller.expandSection(collapsedItem.lineIndex),
+                  configuration: widget.configuration,
                 );
               }
 
-              final blockBg = theme.resolveBlockBackgroundColor(isOldSide: false);
-              final blockBorder = theme.resolveBlockBorderColor(isOldSide: false);
+              final blockBg =
+                  theme.resolveBlockBackgroundColor(isOldSide: false);
+              final blockBorder =
+                  theme.resolveBlockBorderColor(isOldSide: false);
 
               return Container(
                 margin: EdgeInsets.only(
-                  bottom: index == blocks.length - 1 ? 0 : spacing.blockSpacing,
+                  bottom:
+                      index == blocks.length - 1 ? 0 : spacing.blockSpacing,
                 ),
                 padding: spacing.blockPadding,
                 decoration: BoxDecoration(
@@ -212,23 +237,26 @@ class UnifiedDiffView extends StatelessWidget {
                     color: blockBorder,
                     width: spacing.blockBorderWidth,
                   ),
-                  borderRadius: BorderRadius.circular(spacing.blockBorderRadius),
+                  borderRadius:
+                      BorderRadius.circular(spacing.blockBorderRadius),
                 ),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: block.items.map((item) {
                     final lineItem = item as _LineItem;
-                    if (lineBuilder != null) {
-                      return lineBuilder!(context, lineItem.line, configuration);
+                    if (widget.lineBuilder != null) {
+                      return widget.lineBuilder!(
+                          context, lineItem.line, widget.configuration);
                     }
                     return DiffLineWidget(
                       key: ValueKey('unified_${lineItem.lineIndex}'),
                       line: lineItem.line,
-                      configuration: configuration,
-                      lineNumberBuilder: lineNumberBuilder,
-                      indicatorBuilder: indicatorBuilder,
-                      segmentBuilder: segmentBuilder,
+                      configuration: widget.configuration,
+                      lineNumberBuilder: widget.lineNumberBuilder,
+                      indicatorBuilder: widget.indicatorBuilder,
+                      segmentBuilder: widget.segmentBuilder,
+                      horizontalScrollSync: _horizontalScrollSync,
                     );
                   }).toList(growable: false),
                 ),
@@ -238,39 +266,40 @@ class UnifiedDiffView extends StatelessWidget {
         }
 
         return ListView.builder(
-          controller: controller.primaryScrollController,
+          controller: widget.controller.primaryScrollController,
           itemCount: items.length,
-          itemExtent: configuration.spacing.lineHeight,
+          itemExtent: widget.configuration.spacing.lineHeight,
           itemBuilder: (context, index) {
             final item = items[index];
 
             switch (item) {
               case _CollapsedItem(:final lineIndex, :final lineCount):
-                if (collapsedSectionBuilder != null) {
-                  return collapsedSectionBuilder!(
+                if (widget.collapsedSectionBuilder != null) {
+                  return widget.collapsedSectionBuilder!(
                     context,
                     lineCount,
-                    () => controller.expandSection(lineIndex),
-                    configuration,
+                    () => widget.controller.expandSection(lineIndex),
+                    widget.configuration,
                   );
                 }
                 return CollapsedSectionWidget(
                   collapsedLineCount: lineCount,
-                  onExpand: () => controller.expandSection(lineIndex),
-                  configuration: configuration,
+                  onExpand: () => widget.controller.expandSection(lineIndex),
+                  configuration: widget.configuration,
                 );
 
               case _LineItem(:final line):
-                if (lineBuilder != null) {
-                  return lineBuilder!(context, line, configuration);
+                if (widget.lineBuilder != null) {
+                  return widget.lineBuilder!(context, line, widget.configuration);
                 }
                 return DiffLineWidget(
                   key: ValueKey('unified_${item.lineIndex}'),
                   line: line,
-                  configuration: configuration,
-                  lineNumberBuilder: lineNumberBuilder,
-                  indicatorBuilder: indicatorBuilder,
-                  segmentBuilder: segmentBuilder,
+                  configuration: widget.configuration,
+                  lineNumberBuilder: widget.lineNumberBuilder,
+                  indicatorBuilder: widget.indicatorBuilder,
+                  segmentBuilder: widget.segmentBuilder,
+                  horizontalScrollSync: _horizontalScrollSync,
                 );
             }
           },
