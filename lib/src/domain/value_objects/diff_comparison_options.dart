@@ -23,6 +23,11 @@ class DiffComparisonOptions {
   /// Defaults to `false`.
   final bool ignoreWhitespace;
 
+  /// Whether to visually highlight added whitespace characters.
+  ///
+  /// Defaults to `true`.
+  final bool highlightWhitespace;
+
   /// Whether the comparison is case-sensitive.
   ///
   /// Defaults to `true` (case-sensitive).
@@ -46,6 +51,7 @@ class DiffComparisonOptions {
   const DiffComparisonOptions({
     this.granularity = DiffGranularity.word,
     this.ignoreWhitespace = false,
+    this.highlightWhitespace = true,
     this.caseSensitive = true,
     this.contextLines = 3,
     this.useIsolate = false,
@@ -55,6 +61,7 @@ class DiffComparisonOptions {
   DiffComparisonOptions copyWith({
     DiffGranularity? granularity,
     bool? ignoreWhitespace,
+    bool? highlightWhitespace,
     bool? caseSensitive,
     int? contextLines,
     bool? useIsolate,
@@ -62,6 +69,7 @@ class DiffComparisonOptions {
     return DiffComparisonOptions(
       granularity: granularity ?? this.granularity,
       ignoreWhitespace: ignoreWhitespace ?? this.ignoreWhitespace,
+      highlightWhitespace: highlightWhitespace ?? this.highlightWhitespace,
       caseSensitive: caseSensitive ?? this.caseSensitive,
       contextLines: contextLines ?? this.contextLines,
       useIsolate: useIsolate ?? this.useIsolate,
@@ -75,6 +83,7 @@ class DiffComparisonOptions {
           runtimeType == other.runtimeType &&
           granularity == other.granularity &&
           ignoreWhitespace == other.ignoreWhitespace &&
+          highlightWhitespace == other.highlightWhitespace &&
           caseSensitive == other.caseSensitive &&
           contextLines == other.contextLines &&
           useIsolate == other.useIsolate;
@@ -83,6 +92,7 @@ class DiffComparisonOptions {
   int get hashCode => Object.hash(
         granularity,
         ignoreWhitespace,
+        highlightWhitespace,
         caseSensitive,
         contextLines,
         useIsolate,
@@ -92,6 +102,7 @@ class DiffComparisonOptions {
   String toString() => 'DiffComparisonOptions('
       'granularity: $granularity, '
       'ignoreWhitespace: $ignoreWhitespace, '
+      'highlightWhitespace: $highlightWhitespace, '
       'caseSensitive: $caseSensitive, '
       'contextLines: $contextLines, '
       'useIsolate: $useIsolate)';
